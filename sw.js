@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gosleep-v5';
+const CACHE_NAME = 'gosleep-v6';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -51,7 +51,7 @@ self.addEventListener('fetch', event => {
 
 self.addEventListener('push', event => {
     const fallback = {
-        title:'GoSleep',
+        title:'G04Sleep',
         body:'Guten Morgen! Dein Wecker klingelt.',
         tag:'gosleep-alarm',
         url:'./'
