@@ -107,12 +107,63 @@ function validAlarm(alarm){
     }
 }
 
-async function sendNotification(env, subscription, test = false){
+function validAlarmList(alarms){
+    return Array.isArray(alarms) && alarms.length <= 30 && alarms.every(validAlarm);
+}
+
+// Earliest next occurrence across a whole list of alarms (multiple alarms + bedtime reminders
+// share one Durable Object alarm timer). Also reports which kind of entry produced that
+// occurrence, so the correct notification text can be sent when it actually fires.
+function nextGlobalAlarm(alarms, after = Date.now() + 30000){
+    if(!Array.isArray(alarms)) return { timestamp:null, kind:'wake' };
+    let best = null;
+    let bestKind = 'wake';
+    for(const alarm of alarms){
+        const candidate = nextAlarmTimestamp(alarm, after);
+        if(candidate && (best === null || candidate < best)){
+            best = candidate;
+            bestKind = alarm.kind === 'bedtime' ? 'bedtime' : 'wake';
+        }
+    }
+    return { timestamp:best, kind:bestKind };
+}
+
+const NOTIFICATION_STRINGS = {
+    de:{
+        morningTitle:'Guten Morgen',
+        morningBody:'Dein G04Sleep-Wecker klingelt jetzt.',
+        bedtimeTitle:'Zeit für Bettruhe',
+        bedtimeBody:'Dein G04Sleep-Schlafziel beginnt jetzt am besten.',
+        testTitle:'G04Sleep Test',
+        testBody:'Hintergrund-Benachrichtigungen funktionieren.'
+    },
+    en:{
+        morningTitle:'Good morning',
+        morningBody:'Your G04Sleep alarm is ringing now.',
+        bedtimeTitle:'Time for bed',
+        bedtimeBody:'Now is a good time to start your G04Sleep goal.',
+        testTitle:'G04Sleep Test',
+        testBody:'Background notifications are working.'
+    }
+};
+
+function notificationStrings(lang){
+    return NOTIFICATION_STRINGS[lang] || NOTIFICATION_STRINGS.de;
+}
+
+async function sendNotification(env, subscription, kind = 'wake', lang = 'de'){
+    const strings = notificationStrings(lang);
+    const byKind = {
+        wake:{ title:strings.morningTitle, body:strings.morningBody, tag:'gosleep-alarm' },
+        bedtime:{ title:strings.bedtimeTitle, body:strings.bedtimeBody, tag:'gosleep-bedtime' },
+        test:{ title:strings.testTitle, body:strings.testBody, tag:'gosleep-test' }
+    };
+    const payload = byKind[kind] || byKind.wake;
     webpush.setVapidDetails(env.VAPID_SUBJECT, env.VAPID_PUBLIC_KEY, env.VAPID_PRIVATE_KEY);
     return webpush.sendNotification(subscription, JSON.stringify({
-        title:test ? 'GoSleep Test' : 'Guten Morgen',
-        body:test ? 'Hintergrund-Benachrichtigungen funktionieren.' : 'Dein GoSleep-Wecker klingelt jetzt.',
-        tag:test ? 'gosleep-test' : 'gosleep-alarm',
+        title:payload.title,
+        body:payload.body,
+        tag:payload.tag,
         url:env.APP_URL
     }), { TTL:300, urgency:'high' });
 }
@@ -143,14 +194,19 @@ export class AlarmDevice {
         if(request.method === 'PUT'){
             if(!await this.authorize(request, true)) return json({ error:'Nicht autorisiert.' }, 401);
             const body = await request.json().catch(() => null);
-            if(!validSubscription(body?.subscription) || !validAlarm(body?.alarm)){
+            if(!validSubscription(body?.subscription) || !validAlarmList(body?.alarms)){
                 return json({ error:'Ungültige Push- oder Weckerdaten.' }, 400);
             }
-            const nextAlarm = nextAlarmTimestamp(body.alarm);
-            await this.state.storage.put({ subscription:body.subscription, alarm:body.alarm, nextAlarm });
-            if(nextAlarm) await this.state.storage.setAlarm(nextAlarm);
+            const next = nextGlobalAlarm(body.alarms);
+            const lang = body.lang === 'en' ? 'en' : 'de';
+            await this.state.storage.put({
+                subscription:body.subscription, alarms:body.alarms, lang,
+                nextAlarm:next.timestamp, nextAlarmKind:next.kind
+            });
+            await this.state.storage.delete('alarm'); // legacy single-alarm field from older client versions
+            if(next.timestamp) await this.state.storage.setAlarm(next.timestamp);
             else await this.state.storage.deleteAlarm();
-            return json({ ok:true, nextAlarm });
+            return json({ ok:true, nextAlarm:next.timestamp });
         }
 
         if(request.method === 'DELETE'){
@@ -163,9 +219,10 @@ export class AlarmDevice {
         if(request.method === 'POST' && isTest){
             if(!await this.authorize(request)) return json({ error:'Nicht autorisiert.' }, 401);
             const subscription = await this.state.storage.get('subscription');
+            const lang = await this.state.storage.get('lang');
             if(!subscription) return json({ error:'Keine Push-Anmeldung vorhanden.' }, 404);
             try{
-                await sendNotification(this.env, subscription, true);
+                await sendNotification(this.env, subscription, 'test', lang || 'de');
                 return json({ ok:true });
             } catch(error){
                 if(error?.statusCode === 404 || error?.statusCode === 410){
@@ -180,10 +237,13 @@ export class AlarmDevice {
     }
 
     async alarm(){
-        const data = await this.state.storage.get(['subscription', 'alarm']);
-        if(!data.subscription || !data.alarm?.enabled) return;
+        const data = await this.state.storage.get(['subscription', 'alarms', 'alarm', 'lang', 'nextAlarmKind']);
+        // 'alarms' is the current (list) format; 'alarm' is kept only as a fallback for devices that
+        // haven't re-synced since the multi-alarm update yet.
+        const alarms = data.alarms || (data.alarm ? [data.alarm] : []);
+        if(!data.subscription || !alarms.some(a => a.enabled)) return;
         try{
-            await sendNotification(this.env, data.subscription, false);
+            await sendNotification(this.env, data.subscription, data.nextAlarmKind || 'wake', data.lang || 'de');
         } catch(error){
             if(error?.statusCode === 404 || error?.statusCode === 410){
                 await this.state.storage.deleteAll();
@@ -192,9 +252,9 @@ export class AlarmDevice {
             await this.state.storage.setAlarm(Date.now() + 60000);
             throw error;
         }
-        const nextAlarm = nextAlarmTimestamp(data.alarm, Date.now() + 30000);
-        await this.state.storage.put('nextAlarm', nextAlarm);
-        if(nextAlarm) await this.state.storage.setAlarm(nextAlarm);
+        const next = nextGlobalAlarm(alarms, Date.now() + 30000);
+        await this.state.storage.put({ nextAlarm:next.timestamp, nextAlarmKind:next.kind });
+        if(next.timestamp) await this.state.storage.setAlarm(next.timestamp);
     }
 }
 
