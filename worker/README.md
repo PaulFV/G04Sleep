@@ -1,6 +1,6 @@
-# GoSleep Push Worker
+# G04Sleep Push Worker
 
-Der Worker speichert pro Browser eine Web-Push-Anmeldung in einem eigenen Durable Object und plant den nächsten Wecktermin über einen Durable-Object-Alarm. Dadurch kann die Benachrichtigung auch bei geschlossener GoSleep-App zugestellt werden.
+Der Worker speichert pro Browser eine Web-Push-Anmeldung in einem eigenen Durable Object und plant den nächsten Wecktermin über einen Durable-Object-Alarm. Dadurch kann die Benachrichtigung auch bei geschlossener G04Sleep-App zugestellt werden.
 
 ## Bereitstellung
 

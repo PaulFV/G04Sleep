@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gosleep-v6';
+const CACHE_NAME = 'gosleep-v7';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -8,7 +8,8 @@ const APP_ASSETS = [
     './icons/apple-touch-icon.png',
     './icons/icon-192.png',
     './icons/icon-512.png',
-    './icons/icon-1024.png'
+    './icons/icon-1024.png',
+    './icons/moon-floating.svg'
 ];
 
 self.addEventListener('install', event => {

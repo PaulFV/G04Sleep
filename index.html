@@ -200,11 +200,12 @@ body::before{
 }
 
 .moon{
-    width:92px;
-    height:92px;
+    width:112px;
+    height:112px;
     position:relative;
     z-index:2;
-    filter:drop-shadow(0 0 20px rgba(57,255,138,0.75)) drop-shadow(0 0 40px rgba(57,255,138,0.35));
+    filter:drop-shadow(0 0 18px rgba(0,229,255,0.72)) drop-shadow(0 0 38px rgba(140,107,255,0.46));
+    animation:moonFloat 5.5s ease-in-out infinite;
 }
 
 .moon svg,
@@ -215,8 +216,12 @@ body::before{
 }
 
 .moon img{
-    border-radius:24px;
-    object-fit:cover;
+    object-fit:contain;
+}
+
+@keyframes moonFloat{
+    0%,100%{ transform:translateY(0) rotate(-1deg); }
+    50%{ transform:translateY(-8px) rotate(1deg); }
 }
 
 .hero p{
@@ -226,21 +231,6 @@ body::before{
     font-family:var(--mono);
     letter-spacing:0.4px;
     text-transform:uppercase;
-}
-
-.greeting{
-    font-size:20px;
-    font-weight:700;
-    letter-spacing:0.2px;
-    margin:10px 2px 0;
-    color:#fff;
-}
-
-.greeting #greetingName{
-    background:linear-gradient(90deg,var(--cyan),var(--violet));
-    -webkit-background-clip:text;
-    background-clip:text;
-    -webkit-text-fill-color:transparent;
 }
 
 /* neural wave */
@@ -1313,14 +1303,14 @@ textarea:focus-visible{
 
 @media (max-width:520px){
     .header{ padding-left:16px; padding-right:16px; }
-    .avatar{ max-width:96px; }
+    .avatar{ max-width:132px; }
     .container{ padding-left:14px; padding-right:14px; }
     .hero{ padding-top:12px; }
     .orbit-wrap{ width:172px; height:172px; }
     .orbit-ring.r1{ width:172px; height:172px; }
     .orbit-ring.r2{ width:132px; height:132px; }
     .orbit-ring.r3{ width:94px; height:94px; }
-    .moon{ width:78px; height:78px; }
+    .moon{ width:94px; height:94px; }
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
 }
 
@@ -1354,13 +1344,11 @@ textarea:focus-visible{
 <header class="header">
     <div class="logo"><img class="brand-icon" src="icons/favicon-32.png" alt="">G04SLEEP</div>
     <div class="profile">
-        <div class="avatar" id="avatarInitial">User</div>
+        <div class="avatar" id="avatarInitial">Hallo, User</div>
     </div>
 </header>
 
 <main class="container">
-
-    <p class="greeting" id="greetingText"><span id="greetingPrefix" data-i18n="greetingPrefix">Hallo,</span> <span id="greetingName">User</span></p>
 
     <div class="hero">
         <div class="orbit-wrap">
@@ -1368,7 +1356,7 @@ textarea:focus-visible{
             <div class="orbit-ring r2"></div>
             <div class="orbit-ring r3"></div>
             <div class="moon">
-                <img src="icons/icon-192.png" alt="G04Sleep – leuchtender Halbmond" data-i18n-alt="moonAlt">
+                <img src="icons/moon-floating.svg" alt="G04Sleep – leuchtender Halbmond" data-i18n-alt="moonAlt">
             </div>
         </div>
         <p id="heroText">Bereit für eine erholsame Nacht</p>
@@ -2226,9 +2214,8 @@ function showToast(message){
 
 function renderHeader(){
     const avatar = document.getElementById('avatarInitial');
-    avatar.textContent = state.userName;
-    avatar.title = state.userName;
-    document.getElementById('greetingName').textContent = state.userName;
+    avatar.textContent = t('greetingPrefix') + ' ' + state.userName;
+    avatar.title = avatar.textContent;
 }
 
 function renderSleepCard(){
@@ -2253,20 +2240,11 @@ function renderAlarmCard(){
 }
 
 // ---------- App icon badge ----------
-// A real home-screen widget (live info shown directly on the phone's home screen) needs a native
-// app wrapper and isn't something a plain web app / PWA can offer on iOS or Android. As the closest
-// honest approximation, this badges the installed app's icon with the number of hours left until the
-// next alarm (Badging API) so there's an at-a-glance signal without opening the app. Support varies:
-// works on Android/desktop Chrome and Edge, and on iOS 16.4+ once G04Sleep is added to the home
-// screen; where unsupported it simply does nothing.
+// Do not use the app icon badge for the hours until the next alarm. iOS displays that number like
+// an unread-notification count, which is misleading. Clear any badge left by an older app version.
 function updateAppBadge(upcoming){
-    if(!('setAppBadge' in navigator)) return;
-    if(!upcoming){
-        navigator.clearAppBadge().catch(() => {});
-        return;
-    }
-    const hours = Math.max(1, Math.round((upcoming.date - new Date()) / 3600000));
-    navigator.setAppBadge(hours).catch(() => {});
+    if(!('clearAppBadge' in navigator)) return;
+    navigator.clearAppBadge().catch(() => {});
 }
 
 function renderAlarmsList(){
