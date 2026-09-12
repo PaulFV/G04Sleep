@@ -104,6 +104,56 @@ body::before{
     border-bottom:1px solid rgba(var(--tint-rgb),0.05);
 }
 
+.header-actions{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    flex:1;
+    margin:0 24px;
+}
+
+.header-action{
+    width:auto;
+    min-width:250px;
+    min-height:42px;
+    margin:0;
+    padding:9px 16px;
+    border-radius:9px;
+    box-sizing:border-box;
+    font-size:13px;
+}
+
+.main-action.header-action{
+    border:2px solid var(--cyan);
+    color:var(--cyan);
+    background:rgba(0,229,255,0.035);
+    box-shadow:none;
+    margin-top:0;
+}
+
+.main-action.header-action.active{
+    border-color:var(--magenta);
+    color:#ff9bc1;
+    background:rgba(255,61,138,0.12);
+    box-shadow:0 0 18px rgba(255,61,138,0.22);
+}
+
+.secondary-action.header-action{
+    border:2px solid var(--cyan);
+    color:var(--cyan);
+    background:rgba(0,229,255,0.035);
+    margin-top:0;
+}
+
+.secondary-action.header-action:hover,
+.secondary-action.header-action:focus-visible,
+.main-action.header-action:hover,
+.main-action.header-action:focus-visible{
+    background:rgba(0,229,255,0.12);
+    box-shadow:0 0 18px rgba(0,229,255,0.18);
+}
+
 .logo{
     font-size:22px;
     font-weight:700;
@@ -177,8 +227,8 @@ body::before{
 
 .orbit-wrap{
     position:relative;
-    width:210px;
-    height:210px;
+    width:270px;
+    height:270px;
     margin:0 auto;
     display:flex;
     align-items:center;
@@ -191,17 +241,17 @@ body::before{
     border:1px solid rgba(0,229,255,0.18);
 }
 
-.orbit-ring.r1{ width:210px; height:210px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
-.orbit-ring.r2{ width:160px; height:160px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
-.orbit-ring.r3{ width:112px; height:112px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
+.orbit-ring.r1{ width:270px; height:270px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
+.orbit-ring.r2{ width:204px; height:204px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
+.orbit-ring.r3{ width:144px; height:144px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
 
 @keyframes spin{
     to{ transform:rotate(360deg); }
 }
 
 .moon{
-    width:112px;
-    height:112px;
+    width:148px;
+    height:148px;
     position:relative;
     z-index:2;
     padding:0;
@@ -294,6 +344,17 @@ body::before{
     box-shadow:0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(var(--tint-rgb),0.04);
     position:relative;
     overflow:hidden;
+}
+
+.card > .card-action{
+    position:absolute;
+    top:20px;
+    right:20px;
+    margin-top:0;
+}
+
+.card.has-card-action{
+    padding-bottom:74px;
 }
 
 .card::before{
@@ -1459,12 +1520,28 @@ textarea:focus-visible{
     .avatar{ max-width:132px; }
     .container{ padding-left:14px; padding-right:14px; }
     .hero{ padding-top:12px; }
-    .orbit-wrap{ width:172px; height:172px; }
-    .orbit-ring.r1{ width:172px; height:172px; }
-    .orbit-ring.r2{ width:132px; height:132px; }
-    .orbit-ring.r3{ width:94px; height:94px; }
-    .moon{ width:94px; height:94px; }
+    .orbit-wrap{ width:220px; height:220px; }
+    .orbit-ring.r1{ width:220px; height:220px; }
+    .orbit-ring.r2{ width:166px; height:166px; }
+    .orbit-ring.r3{ width:118px; height:118px; }
+    .moon{ width:124px; height:124px; }
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
+}
+
+@media (max-width:900px){
+    .header{ flex-wrap:wrap; row-gap:10px; }
+    .header-actions{
+        order:3;
+        flex:0 0 100%;
+        margin:0;
+        gap:8px;
+    }
+    .header-action{
+        flex:1 1 0;
+        min-width:0;
+        padding-left:8px;
+        padding-right:8px;
+    }
 }
 
 </style>
@@ -1496,6 +1573,10 @@ textarea:focus-visible{
 
 <header class="header">
     <div class="logo"><img class="brand-icon" src="icons/favicon-32.png" alt="">G04SLEEP</div>
+    <div class="header-actions">
+        <button type="button" class="main-action header-action" id="sleepBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>Schlaf aufzeichnen</span></button>
+        <button type="button" class="secondary-action header-action" id="soundsBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg><span data-i18n="btnOpenSounds">Einschlafhilfe abspielen</span></button>
+    </div>
     <div class="profile">
         <div class="avatar" id="avatarInitial">Hallo, User</div>
     </div>
@@ -1533,12 +1614,9 @@ textarea:focus-visible{
         </div>
     </div>
 
-    <button type="button" class="main-action" id="sleepBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>Schlaf aufzeichnen</span></button>
-    <button type="button" class="secondary-action" id="soundsBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg><span data-i18n="btnOpenSounds">Einschlafhilfe abspielen</span></button>
-
     <div class="cards">
 
-        <div class="card">
+        <div class="card has-card-action">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-bed"></use></svg><span data-i18n="cardQualityLabel">Schlafqualität</span></div>
             <div class="quality-row">
                 <div class="ring" id="qualityRing">
@@ -1552,14 +1630,14 @@ textarea:focus-visible{
             <button type="button" class="card-action" data-open="stats"><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span data-i18n="cardQualityAction">Verlauf ansehen</span></button>
         </div>
 
-        <div class="card">
+        <div class="card has-card-action">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Nächster Wecker</span></div>
             <p class="big-value" id="alarmValue">–:–</p>
             <p class="sub-value" id="alarmDaysLabel">Kein Wecker aktiv</p>
             <button type="button" class="card-action" data-open="alarm"><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span data-i18n="cardAlarmAction">Wecker verwalten</span></button>
         </div>
 
-        <div class="card">
+        <div class="card has-card-action">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-chart"></use></svg><span data-i18n="cardOverviewLabel">Dein Überblick</span></div>
             <div class="stat-line"><span data-i18n="labelWeek">Woche</span><span id="statWeek">–</span></div>
             <div class="stat-line"><span data-i18n="labelMonth">Monat</span><span id="statMonth">–</span></div>
@@ -2102,6 +2180,8 @@ const I18N = {
          soundClipsTitle:'Ältere Hörproben', soundClipPlay:'Hörprobe {time}', soundClipLoading:'Hörprobe wird geladen …',
          soundClipUnavailable:'Hörprobe nicht verfügbar', soundClipSeconds:'{seconds} Sek.', soundDetailTitle:'Geräuschdetails',
          soundRecordingPlay:'Ganze Aufnahme anhören', soundRecordingLoading:'Aufnahme wird geladen …', soundRecordingUnavailable:'Aufnahme nicht verfügbar',
+         soundRecordingSave:'Aufnahme lokal speichern', soundRecordingSaving:'Aufnahme wird vorbereitet …', soundRecordingSaved:'Aufnahme bereit – wähle jetzt den Speicherort.', soundRecordingShareTitle:'G04Sleep Schlafaufnahme',
+         soundRecordingVideo:'Als Video in Fotos speichern', soundRecordingVideoSaving:'Video wird erstellt …', soundRecordingVideoSaved:'Video bereit – im Teilen-Menü „In Fotos sichern“ wählen.', soundRecordingVideoReady:'Video erstellt – tippe erneut zum Öffnen des Teilen-Menüs.', soundRecordingVideoUnavailable:'Videoexport wird von diesem Browser nicht unterstützt.',
          soundRecordingInfo:'Aufnahme {duration} · {count} Ereignisse', soundNoAudio:'Für diese Nacht ist keine lokale Audioaufnahme verfügbar.',
          soundEventAt:'Ereignis um {time}', soundEventDuration:'{seconds} Sek.', sleepDetailTitle:'Schlafdetails', sleepStartLabel:'Beginn', sleepEndLabel:'Ende', sleepDurationLabel:'Dauer', sleepQualityLabel:'Qualität',
         editSleepTitle:'Schlafeintrag bearbeiten', labelDate:'Datum', labelHours:'Stunden', labelMinutes:'Minuten',
@@ -2231,6 +2311,8 @@ const I18N = {
          soundClipsTitle:'Older audio clips', soundClipPlay:'Audio clip {time}', soundClipLoading:'Loading audio clip …',
          soundClipUnavailable:'Audio clip unavailable', soundClipSeconds:'{seconds} sec.', soundDetailTitle:'Sound details',
          soundRecordingPlay:'Listen to full recording', soundRecordingLoading:'Loading recording …', soundRecordingUnavailable:'Recording unavailable',
+         soundRecordingSave:'Save recording locally', soundRecordingSaving:'Preparing recording …', soundRecordingSaved:'Recording ready – choose where to save it.', soundRecordingShareTitle:'G04Sleep sleep recording',
+         soundRecordingVideo:'Save as video to Photos', soundRecordingVideoSaving:'Creating video …', soundRecordingVideoSaved:'Video ready – choose “Save Video” in the share menu.', soundRecordingVideoReady:'Video created – tap again to open the share menu.', soundRecordingVideoUnavailable:'Video export is not supported by this browser.',
          soundRecordingInfo:'Recording {duration} · {count} events', soundNoAudio:'No local audio recording is available for this night.',
          soundEventAt:'Event at {time}', soundEventDuration:'{seconds} sec.', sleepDetailTitle:'Sleep details', sleepStartLabel:'Start', sleepEndLabel:'End', sleepDurationLabel:'Duration', sleepQualityLabel:'Quality',
         editSleepTitle:'Edit sleep entry', labelDate:'Date', labelHours:'Hours', labelMinutes:'Minutes',
@@ -2666,11 +2748,46 @@ function formatSoundClipTime(entry, clip){
 }
 
 function soundLevelToDb(level){
-    return -60 + Math.max(0, Math.min(100, Number(level) || 0)) * 0.3;
+    return -60 + Math.max(0, Math.min(100, Number(level) || 0)) * 0.6;
 }
 
 function formatSoundDb(level){
     return Math.round(soundLevelToDb(level)) + ' ' + t('soundAxisDb');
+}
+
+function soundScaleForTimelines(timelines){
+    const values = [];
+    timelines.forEach(timeline => timeline.forEach(point => {
+        if(point && Number.isFinite(Number(point.level))) values.push(soundLevelToDb(point.level));
+    }));
+    if(!values.length) return {minDb:-60, maxDb:0};
+    const rawMin = Math.min(...values);
+    const rawMax = Math.max(...values);
+    const rawRange = rawMax - rawMin;
+    if(rawRange < 0.1){
+        const center = Math.max(-59.5, Math.min(-0.5, rawMin));
+        return {minDb:center - 0.5, maxDb:center + 0.5};
+    }
+    const tolerance = rawRange * 0.05;
+    return {
+        minDb:Math.max(-60, rawMin - tolerance),
+        maxDb:Math.min(0, rawMax + tolerance)
+    };
+}
+
+function soundScaleTicks(scale){
+    return [scale.maxDb, (scale.maxDb + scale.minDb) / 2, scale.minDb];
+}
+
+function formatSoundScaleTick(value, scale){
+    const roundedTicks = soundScaleTicks(scale).map(tick => Math.round(tick));
+    const label = new Set(roundedTicks).size < 3 ? Number(value).toFixed(1) : Math.round(value);
+    return label + ' ' + t('soundAxisDb');
+}
+
+function soundDbToY(db, scale, top, plotHeight){
+    const span = Math.max(0.1, scale.maxDb - scale.minDb);
+    return top + (scale.maxDb - db) / span * plotHeight;
 }
 
 function renderSoundChart(){
@@ -2695,10 +2812,13 @@ function renderSoundChart(){
     const plotWidth = width - left - right;
     const plotHeight = height - top - bottom;
     const palette = ['#00E5FF','#8C6BFF','#39FF8A','#FF3D8A','#35D6C4','#FFB454','#B58CFF'];
-    const grid = [[0,-60],[50,-45],[100,-30]].map(([value,db]) => {
-        const y = top + (100 - value) / 100 * plotHeight;
+    const timelines = visibleEntries.map(entry => entry.timeline.filter(point => point && Number.isFinite(Number(point.offsetSec)) && Number.isFinite(Number(point.level))));
+    const scale = soundScaleForTimelines(timelines);
+    const ticks = soundScaleTicks(scale);
+    const grid = ticks.map((db,index) => {
+        const y = top + index / (ticks.length - 1) * plotHeight;
         return '<line x1=\"' + left + '\" y1=\"' + y.toFixed(1) + '\" x2=\"' + (width-right) + '\" y2=\"' + y.toFixed(1) + '\" stroke=\"rgba(' + getTintRgb() + ',0.12)\" stroke-width=\"1\"/>' +
-            '<text x=\"3\" y=\"' + (y + 3).toFixed(1) + '\" fill=\"rgba(' + getTintRgb() + ',0.65)\" font-size=\"10\">' + db + ' ' + escapeHtml(t('soundAxisDb')) + '</text>';
+            '<text x=\"3\" y=\"' + (y + 3).toFixed(1) + '\" fill=\"rgba(' + getTintRgb() + ',0.65)\" font-size=\"10\">' + escapeHtml(formatSoundScaleTick(db, scale)) + '</text>';
     }).join('');
     const lines = visibleEntries.map((entry, entryIndex) => {
         const timeline = entry.timeline.filter(point => point && Number.isFinite(Number(point.offsetSec)) && Number.isFinite(Number(point.level)));
@@ -2709,7 +2829,7 @@ function renderSoundChart(){
         const points = timeline.map(point => {
             const x = left + Math.min(1, Math.max(0, Number(point.offsetSec) / durationSec)) * plotWidth;
             const level = Math.max(0, Math.min(100, Number(point.level) || 0));
-            const y = top + (100 - level) / 100 * plotHeight;
+            const y = soundDbToY(soundLevelToDb(level), scale, top, plotHeight);
             return {x,y,level,point};
         });
         const pointString = points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ');
@@ -2749,19 +2869,21 @@ function renderIndividualSoundCurve(entry){
     const plotWidth = width - left - right;
     const plotHeight = height - top - bottom;
     const durationSec = Math.max(1, Number(entry.durationSec) || Number(timeline[timeline.length-1].offsetSec) || 1);
+    const scale = soundScaleForTimelines([timeline]);
+    const ticks = soundScaleTicks(scale);
     const points = timeline.map(point => {
         const level = Math.max(0, Math.min(100, Number(point.level) || 0));
         return {
             x:left + Math.min(1, Math.max(0, Number(point.offsetSec) / durationSec)) * plotWidth,
-            y:top + (100 - level) / 100 * plotHeight,
+            y:soundDbToY(soundLevelToDb(level), scale, top, plotHeight),
             level,
             point
         };
     });
-    const grid = [[0,-60],[50,-45],[100,-30]].map(([value,db]) => {
-        const y = top + (100 - value) / 100 * plotHeight;
+    const grid = ticks.map((db,index) => {
+        const y = top + index / (ticks.length - 1) * plotHeight;
         return '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (width-right) + '" y2="' + y.toFixed(1) + '" stroke="rgba(' + getTintRgb() + ',0.12)" stroke-width="1"/>' +
-            '<text x="3" y="' + (y + 3).toFixed(1) + '" fill="rgba(' + getTintRgb() + ',0.65)" font-size="10">' + db + ' ' + escapeHtml(t('soundAxisDb')) + '</text>';
+            '<text x="3" y="' + (y + 3).toFixed(1) + '" fill="rgba(' + getTintRgb() + ',0.65)" font-size="10">' + escapeHtml(formatSoundScaleTick(db, scale)) + '</text>';
     }).join('');
     const line = '<polyline points="' + points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ') + '" fill="none" stroke="#00E5FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
     const dots = points.filter(point => point.point.event).map(point => {
@@ -2808,7 +2930,7 @@ function renderSoundDetails(sound){
             const label = t('soundEventAt', {time}) + ' · ' + t('soundEventDuration', {seconds:Math.max(1, Math.round(event.durationSec))});
             return '<button type="button" class="sound-event-button" data-seek-sound="' + Math.round(event.offsetSec) + '" data-sound-entry="' + escapeHtml(entryKey) + '">▶ ' + escapeHtml(label) + '</button>';
         }).join('') + '</div>' : '<p class="sleep-recording-meta">' + escapeHtml(t('soundNoEvents')) + '</p>';
-    const playback = audioAvailable ? '<button type="button" class="sound-clip-button" data-play-recording data-sound-entry="' + escapeHtml(entryKey) + '">▶ ' + escapeHtml(t('soundRecordingPlay')) + '</button>' :
+    const playback = audioAvailable ? '<div class="sound-clip-list sound-recording-actions"><button type="button" class="sound-clip-button" data-play-recording data-sound-entry="' + escapeHtml(entryKey) + '">▶ ' + escapeHtml(t('soundRecordingPlay')) + '</button><button type="button" class="sound-clip-button" data-save-recording data-sound-entry="' + escapeHtml(entryKey) + '">⇩ ' + escapeHtml(t('soundRecordingSave')) + '</button><button type="button" class="sound-clip-button" data-save-video data-sound-entry="' + escapeHtml(entryKey) + '">▣ ' + escapeHtml(t('soundRecordingVideo')) + '</button></div>' :
         (Array.isArray(sound.clips) && sound.clips.length ? renderSoundClipButtons(sound) : '<p class="sleep-recording-meta">' + escapeHtml(t('soundNoAudio')) + '</p>');
     return '<section class="sleep-detail-section"><h4>' + t('soundDetailTitle') + '</h4>' +
         renderIndividualSoundCurve(sound) +
@@ -2832,7 +2954,9 @@ let micStream = null;
 let micAudioContext = null;
 let micSourceNode = null;
 let micAnalyser = null;
+let micMonitorGain = null;
 let micTimeData = null;
+let micFloatTimeData = null;
 let micFrequencyData = null;
 let micAnalysisTimer = null;
 let micRecorder = null;
@@ -2845,6 +2969,7 @@ let soundLoudFrames = 0;
 let soundQuietFrames = 0;
 let soundCurrentEventStart = null;
 let soundCurrentPeakLevel = 0;
+let soundTimelineBucket = null;
 let soundDbPromise = null;
 
 function openSoundClipDb(){
@@ -2999,17 +3124,36 @@ function persistSoundSession(){
     if(activeSoundSession) save('gs_soundCurrent', activeSoundSession);
 }
 
+function flushSoundTimelineBucket(){
+    if(!activeSoundSession || !soundTimelineBucket) return;
+    const last = activeSoundSession.timeline[activeSoundSession.timeline.length - 1];
+    if(last && Number(last.offsetSec) === Number(soundTimelineBucket.offsetSec)){
+        last.level = Math.max(Number(last.level) || 0, Number(soundTimelineBucket.level) || 0);
+        last.event = Boolean(last.event || soundTimelineBucket.event);
+    } else {
+        activeSoundSession.timeline.push({...soundTimelineBucket});
+    }
+    soundTimelineBucket = null;
+}
+
 function analyseSoundFrame(){
     if(!micAnalyser || !micAudioContext || !activeSoundSession) return;
-    micAnalyser.getByteTimeDomainData(micTimeData);
     let sum = 0;
-    for(const sample of micTimeData){
-        const centered = (sample - 128) / 128;
-        sum += centered * centered;
+    if(typeof micAnalyser.getFloatTimeDomainData === 'function'){
+        micAnalyser.getFloatTimeDomainData(micFloatTimeData);
+        for(const sample of micFloatTimeData) sum += sample * sample;
     }
-    const rms = Math.sqrt(sum / micTimeData.length);
+    if(!sum){
+        micAnalyser.getByteTimeDomainData(micTimeData);
+        sum = 0;
+        for(const sample of micTimeData){
+            const centered = (sample - 128) / 128;
+            sum += centered * centered;
+        }
+    }
+    const rms = Math.sqrt(sum / (micFloatTimeData ? micFloatTimeData.length : micTimeData.length));
     const db = 20 * Math.log10(Math.max(rms, 0.0001));
-    const level = Math.max(0, Math.min(100, Math.round(((db + 60) / 30) * 100)));
+    const level = Math.max(0, Math.min(100, Math.round(((db + 60) / 60) * 100)));
 
     micAnalyser.getByteFrequencyData(micFrequencyData);
     const binHz = micAudioContext.sampleRate / micAnalyser.fftSize;
@@ -3023,7 +3167,7 @@ function analyseSoundFrame(){
         if(frequency >= 80 && frequency <= 1200) lowEnergy += energy;
     }
     const lowRatio = totalEnergy ? lowEnergy / totalEnergy : 0;
-    const likelySound = level >= 62 && lowRatio >= 0.22;
+    const likelySound = db >= -48 && (lowRatio >= 0.08 || db >= -38);
     const now = Date.now();
     activeSoundSession.peakLevel = Math.max(activeSoundSession.peakLevel || 0, level);
     activeSoundSession.lastLevel = level;
@@ -3044,11 +3188,18 @@ function analyseSoundFrame(){
             finalizeSoundEvent(now - (soundQuietFrames - 1) * 1000);
         }
     }
-    if(activeSoundSession.samples === 1 || activeSoundSession.samples % 30 === 0){
-        const sessionStart = Date.parse(activeSoundSession.startedAt);
-        const offsetSec = Number.isFinite(sessionStart) ? Math.max(0, Math.round((now - sessionStart) / 1000)) : activeSoundSession.samples;
-        activeSoundSession.timeline.push({offsetSec, level, event:Boolean(soundCurrentEventStart || likelySound)});
-        if(activeSoundSession.timeline.length > 1000) activeSoundSession.timeline.shift();
+    const sessionStart = Date.parse(activeSoundSession.startedAt);
+    const offsetSec = Number.isFinite(sessionStart) ? Math.max(0, Math.round((now - sessionStart) / 1000)) : activeSoundSession.samples;
+    const bucketOffset = Math.floor(offsetSec / 5) * 5;
+    if(!soundTimelineBucket || soundTimelineBucket.offsetSec !== bucketOffset){
+        flushSoundTimelineBucket();
+        soundTimelineBucket = {offsetSec:bucketOffset, level, event:Boolean(soundCurrentEventStart || likelySound)};
+    } else {
+        soundTimelineBucket.level = Math.max(soundTimelineBucket.level, level);
+        soundTimelineBucket.event = Boolean(soundTimelineBucket.event || soundCurrentEventStart || likelySound);
+    }
+    if(activeSoundSession.timeline.length > 6000){
+        activeSoundSession.timeline.splice(0, activeSoundSession.timeline.length - 6000);
     }
     if(activeSoundSession.samples % 30 === 0) persistSoundSession();
 }
@@ -3099,14 +3250,20 @@ async function startSoundDetection(){
         if(context.state === 'suspended') await context.resume();
         const sourceNode = context.createMediaStreamSource(stream);
         const analyser = context.createAnalyser();
+        const monitorGain = context.createGain();
         analyser.fftSize = 2048;
-        analyser.smoothingTimeConstant = 0.75;
+        analyser.smoothingTimeConstant = 0.35;
+        monitorGain.gain.value = 0;
         sourceNode.connect(analyser);
+        analyser.connect(monitorGain);
+        monitorGain.connect(context.destination);
         micStream = stream;
         micAudioContext = context;
         micSourceNode = sourceNode;
         micAnalyser = analyser;
+        micMonitorGain = monitorGain;
         micTimeData = new Uint8Array(analyser.fftSize);
+        micFloatTimeData = typeof analyser.getFloatTimeDomainData === 'function' ? new Float32Array(analyser.fftSize) : null;
         micFrequencyData = new Uint8Array(analyser.frequencyBinCount);
         activeSoundSession = {
             id:'sound-' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
@@ -3126,6 +3283,7 @@ async function startSoundDetection(){
         soundQuietFrames = 0;
         soundCurrentEventStart = null;
         soundCurrentPeakLevel = 0;
+        soundTimelineBucket = null;
         persistSoundSession();
         startMicRecorder(stream, activeSoundSession);
         micAnalysisTimer = setInterval(analyseSoundFrame, 1000);
@@ -3137,6 +3295,8 @@ async function startSoundDetection(){
         micAudioContext = null;
         micSourceNode = null;
         micAnalyser = null;
+        micMonitorGain = null;
+        micFloatTimeData = null;
         if(error && (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError')){
             setSoundDetectionStatus('soundStatusPermission', 'error');
         } else {
@@ -3153,6 +3313,7 @@ async function stopSoundDetection(endIso){
     const endMs = Number.isFinite(Date.parse(endedAt)) ? Date.parse(endedAt) : Date.now();
     if(sessionInProgress && soundCurrentEventStart) finalizeSoundEvent(endMs);
     if(sessionInProgress){
+        flushSoundTimelineBucket();
         const sessionStart = Date.parse(sessionInProgress.startedAt);
         const offsetSec = Number.isFinite(sessionStart) ? Math.max(0, Math.round((endMs - sessionStart) / 1000)) : 0;
         const lastPoint = sessionInProgress.timeline[sessionInProgress.timeline.length - 1];
@@ -3168,6 +3329,10 @@ async function stopSoundDetection(endIso){
     if(micAnalyser){
         try{ micAnalyser.disconnect(); } catch(error){ /* already disconnected */ }
         micAnalyser = null;
+    }
+    if(micMonitorGain){
+        try{ micMonitorGain.disconnect(); } catch(error){ /* already disconnected */ }
+        micMonitorGain = null;
     }
     if(micStream){ micStream.getTracks().forEach(track => track.stop()); micStream = null; }
     if(micAudioContext){ micAudioContext.close().catch(() => {}); micAudioContext = null; }
@@ -3202,6 +3367,7 @@ async function stopSoundDetection(endIso){
     soundQuietFrames = 0;
     soundCurrentEventStart = null;
     soundCurrentPeakLevel = 0;
+    micFloatTimeData = null;
     if(state.soundDetectionEnabled) setSoundDetectionStatus('soundStatusStopped', 'success');
     else setSoundDetectionStatus('soundStatusOff');
 }
@@ -3571,6 +3737,246 @@ async function playSoundRecording(button, seekSec){
     }
 }
 
+async function saveSoundRecording(button){
+    const entryKey = button.dataset.soundEntry;
+    const entry = state.soundHistory.find(item => (item.id || item.date) === entryKey);
+    if(!entry) return;
+    const originalLabel = button.textContent;
+    button.disabled = true;
+    button.textContent = t('soundRecordingSaving');
+    try{
+        const blob = await loadSoundRecordingBlob(entry);
+        if(!blob) throw new Error('Recording not found');
+        const extension = (blob.type || entry.audioMimeType || '').includes('mp4') ? 'm4a' : 'webm';
+        const fileName = 'g04sleep-' + formatDateInput(new Date(entry.date)) + '-' + fmtTime(new Date(entry.date)).replace(':','') + '.' + extension;
+        const canShareFile = typeof File !== 'undefined' && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+        let shared = false;
+        if(canShareFile){
+            const file = new File([blob], fileName, {type:blob.type || entry.audioMimeType || 'audio/webm'});
+            if(navigator.canShare({files:[file]})){
+                await navigator.share({files:[file], title:t('soundRecordingShareTitle')});
+                shared = true;
+            }
+        }
+        if(!shared){
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        showToast(t('soundRecordingSaved'));
+    } catch(error){
+        if(!error || error.name !== 'AbortError') showToast(t('soundRecordingUnavailable'));
+    } finally {
+        button.disabled = false;
+        button.textContent = originalLabel;
+    }
+}
+
+function drawSleepVideoFrame(context, entry, currentSec, durationSec, logo){
+    const width = context.canvas.width;
+    const height = context.canvas.height;
+    const progress = durationSec > 0 ? Math.max(0, Math.min(1, currentSec / durationSec)) : 0;
+    const background = context.createLinearGradient(0, 0, width, height);
+    background.addColorStop(0, '#070B17');
+    background.addColorStop(0.52, '#10132A');
+    background.addColorStop(1, '#031B27');
+    context.fillStyle = background;
+    context.fillRect(0, 0, width, height);
+
+    const glow = context.createRadialGradient(width / 2, 390, 20, width / 2, 390, 280);
+    glow.addColorStop(0, 'rgba(0,229,255,0.18)');
+    glow.addColorStop(1, 'rgba(0,229,255,0)');
+    context.fillStyle = glow;
+    context.fillRect(0, 120, width, 560);
+
+    context.textAlign = 'center';
+    context.fillStyle = '#F4F7FF';
+    context.font = '700 54px sans-serif';
+    context.fillText('GO4SLEEP', width / 2, 140);
+    context.fillStyle = 'rgba(177,193,226,0.82)';
+    context.font = '400 26px sans-serif';
+    context.fillText('Schlafaufnahme', width / 2, 195);
+
+    if(logo){
+        context.drawImage(logo, width / 2 - 190, 270, 380, 380);
+    } else {
+        context.fillStyle = '#00B7FF';
+        context.font = '260px serif';
+        context.fillText('☾', width / 2, 570);
+    }
+
+    context.strokeStyle = '#00E5FF';
+    context.lineWidth = 5;
+    context.lineCap = 'round';
+    context.beginPath();
+    for(let x = 80; x <= width - 80; x += 8){
+        const wave = Math.sin(x / 46 + currentSec * 1.6) * 16 + Math.sin(x / 91 + currentSec * 0.7) * 9;
+        const y = 720 + wave;
+        if(x === 80) context.moveTo(x, y); else context.lineTo(x, y);
+    }
+    context.stroke();
+
+    const entryDate = new Date(entry.date);
+    context.fillStyle = '#F4F7FF';
+    context.font = '500 28px sans-serif';
+    context.fillText(entryDate.toLocaleDateString(dateLocale()), width / 2, 850);
+    context.fillStyle = 'rgba(177,193,226,0.82)';
+    context.font = '400 24px sans-serif';
+    context.fillText(fmtTime(entryDate) + ' · ' + formatSoundDb(entry.peakLevel || 0), width / 2, 895);
+
+    const barLeft = 80;
+    const barWidth = width - 160;
+    context.fillStyle = 'rgba(177,193,226,0.24)';
+    context.fillRect(barLeft, 1000, barWidth, 12);
+    context.fillStyle = '#00E5FF';
+    context.fillRect(barLeft, 1000, barWidth * progress, 12);
+    context.fillStyle = '#F4F7FF';
+    context.font = '500 24px sans-serif';
+    context.textAlign = 'left';
+    context.fillText(fmtDuration(currentSec / 60), barLeft, 1060);
+    context.textAlign = 'right';
+    context.fillText(fmtDuration(durationSec / 60), width - barLeft, 1060);
+}
+
+async function saveSoundRecordingVideo(button){
+    const entryKey = button.dataset.soundEntry;
+    const entry = state.soundHistory.find(item => (item.id || item.date) === entryKey);
+    if(!entry) return;
+    const originalLabel = button.textContent;
+    let audioUrl = null;
+    let audio = null;
+    let audioContext = null;
+    let stream = null;
+    let recorder = null;
+    button.disabled = true;
+    button.textContent = t('soundRecordingVideoSaving');
+    try{
+        const pendingVideo = button._g04sleepPendingVideo;
+        if(pendingVideo){
+            const file = new File([pendingVideo.blob], pendingVideo.fileName, {type:pendingVideo.blob.type || 'video/mp4'});
+            if(typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function' || !navigator.canShare({files:[file]})) throw new Error('Video unsupported');
+            await navigator.share({files:[file], title:t('soundRecordingShareTitle')});
+            delete button._g04sleepPendingVideo;
+            showToast(t('soundRecordingVideoSaved'));
+            return;
+        }
+        const canvas = document.createElement('canvas');
+        if(typeof MediaRecorder === 'undefined' || typeof canvas.captureStream !== 'function') throw new Error('Video unsupported');
+        const blob = await loadSoundRecordingBlob(entry);
+        if(!blob) throw new Error('Recording not found');
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if(!AudioContextClass) throw new Error('AudioContext unavailable');
+
+        canvas.width = 720;
+        canvas.height = 1120;
+        const context = canvas.getContext('2d');
+        if(!context) throw new Error('Canvas unavailable');
+        const logo = new Image();
+        logo.src = './icons/moon-floating.svg';
+        await new Promise(resolve => {
+            logo.onload = resolve;
+            logo.onerror = resolve;
+        });
+
+        stream = canvas.captureStream(1);
+        audioUrl = URL.createObjectURL(blob);
+        audio = document.createElement('audio');
+        audio.src = audioUrl;
+        audio.preload = 'auto';
+        await new Promise((resolve, reject) => {
+            audio.onloadedmetadata = resolve;
+            audio.onerror = () => reject(new Error('Audio metadata unavailable'));
+        });
+
+        audioContext = new AudioContextClass();
+        if(audioContext.state === 'suspended') await audioContext.resume();
+        const source = audioContext.createMediaElementSource(audio);
+        const destination = audioContext.createMediaStreamDestination();
+        const mute = audioContext.createGain();
+        mute.gain.value = 0;
+        source.connect(destination);
+        source.connect(mute);
+        mute.connect(audioContext.destination);
+        destination.stream.getAudioTracks().forEach(track => stream.addTrack(track));
+
+        const supportedMimeTypes = ['video/mp4', 'video/webm;codecs=vp8,opus', 'video/webm'];
+        const mimeType = supportedMimeTypes.find(type => typeof MediaRecorder.isTypeSupported !== 'function' || MediaRecorder.isTypeSupported(type)) || '';
+        recorder = mimeType ? new MediaRecorder(stream, {mimeType}) : new MediaRecorder(stream);
+        const videoBlob = await new Promise((resolve, reject) => {
+            const chunks = [];
+            recorder.ondataavailable = event => {
+                if(event.data && event.data.size) chunks.push(event.data);
+            };
+            recorder.onerror = () => reject(recorder.error || new Error('Video recording failed'));
+            recorder.onstop = () => resolve(new Blob(chunks, {type:recorder.mimeType || mimeType || 'video/webm'}));
+            const durationSec = Math.max(1, Number(entry.durationSec) || audio.duration || 1);
+            const draw = () => {
+                drawSleepVideoFrame(context, entry, audio.currentTime || 0, durationSec, logo.naturalWidth ? logo : null);
+                if(!audio.ended && recorder.state !== 'inactive') requestAnimationFrame(draw);
+            };
+            audio.onended = () => {
+                drawSleepVideoFrame(context, entry, durationSec, durationSec, logo.naturalWidth ? logo : null);
+                if(recorder.state !== 'inactive') recorder.stop();
+            };
+            recorder.start(10000);
+            draw();
+            audio.play().catch(reject);
+        });
+        if(!videoBlob.size) throw new Error('Empty video');
+
+        const extension = (videoBlob.type || '').includes('mp4') ? 'mp4' : 'webm';
+        const fileName = 'g04sleep-' + formatDateInput(new Date(entry.date)) + '-' + fmtTime(new Date(entry.date)).replace(':','') + '.' + extension;
+        const canShareFile = typeof File !== 'undefined' && typeof navigator.share === 'function' && typeof navigator.canShare === 'function';
+        let shared = false;
+        if(canShareFile){
+            const file = new File([videoBlob], fileName, {type:videoBlob.type || 'video/mp4'});
+            if(navigator.canShare({files:[file]})){
+                try{
+                    await navigator.share({files:[file], title:t('soundRecordingShareTitle')});
+                    shared = true;
+                } catch(error){
+                    if(error && error.name === 'AbortError') throw error;
+                    button._g04sleepPendingVideo = {blob:videoBlob, fileName};
+                    showToast(t('soundRecordingVideoReady'));
+                    return;
+                }
+            }
+        }
+        if(!shared){
+            const url = URL.createObjectURL(videoBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = fileName;
+            link.rel = 'noopener';
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+        }
+        showToast(t('soundRecordingVideoSaved'));
+    } catch(error){
+        if(!error || error.name !== 'AbortError'){
+            showToast(error && error.message === 'Video unsupported' ? t('soundRecordingVideoUnavailable') : t('soundRecordingUnavailable'));
+        }
+    } finally {
+        if(recorder && recorder.state !== 'inactive'){
+            try{ recorder.stop(); }catch(error){}
+        }
+        if(audio) audio.pause();
+        if(stream) stream.getTracks().forEach(track => track.stop());
+        if(audioContext) audioContext.close().catch(() => {});
+        if(audioUrl) URL.revokeObjectURL(audioUrl);
+        button.disabled = false;
+        button.textContent = originalLabel;
+    }
+}
+
 document.querySelectorAll('[data-open]').forEach(button => {
     button.addEventListener('click', () => {
         const targets = {
@@ -3588,6 +3994,8 @@ document.getElementById('statsHistory').addEventListener('click', event => {
     const toggleButton = event.target.closest('[data-toggle-sleep]');
     const soundButton = event.target.closest('[data-play-sound]');
     const recordingButton = event.target.closest('[data-play-recording]');
+    const saveRecordingButton = event.target.closest('[data-save-recording]');
+    const saveVideoButton = event.target.closest('[data-save-video]');
     const seekButton = event.target.closest('[data-seek-sound]');
     const editButton = event.target.closest('[data-edit-sleep]');
     const saveButton = event.target.closest('[data-save-sleep]');
@@ -3599,6 +4007,10 @@ document.getElementById('statsHistory').addEventListener('click', event => {
         renderStatsHistory();
     } else if(recordingButton){
         playSoundRecording(recordingButton);
+    } else if(saveRecordingButton){
+        saveSoundRecording(saveRecordingButton);
+    } else if(saveVideoButton){
+        saveSoundRecordingVideo(saveVideoButton);
     } else if(seekButton){
         playSoundRecording(seekButton, Number(seekButton.dataset.seekSound) || 0);
     } else if(soundButton){
