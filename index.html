@@ -346,6 +346,31 @@ body::before{
     transition:border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+.cards > .card-link:nth-child(1){
+    --card-accent:#00E5FF;
+    border-color:rgba(0,229,255,0.3);
+}
+
+.cards > .card-link:nth-child(2){
+    --card-accent:#8C6BFF;
+    border-color:rgba(140,107,255,0.32);
+}
+
+.cards > .card-link:nth-child(3){
+    --card-accent:#FF3D8A;
+    border-color:rgba(255,61,138,0.28);
+}
+
+.cards > .card-link:nth-child(4){
+    --card-accent:#50FFC4;
+    border-color:rgba(80,255,196,0.3);
+}
+
+.cards > .card-link::before{
+    background:linear-gradient(90deg, transparent, var(--card-accent), transparent);
+    opacity:0.65;
+}
+
 .card-link:hover,
 .card-link:focus-visible{
     border-color:rgba(0,229,255,0.42) !important;
@@ -1520,12 +1545,27 @@ textarea:focus-visible{
     .header{ padding-left:16px; padding-right:16px; }
     .avatar{ max-width:132px; }
     .container{ padding-left:14px; padding-right:14px; }
-    .hero{ padding-top:34px; }
-    .orbit-wrap{ width:260px; height:260px; }
-    .orbit-ring.r1{ width:260px; height:260px; }
-    .orbit-ring.r2{ width:198px; height:198px; }
-    .orbit-ring.r3{ width:140px; height:140px; }
-    .moon{ width:158px; height:158px; }
+    .hero{ padding-top:20px; }
+    .orbit-wrap{ width:230px; height:230px; }
+    .orbit-ring.r1{ width:230px; height:230px; }
+    .orbit-ring.r2{ width:174px; height:174px; }
+    .orbit-ring.r3{ width:124px; height:124px; }
+    .moon{ width:150px; height:150px; }
+    .cards{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
+    .cards > .card:nth-child(n+3){ grid-column:auto; }
+    .card{ padding:16px; }
+    .card-label{ font-size:11px; gap:6px; letter-spacing:0.7px; }
+    .card-label .ui-icon{ width:16px; height:16px; }
+    .quality-row{ gap:8px; }
+    .ring{ width:64px; height:64px; }
+    .ring-inner{ width:50px; height:50px; font-size:15px; }
+    .quality-text h1{ font-size:14px; }
+    .quality-text p,
+    .sub-value{ font-size:12px; }
+    .big-value{ font-size:23px; }
+    .cycle-list li{ gap:6px; font-size:13px; }
+    .cycle-list b{ font-size:14px; }
+    .cycle-help{ font-size:10px; }
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
 }
 
@@ -1614,7 +1654,7 @@ textarea:focus-visible{
         </div>
 
         <div class="card card-link" data-open="alarm" role="link" tabindex="0">
-            <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Nächster Wecker</span></div>
+            <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Wecker</span></div>
             <p class="big-value" id="alarmValue">–:–</p>
             <p class="sub-value" id="alarmDaysLabel">Kein Wecker aktiv</p>
         </div>
@@ -2123,7 +2163,7 @@ const I18N = {
         heroReady:'Bereit für eine erholsame Nacht', heroRecording:'Schlafaufzeichnung läuft',
         sleepBtnStart:'Schlaf aufzeichnen', sleepBtnStop:'Aufwachen & Schlaf speichern',
         cardQualityLabel:'Schlafqualität', cardQualitySub:'Letzte Nacht', cardQualityAction:'Verlauf ansehen', cardQualityNoData:'Keine Daten',
-        cardAlarmLabel:'Nächster Wecker', cardAlarmNone:'Kein Wecker aktiv', cardAlarmAction:'Wecker verwalten',
+        cardAlarmLabel:'Wecker', cardAlarmNone:'Kein Wecker aktiv', cardAlarmAction:'Wecker verwalten',
         cardOverviewLabel:'Dein Überblick', labelWeek:'Woche', labelMonth:'Monat', labelQuality:'Qualität', labelStreak:'Serie', cardOverviewAction:'Alle Nächte',
         streakNights:'{count} Nächte', streakNone:'Noch keine',
         toastStreakMilestone:'{count} Nächte in Folge nah am Schlafziel – weiter so!',
@@ -2254,7 +2294,7 @@ const I18N = {
         heroReady:'Ready for a restful night', heroRecording:'Sleep tracking in progress',
         sleepBtnStart:'Track sleep', sleepBtnStop:'Wake up & save sleep',
         cardQualityLabel:'Sleep quality', cardQualitySub:'Last night', cardQualityAction:'View history', cardQualityNoData:'No data',
-        cardAlarmLabel:'Next alarm', cardAlarmNone:'No alarm active', cardAlarmAction:'Manage alarms',
+        cardAlarmLabel:'Alarm', cardAlarmNone:'No alarm active', cardAlarmAction:'Manage alarms',
         cardOverviewLabel:'Your overview', labelWeek:'Week', labelMonth:'Month', labelQuality:'Quality', labelStreak:'Streak', cardOverviewAction:'All nights',
         streakNights:'{count} nights', streakNone:'None yet',
         toastStreakMilestone:'{count} nights in a row close to your sleep goal – keep it up!',
