@@ -990,7 +990,7 @@ button:disabled{
 }
 
 .stats-chart{ margin:0 0 18px; }
-.stats-chart svg{ width:100%; height:140px; display:block; }
+.stats-chart svg{ width:100%; height:180px; display:block; }
 .stats-subtitle{
     display:flex;
     align-items:center;
@@ -1022,6 +1022,37 @@ input[type="range"]{
     color:var(--text-dim);
     font-size:11.5px;
     text-align:center;
+}
+
+.sound-chart-nights{
+    text-align:left;
+    line-height:1.5;
+}
+
+.sound-clip-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:8px;
+}
+
+.sound-clip-button{
+    min-height:34px;
+    padding:7px 10px;
+    border-radius:9px;
+    border:1px solid rgba(255,61,138,0.28);
+    background:rgba(255,61,138,0.08);
+    color:#ff9bc1;
+    font:600 12px var(--mono);
+}
+
+.sound-clip-button:disabled{ opacity:0.55; }
+
+.sound-clip-player{
+    width:100%;
+    height:38px;
+    margin-top:7px;
+    accent-color:var(--cyan);
 }
 
 .onboarding-list{
@@ -1100,6 +1131,92 @@ input[type="range"]{
     padding:14px;
     margin-bottom:10px;
 }
+
+.history-toggle{
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:inherit;
+    text-align:left;
+}
+
+.history-toggle-content{ min-width:0; }
+.history-toggle-content > span{ display:block; }
+.history-toggle .history-value{ margin-top:5px; }
+.history-chevron{
+    flex:0 0 auto;
+    color:var(--cyan);
+    font:600 20px var(--mono);
+    transition:transform 160ms ease;
+}
+.history-toggle[aria-expanded="true"] .history-chevron{ transform:rotate(90deg); }
+
+.history-detail{
+    margin-top:15px;
+    padding-top:14px;
+    border-top:1px solid rgba(var(--tint-rgb),0.08);
+}
+
+.sleep-detail-title{
+    margin:0 0 8px;
+    color:var(--text);
+    font-size:14px;
+}
+
+.sleep-detail-section{
+    margin-top:14px;
+    padding:12px;
+    border-radius:12px;
+    background:rgba(var(--tint-rgb),0.035);
+    border:1px solid rgba(var(--tint-rgb),0.07);
+}
+
+.sleep-detail-section h4{
+    margin:0 0 8px;
+    color:var(--cyan);
+    font-size:12px;
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.6px;
+}
+
+.sleep-detail-section > svg{
+    width:100%;
+    height:220px;
+    display:block;
+    margin:2px 0 4px;
+}
+
+.sound-event-list{
+    display:flex;
+    flex-wrap:wrap;
+    gap:7px;
+    margin-top:9px;
+}
+
+.sound-event-button{
+    min-height:32px;
+    padding:6px 9px;
+    border-radius:8px;
+    border:1px solid rgba(255,61,138,0.28);
+    background:rgba(255,61,138,0.08);
+    color:#ff9bc1;
+    font:600 11px var(--mono);
+}
+
+.sleep-recording-meta{
+    margin:0 0 8px;
+    color:var(--text-dim);
+    font-size:12px;
+}
+
+.sleep-detail .sound-clip-button,
+.sleep-detail .sound-clip-player{ margin-top:8px; }
 
 .history-row{
     display:flex;
@@ -1665,7 +1782,7 @@ textarea:focus-visible{
             <div class="setting-row">
                 <div class="setting-copy">
                     <svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg>
-                    <div><strong data-i18n="soundDetectionTitle">Geräuscherkennung</strong><span data-i18n="soundDetectionDesc">Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Es werden keine Audiodateien gespeichert. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.</span></div>
+                    <div><strong data-i18n="soundDetectionTitle">Geräuscherkennung</strong><span data-i18n="soundDetectionDesc">Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Die Aufnahme wird maximal 8 Stunden auf diesem Gerät gespeichert und nicht hochgeladen. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.</span></div>
                 </div>
                 <label class="switch" aria-label="Geräuscherkennung aktivieren" data-i18n-aria-label="soundDetectionToggleAria">
                     <input type="checkbox" id="soundDetectionToggle" role="switch">
@@ -1971,15 +2088,22 @@ const I18N = {
         alarmMsgNoTime:'Bitte wähle eine Weckzeit.', alarmMsgNoDays:'Bitte wähle mindestens einen Wochentag.',
         toastAlarmSaved:'Wecker für {time} Uhr gespeichert.', toastAlarmSyncFailedSave:'Wecker gespeichert, Push-Synchronisierung fehlgeschlagen.',
         toastAlarmDisabled:'Wecker ausgeschaltet.', toastAlarmSyncFailedDisable:'Wecker ausgeschaltet, Push-Synchronisierung fehlgeschlagen.',
-        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf „Bearbeiten“, um Datum oder Schlafdauer zu korrigieren.', btnDone:'Fertig',
+        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf einen Eintrag, um alle Details, die Kurve und die Bearbeitung zu öffnen.', btnDone:'Fertig',
         statsEmpty:'Noch keine Schlafdaten. Starte auf der Hauptseite deinen ersten Schlafmodus.',
         chartRange30:'30 Tage', chartRange90:'90 Tage', statsChartAria:'Balkendiagramm der Schlafdauer',
         statsChartEmpty:'Für diesen Zeitraum liegen noch keine Schlafdaten vor.',
         statsChartLegend:'Gestrichelte Linie: Schlafziel ({hours} Std.)',
-        soundChartTitle:'Geräuscherkennung', soundChartIntro:'Wahrscheinliche Schnarch-/Geräuschereignisse pro Nacht',
-        soundChartAria:'Balkendiagramm der Geräuschereignisse', soundChartEmpty:'Noch keine Geräuschdaten vorhanden.',
-        soundChartLegend:'Balken: erkannte Geräuschereignisse', soundEventCount:'{count} Ereignisse', soundEventMinutes:'{minutes} Min.',
-        soundNoEvents:'Keine auffälligen Geräusche erkannt',
+        soundChartTitle:'Geräuschverlauf', soundChartIntro:'Geräuschintensität und Aufnahme pro Nacht',
+         soundChartAria:'Kurvendiagramm der Geräuschintensität', soundChartEmpty:'Noch keine Geräuschdaten vorhanden.',
+         soundChartNoTimeline:'Für ältere Aufnahmen gibt es noch keinen Zeitverlauf. Ab der nächsten Schlafaufzeichnung wird die Kurve mit Uhrzeiten erstellt.',
+         soundChartLegend:'Kurven: Lautstärke · Punkte: erkannte Ereignisse', soundAxisStart:'Start', soundAxisMiddle:'Mitte', soundAxisEnd:'Ende', soundAxisTime:'Zeit', soundAxisDb:'dB',
+         soundEventCount:'{count} Ereignisse', soundEventMinutes:'{minutes} Min.',
+         soundNoEvents:'Keine auffälligen Geräusche erkannt',
+         soundClipsTitle:'Ältere Hörproben', soundClipPlay:'Hörprobe {time}', soundClipLoading:'Hörprobe wird geladen …',
+         soundClipUnavailable:'Hörprobe nicht verfügbar', soundClipSeconds:'{seconds} Sek.', soundDetailTitle:'Geräuschdetails',
+         soundRecordingPlay:'Ganze Aufnahme anhören', soundRecordingLoading:'Aufnahme wird geladen …', soundRecordingUnavailable:'Aufnahme nicht verfügbar',
+         soundRecordingInfo:'Aufnahme {duration} · {count} Ereignisse', soundNoAudio:'Für diese Nacht ist keine lokale Audioaufnahme verfügbar.',
+         soundEventAt:'Ereignis um {time}', soundEventDuration:'{seconds} Sek.', sleepDetailTitle:'Schlafdetails', sleepStartLabel:'Beginn', sleepEndLabel:'Ende', sleepDurationLabel:'Dauer', sleepQualityLabel:'Qualität',
         editSleepTitle:'Schlafeintrag bearbeiten', labelDate:'Datum', labelHours:'Stunden', labelMinutes:'Minuten',
         btnSave:'Speichern', btnDelete:'Löschen', editButton:'Bearbeiten',
         ariaEditSleep:'Schlafeintrag vom {date} bearbeiten', qualitySuffix:'% Qualität',
@@ -2007,7 +2131,7 @@ const I18N = {
         bedtimeToggleAria:'Bettzeit-Erinnerung aktivieren',
         toastBedtimeReminder:'Zeit, schlafen zu gehen – so klappt dein Schlafziel bis {time} Uhr.',
         bedtimeNotifTitle:'Zeit für Bettruhe', bedtimeNotifBody:'Dein G04Sleep-Schlafziel beginnt jetzt am besten.',
-        soundDetectionTitle:'Geräuscherkennung', soundDetectionDesc:'Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Es werden keine Audiodateien gespeichert. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.',
+         soundDetectionTitle:'Geräuscherkennung', soundDetectionDesc:'Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Die Aufnahme wird maximal 8 Stunden auf diesem Gerät gespeichert und nicht hochgeladen. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.',
         soundDetectionToggleAria:'Geräuscherkennung aktivieren', soundStatusOff:'Ausgeschaltet.',
         soundStatusReady:'Aktiv – startet mit der nächsten Schlafaufzeichnung.',
         soundStatusActive:'Mikrofon aktiv – Geräusche werden nur lokal ausgewertet.',
@@ -2047,7 +2171,7 @@ const I18N = {
         ringingLabel:'Zeit zum Aufstehen', btnSnooze:'Noch {minutes} Minuten', btnStopAlarm:'Wecker stoppen',
         toastAlarmStopped:'Wecker gestoppt. Guten Morgen!', toastAlarmSnoozed:'Wecker um {minutes} Minuten verschoben.',
         toastSnoozeSyncFailed:'Schlummerzeit gespeichert, Push-Synchronisierung fehlgeschlagen.',
-        toastSleepStarted:'Schlafaufzeichnung gestartet. Gute Nacht!', toastSleepSaved:'Schlaf gespeichert: {duration}',
+         toastSleepStarted:'Schlafaufzeichnung gestartet. Gute Nacht!', toastSleepSaved:'Schlaf gespeichert: {duration}', toastSleepAutoStopped:'Aufnahme automatisch nach 8 Stunden beendet. Schlaf gespeichert: {duration}',
         toastSwSyncFailed:'Hintergrund-Wecker konnte nicht synchronisiert werden.',
         moonAlt:'G04Sleep – leuchtender Halbmond',
         btnOpenSounds:'Einschlafhilfe abspielen',
@@ -2093,15 +2217,22 @@ const I18N = {
         alarmMsgNoTime:'Please choose an alarm time.', alarmMsgNoDays:'Please choose at least one day.',
         toastAlarmSaved:'Alarm set for {time}.', toastAlarmSyncFailedSave:'Alarm saved, background sync failed.',
         toastAlarmDisabled:'Alarm turned off.', toastAlarmSyncFailedDisable:'Alarm turned off, background sync failed.',
-        statsSheetTitle:'Your sleep history', statsIntro:'Tap "Edit" to correct the date or sleep duration.', btnDone:'Done',
+        statsSheetTitle:'Your sleep history', statsIntro:'Tap an entry to open all details, the curve and editing.', btnDone:'Done',
         statsEmpty:'No sleep data yet. Start your first sleep session on the home screen.',
         chartRange30:'30 days', chartRange90:'90 days', statsChartAria:'Bar chart of sleep duration',
         statsChartEmpty:'No sleep data for this time range yet.',
         statsChartLegend:'Dashed line: sleep goal ({hours} h)',
-        soundChartTitle:'Sound detection', soundChartIntro:'Likely snoring/sound events per night',
-        soundChartAria:'Bar chart of sound events', soundChartEmpty:'No sound data recorded yet.',
-        soundChartLegend:'Bars: detected sound events', soundEventCount:'{count} events', soundEventMinutes:'{minutes} min.',
-        soundNoEvents:'No notable sounds detected',
+         soundChartTitle:'Sound timeline', soundChartIntro:'Sound intensity and recording per night',
+         soundChartAria:'Line chart of sound intensity', soundChartEmpty:'No sound data recorded yet.',
+         soundChartNoTimeline:'Older recordings have no timeline yet. The next sleep session will add the curve with times.',
+         soundChartLegend:'Lines: volume · dots: detected events', soundAxisStart:'Start', soundAxisMiddle:'Middle', soundAxisEnd:'End', soundAxisTime:'Time', soundAxisDb:'dB',
+         soundEventCount:'{count} events', soundEventMinutes:'{minutes} min.',
+         soundNoEvents:'No notable sounds detected',
+         soundClipsTitle:'Older audio clips', soundClipPlay:'Audio clip {time}', soundClipLoading:'Loading audio clip …',
+         soundClipUnavailable:'Audio clip unavailable', soundClipSeconds:'{seconds} sec.', soundDetailTitle:'Sound details',
+         soundRecordingPlay:'Listen to full recording', soundRecordingLoading:'Loading recording …', soundRecordingUnavailable:'Recording unavailable',
+         soundRecordingInfo:'Recording {duration} · {count} events', soundNoAudio:'No local audio recording is available for this night.',
+         soundEventAt:'Event at {time}', soundEventDuration:'{seconds} sec.', sleepDetailTitle:'Sleep details', sleepStartLabel:'Start', sleepEndLabel:'End', sleepDurationLabel:'Duration', sleepQualityLabel:'Quality',
         editSleepTitle:'Edit sleep entry', labelDate:'Date', labelHours:'Hours', labelMinutes:'Minutes',
         btnSave:'Save', btnDelete:'Delete', editButton:'Edit',
         ariaEditSleep:'Edit sleep entry from {date}', qualitySuffix:'% quality',
@@ -2129,7 +2260,7 @@ const I18N = {
         bedtimeToggleAria:'Enable bedtime reminder',
         toastBedtimeReminder:'Time to go to bed – that gets you to your sleep goal by {time}.',
         bedtimeNotifTitle:'Time for bed', bedtimeNotifBody:'Now is a good time to start your G04Sleep goal.',
-        soundDetectionTitle:'Sound detection', soundDetectionDesc:'Detects likely snoring and loud sound events locally. No audio files are stored. Keep the app open with the screen on for measurement.',
+        soundDetectionTitle:'Sound detection', soundDetectionDesc:'Detects likely snoring and loud sound events locally. The recording is stored on this device for up to 8 hours and never uploaded. Keep the app open with the screen on for measurement.',
         soundDetectionToggleAria:'Enable sound detection', soundStatusOff:'Off.',
         soundStatusReady:'Active – starts with the next sleep session.',
         soundStatusActive:'Microphone active – sounds are analyzed locally only.',
@@ -2169,7 +2300,7 @@ const I18N = {
         ringingLabel:'Time to get up', btnSnooze:'{minutes} more minutes', btnStopAlarm:'Stop alarm',
         toastAlarmStopped:'Alarm stopped. Good morning!', toastAlarmSnoozed:'Alarm snoozed by {minutes} minutes.',
         toastSnoozeSyncFailed:'Snooze saved, background sync failed.',
-        toastSleepStarted:'Sleep tracking started. Good night!', toastSleepSaved:'Sleep saved: {duration}',
+         toastSleepStarted:'Sleep tracking started. Good night!', toastSleepSaved:'Sleep saved: {duration}', toastSleepAutoStopped:'Recording stopped automatically after 8 hours. Sleep saved: {duration}',
         toastSwSyncFailed:'Background alarm could not be synced.',
         moonAlt:'G04Sleep – glowing crescent moon',
         btnOpenSounds:'Play sleep sounds',
@@ -2239,6 +2370,7 @@ function setLanguage(lang){
 
 let draftAlarmTone = 'classic';
 let editingSleepIndex = null;
+let expandedSleepIndex = null;
 let editingJournalIndex = null;
 let lastFocusedElement = null;
 let toastTimer = null;
@@ -2249,6 +2381,7 @@ function save(key, value){
 
 function pad(n){ return n.toString().padStart(2,'0'); }
 function fmtTime(date){ return pad(date.getHours()) + ':' + pad(date.getMinutes()); }
+function formatDateTime(date){ return date.toLocaleDateString(dateLocale()) + ' · ' + fmtTime(date); }
 function fmtDuration(minutes){
     const total = Math.max(0, Math.round(minutes));
     const h = Math.floor(total/60);
@@ -2436,6 +2569,16 @@ function renderJournalHistory(){
     }).join('');
 }
 
+function renderSoundClipButtons(sound){
+    if(!Array.isArray(sound.clips) || sound.clips.length === 0) return '';
+    const buttons = sound.clips.map(clip => {
+        const time = formatSoundClipTime(sound, clip);
+        const label = t('soundClipPlay', {time}) + ' · ' + t('soundClipSeconds', {seconds:Math.max(1, Math.round(Number(clip.durationSec) || 1))});
+        return '<button type="button" class="sound-clip-button" data-play-sound="' + escapeHtml(clip.id) + '" data-sound-entry="' + escapeHtml(sound.id || sound.date) + '" aria-label="' + escapeHtml(label) + '">▶ ' + escapeHtml(label) + '</button>';
+    }).join('');
+    return '<div class="sound-clip-list" aria-label="' + escapeHtml(t('soundClipsTitle')) + '">' + buttons + '</div>';
+}
+
 function renderStatsHistory(){
     renderStatsChart();
     renderSoundChart();
@@ -2453,17 +2596,23 @@ function renderStatsHistory(){
         const soundSummary = sound ? '<div class="history-sound' + (sound.eventCount ? ' detected' : '') + '">' +
             (sound.eventCount ? t('soundEventCount', {count:sound.eventCount}) + ' · ' + t('soundEventMinutes', {minutes:Math.round((sound.eventSeconds || 0) / 60)}) : t('soundNoEvents')) +
             '</div>' : '';
-        if(editingSleepIndex === index){
-            return '<article class="history-entry"><div class="history-date">' + t('editSleepTitle') + '</div>' +
-                '<div class="history-editor"><label for="sleepDate-' + index + '">' + t('labelDate') + '<input id="sleepDate-' + index + '" type="date" value="' + formatDateInput(d) + '"></label>' +
+        const expanded = expandedSleepIndex === index;
+        const start = new Date(d.getTime() - duration * 60000);
+        const detail = expanded ? '<div class="history-detail" id="sleep-detail-' + index + '">' +
+            '<div class="sleep-detail-section"><h4>' + t('sleepDetailTitle') + '</h4>' +
+            '<p class="sleep-recording-meta">' + escapeHtml(t('sleepStartLabel')) + ': ' + escapeHtml(formatDateTime(start)) + '<br>' +
+            escapeHtml(t('sleepEndLabel')) + ': ' + escapeHtml(formatDateTime(d)) + '<br>' +
+            escapeHtml(t('sleepDurationLabel')) + ': ' + escapeHtml(fmtDuration(entry.durationMin)) + '<br>' +
+            escapeHtml(t('sleepQualityLabel')) + ': ' + escapeHtml(String(Math.round(entry.quality))) + escapeHtml(t('qualitySuffix')) + '</p></div>' +
+            (editingSleepIndex === index ?
+                '<div class="sleep-detail-section"><h4>' + t('editSleepTitle') + '</h4><div class="history-editor"><label for="sleepDate-' + index + '">' + t('labelDate') + '<input id="sleepDate-' + index + '" type="date" value="' + formatDateInput(d) + '"></label>' +
                 '<label for="sleepHours-' + index + '">' + t('labelHours') + '<input id="sleepHours-' + index + '" type="number" min="0" max="24" step="1" value="' + hours + '"></label>' +
                 '<label for="sleepMinutes-' + index + '">' + t('labelMinutes') + '<input id="sleepMinutes-' + index + '" type="number" min="0" max="59" step="1" value="' + minutes + '"></label></div>' +
-                '<div class="history-actions"><button type="button" class="save-edit" data-save-sleep="' + index + '">' + t('btnSave') + '</button><button type="button" class="delete-edit" data-delete-sleep="' + index + '">' + t('btnDelete') + '</button><button type="button" data-cancel-sleep>' + t('btnCancel') + '</button></div></article>';
-        }
-        return '<article class="history-entry"><div class="history-row"><div><div class="history-date">' + d.toLocaleDateString(dateLocale()) +
-            '</div><div class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + entry.quality +
-            t('qualitySuffix') + '</div>' + soundSummary + '</div><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) +
-            '">' + t('editButton') + '</button></div></article>';
+                '<div class="history-actions"><button type="button" class="save-edit" data-save-sleep="' + index + '">' + t('btnSave') + '</button><button type="button" class="delete-edit" data-delete-sleep="' + index + '">' + t('btnDelete') + '</button><button type="button" data-cancel-sleep>' + t('btnCancel') + '</button></div></div>' :
+                '<div class="history-actions"><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) + '">' + t('editButton') + '</button></div>') +
+            (sound ? renderSoundDetails(sound) : '') + '</div>' : '';
+        return '<article class="history-entry"><button type="button" class="history-toggle" data-toggle-sleep="' + index + '" aria-expanded="' + String(expanded) + '" aria-controls="sleep-detail-' + index + '"><span class="history-toggle-content"><span class="history-date">' + d.toLocaleDateString(dateLocale()) +
+            '</span><span class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + entry.quality + t('qualitySuffix') + '</span>' + soundSummary + '</span><span class="history-chevron" aria-hidden="true">›</span></button>' + detail + '</article>';
     }).join('');
 }
 
@@ -2502,6 +2651,28 @@ function renderStatsChart(){
         '<p class="chart-legend">' + t('statsChartLegend', {hours:state.targetHours}) + '</p>';
 }
 
+function soundEntryStartMs(entry){
+    const started = Date.parse(entry.startedAt);
+    if(Number.isFinite(started)) return started;
+    const ended = Date.parse(entry.date);
+    const duration = Math.max(0, Number(entry.durationSec) || 0);
+    return Number.isFinite(ended) && duration ? ended - duration * 1000 : null;
+}
+
+function formatSoundClipTime(entry, clip){
+    const start = soundEntryStartMs(entry);
+    if(!Number.isFinite(start)) return t('soundAxisStart');
+    return fmtTime(new Date(start + Math.max(0, Number(clip.offsetSec) || 0) * 1000));
+}
+
+function soundLevelToDb(level){
+    return -60 + Math.max(0, Math.min(100, Number(level) || 0)) * 0.3;
+}
+
+function formatSoundDb(level){
+    return Math.round(soundLevelToDb(level)) + ' ' + t('soundAxisDb');
+}
+
 function renderSoundChart(){
     const container = document.getElementById('soundChart');
     if(!container) return;
@@ -2514,28 +2685,135 @@ function renderSoundChart(){
         container.innerHTML = '<p class="stats-chart-empty">' + t('soundChartEmpty') + '</p>';
         return;
     }
-    const width = 600, height = 140, padding = 6;
-    const maxEvents = Math.max(1, ...entries.map(entry => Math.max(0, Number(entry.eventCount) || 0))) * 1.15;
-    const slot = (width - padding*2) / entries.length;
-    const barWidth = Math.max(3, slot - 3);
-    const bars = entries.map((entry, index) => {
-        const count = Math.max(0, Math.round(Number(entry.eventCount) || 0));
-        const minutes = Math.round(Math.max(0, Number(entry.eventSeconds) || 0) / 60);
-        const h = count ? Math.max(4, (count / maxEvents) * (height - padding*2)) : 2;
-        const x = padding + index * slot;
-        const y = height - padding - h;
-        const label = count
-            ? t('soundEventCount', {count:count}) + ' · ' + t('soundEventMinutes', {minutes:minutes})
-            : t('soundNoEvents');
-        return '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + barWidth.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="' + (count ? '#FF3D8A' : 'rgba(' + getTintRgb() + ',0.22)') + '" fill-opacity="0.85"><title>' +
-            escapeHtml(new Date(entry.date).toLocaleDateString(dateLocale()) + ': ' + label) + '</title></rect>';
+    const curveEntries = entries.filter(entry => Array.isArray(entry.timeline) && entry.timeline.length >= 2);
+    if(curveEntries.length === 0){
+        container.innerHTML = '<p class="stats-chart-empty">' + t('soundChartNoTimeline') + '</p>';
+        return;
+    }
+    const visibleEntries = curveEntries.slice(-7);
+    const width = 600, height = 220, left = 46, right = 8, top = 16, bottom = 42;
+    const plotWidth = width - left - right;
+    const plotHeight = height - top - bottom;
+    const palette = ['#00E5FF','#8C6BFF','#39FF8A','#FF3D8A','#35D6C4','#FFB454','#B58CFF'];
+    const grid = [[0,-60],[50,-45],[100,-30]].map(([value,db]) => {
+        const y = top + (100 - value) / 100 * plotHeight;
+        return '<line x1=\"' + left + '\" y1=\"' + y.toFixed(1) + '\" x2=\"' + (width-right) + '\" y2=\"' + y.toFixed(1) + '\" stroke=\"rgba(' + getTintRgb() + ',0.12)\" stroke-width=\"1\"/>' +
+            '<text x=\"3\" y=\"' + (y + 3).toFixed(1) + '\" fill=\"rgba(' + getTintRgb() + ',0.65)\" font-size=\"10\">' + db + ' ' + escapeHtml(t('soundAxisDb')) + '</text>';
     }).join('');
-
+    const lines = visibleEntries.map((entry, entryIndex) => {
+        const timeline = entry.timeline.filter(point => point && Number.isFinite(Number(point.offsetSec)) && Number.isFinite(Number(point.level)));
+        if(timeline.length < 2) return '';
+        const lastOffset = Math.max(1, Number(timeline[timeline.length-1].offsetSec) || 1);
+        const durationSec = Math.max(lastOffset, Number(entry.durationSec) || 0);
+        const color = palette[entryIndex % palette.length];
+        const points = timeline.map(point => {
+            const x = left + Math.min(1, Math.max(0, Number(point.offsetSec) / durationSec)) * plotWidth;
+            const level = Math.max(0, Math.min(100, Number(point.level) || 0));
+            const y = top + (100 - level) / 100 * plotHeight;
+            return {x,y,level,point};
+        });
+        const pointString = points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ');
+        const dots = points.filter(point => point.point.event).map(point => {
+            const pointTime = formatSoundClipTime(entry, {offsetSec:point.point.offsetSec});
+            return '<circle cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="3.5" fill="#FF3D8A" stroke="' + color + '" stroke-width="1.5"><title>' +
+                escapeHtml(pointTime + ' · ' + formatSoundDb(point.level)) + '</title></circle>';
+        }).join('');
+        return '<polyline points="' + pointString + '" fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.86"><title>' +
+            escapeHtml(new Date(entry.date).toLocaleDateString(dateLocale())) + '</title></polyline>' + dots;
+    }).join('');
+    const latest = visibleEntries[visibleEntries.length-1];
+    const latestStart = soundEntryStartMs(latest);
+    const latestDuration = Math.max(1, Number(latest.durationSec) || Number(latest.timeline[latest.timeline.length-1].offsetSec) || 1);
+    const axisLabels = [
+        {x:left, label:latestStart ? fmtTime(new Date(latestStart)) : t('soundAxisStart')},
+        {x:left + plotWidth/2, label:latestStart ? fmtTime(new Date(latestStart + latestDuration*500)) : t('soundAxisMiddle')},
+        {x:width-right, label:latestStart ? fmtTime(new Date(latestStart + latestDuration*1000)) : t('soundAxisEnd')}
+    ].map(item => '<text x="' + item.x.toFixed(1) + '" y="' + (height-19) + '" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.65)" font-size="10">' + escapeHtml(item.label) + '</text>').join('');
+    const axisTitles = '<text x="15" y="' + (top + plotHeight/2).toFixed(1) + '" transform="rotate(-90 15 ' + (top + plotHeight/2).toFixed(1) + ')" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.72)" font-size="10">' + escapeHtml(t('soundAxisDb')) + '</text>' +
+        '<text x="' + (left + plotWidth/2).toFixed(1) + '" y="' + (height-3) + '" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.72)" font-size="10">' + escapeHtml(t('soundAxisTime')) + '</text>';
+    const nightLabels = visibleEntries.map(entry => new Date(entry.date).toLocaleDateString(dateLocale())).join(' · ');
     container.innerHTML =
         '<svg viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" role="img" aria-label="' + escapeHtml(t('soundChartAria')) + '">' +
-        bars +
+        grid + lines + axisLabels + axisTitles +
         '</svg>' +
-        '<p class="chart-legend">' + t('soundChartLegend') + '</p>';
+        '<p class="chart-legend">' + t('soundChartLegend') + '</p>' +
+        '<p class="chart-legend sound-chart-nights">' + escapeHtml(nightLabels) + '</p>';
+}
+
+function renderIndividualSoundCurve(entry){
+    const timeline = Array.isArray(entry.timeline) ? entry.timeline
+        .filter(point => point && Number.isFinite(Number(point.offsetSec)) && Number.isFinite(Number(point.level)))
+        .sort((a,b) => Number(a.offsetSec) - Number(b.offsetSec)) : [];
+    if(timeline.length < 2) return '<p class="stats-chart-empty">' + t('soundChartNoTimeline') + '</p>';
+    const width = 600, height = 220, left = 46, right = 8, top = 16, bottom = 42;
+    const plotWidth = width - left - right;
+    const plotHeight = height - top - bottom;
+    const durationSec = Math.max(1, Number(entry.durationSec) || Number(timeline[timeline.length-1].offsetSec) || 1);
+    const points = timeline.map(point => {
+        const level = Math.max(0, Math.min(100, Number(point.level) || 0));
+        return {
+            x:left + Math.min(1, Math.max(0, Number(point.offsetSec) / durationSec)) * plotWidth,
+            y:top + (100 - level) / 100 * plotHeight,
+            level,
+            point
+        };
+    });
+    const grid = [[0,-60],[50,-45],[100,-30]].map(([value,db]) => {
+        const y = top + (100 - value) / 100 * plotHeight;
+        return '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (width-right) + '" y2="' + y.toFixed(1) + '" stroke="rgba(' + getTintRgb() + ',0.12)" stroke-width="1"/>' +
+            '<text x="3" y="' + (y + 3).toFixed(1) + '" fill="rgba(' + getTintRgb() + ',0.65)" font-size="10">' + db + ' ' + escapeHtml(t('soundAxisDb')) + '</text>';
+    }).join('');
+    const line = '<polyline points="' + points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ') + '" fill="none" stroke="#00E5FF" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>';
+    const dots = points.filter(point => point.point.event).map(point => {
+        const time = formatSoundClipTime(entry, {offsetSec:point.point.offsetSec});
+        return '<circle cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="4" fill="#FF3D8A" stroke="#00E5FF" stroke-width="1.5"><title>' +
+            escapeHtml(time + ' · ' + formatSoundDb(point.level)) + '</title></circle>';
+    }).join('');
+    const start = soundEntryStartMs(entry);
+    const axisLabels = [
+        {x:left, label:start ? fmtTime(new Date(start)) : t('soundAxisStart')},
+        {x:left + plotWidth/2, label:start ? fmtTime(new Date(start + durationSec*500)) : t('soundAxisMiddle')},
+        {x:width-right, label:start ? fmtTime(new Date(start + durationSec*1000)) : t('soundAxisEnd')}
+    ].map(item => '<text x="' + item.x.toFixed(1) + '" y="' + (height-19) + '" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.68)" font-size="10">' + escapeHtml(item.label) + '</text>').join('');
+    const axisTitles = '<text x="15" y="' + (top + plotHeight/2).toFixed(1) + '" transform="rotate(-90 15 ' + (top + plotHeight/2).toFixed(1) + ')" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.72)" font-size="10">' + escapeHtml(t('soundAxisDb')) + '</text>' +
+        '<text x="' + (left + plotWidth/2).toFixed(1) + '" y="' + (height-3) + '" text-anchor="middle" fill="rgba(' + getTintRgb() + ',0.72)" font-size="10">' + escapeHtml(t('soundAxisTime')) + '</text>';
+    return '<svg viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" role="img" aria-label="' + escapeHtml(t('soundChartAria')) + '">' +
+        grid + line + dots + axisLabels + axisTitles + '</svg>';
+}
+
+function soundEventsForEntry(entry){
+    if(Array.isArray(entry.events) && entry.events.length){
+        return entry.events.map(event => ({
+            offsetSec:Math.max(0, Number(event.offsetSec) || 0),
+            durationSec:Math.max(1, Number(event.durationSec) || 1),
+            peakLevel:Math.max(0, Math.min(100, Number(event.peakLevel) || 0))
+        })).sort((a,b) => a.offsetSec - b.offsetSec);
+    }
+    return Array.isArray(entry.timeline) ? entry.timeline.filter(point => point && point.event).map(point => ({
+        offsetSec:Math.max(0, Number(point.offsetSec) || 0),
+        durationSec:1,
+        peakLevel:Math.max(0, Math.min(100, Number(point.level) || 0))
+    })).sort((a,b) => a.offsetSec - b.offsetSec) : [];
+}
+
+function renderSoundDetails(sound){
+    const events = soundEventsForEntry(sound);
+    const entryKey = sound.id || sound.date;
+    const duration = Math.max(1, Number(sound.durationSec) || 1);
+    const eventCount = events.length || Math.max(0, Math.round(Number(sound.eventCount) || 0));
+    const audioAvailable = Boolean(sound.audioRecorded && Number(sound.audioChunkCount) > 0);
+    const eventButtons = events.length ? '<div class="sound-event-list" aria-label="' + escapeHtml(t('soundDetailTitle')) + '">' +
+        events.map(event => {
+            const time = formatSoundClipTime(sound, event);
+            const label = t('soundEventAt', {time}) + ' · ' + t('soundEventDuration', {seconds:Math.max(1, Math.round(event.durationSec))});
+            return '<button type="button" class="sound-event-button" data-seek-sound="' + Math.round(event.offsetSec) + '" data-sound-entry="' + escapeHtml(entryKey) + '">▶ ' + escapeHtml(label) + '</button>';
+        }).join('') + '</div>' : '<p class="sleep-recording-meta">' + escapeHtml(t('soundNoEvents')) + '</p>';
+    const playback = audioAvailable ? '<button type="button" class="sound-clip-button" data-play-recording data-sound-entry="' + escapeHtml(entryKey) + '">▶ ' + escapeHtml(t('soundRecordingPlay')) + '</button>' :
+        (Array.isArray(sound.clips) && sound.clips.length ? renderSoundClipButtons(sound) : '<p class="sleep-recording-meta">' + escapeHtml(t('soundNoAudio')) + '</p>');
+    return '<section class="sleep-detail-section"><h4>' + t('soundDetailTitle') + '</h4>' +
+        renderIndividualSoundCurve(sound) +
+        '<p class="sleep-recording-meta">' + escapeHtml(t('soundRecordingInfo', {duration:fmtDuration(duration/60), count:eventCount})) + '</p>' +
+        playback + eventButtons + '</section>';
 }
 
 document.querySelectorAll('#statsRangeToggle button').forEach(btn => {
@@ -2548,8 +2826,8 @@ document.querySelectorAll('#statsRangeToggle button').forEach(btn => {
 });
 
 // ---------- Local sleep sound detection ----------
-// The microphone stream is analysed in memory only. No MediaRecorder is used, so there is no
-// audio file to upload or keep in local storage; only aggregated event counts are saved.
+// The microphone is analysed locally. The full recording is stored in the device's IndexedDB for
+// the sleep session (maximum eight hours); no audio or metadata is sent to the server.
 let micStream = null;
 let micAudioContext = null;
 let micSourceNode = null;
@@ -2557,11 +2835,139 @@ let micAnalyser = null;
 let micTimeData = null;
 let micFrequencyData = null;
 let micAnalysisTimer = null;
+let micRecorder = null;
+let micRecorderMimeType = '';
+let micRecorderSessionId = null;
+let micRecorderChunkIndex = 0;
+let pendingRecordingWrites = [];
 let activeSoundSession = null;
 let soundLoudFrames = 0;
 let soundQuietFrames = 0;
 let soundCurrentEventStart = null;
 let soundCurrentPeakLevel = 0;
+let soundDbPromise = null;
+
+function openSoundClipDb(){
+    if(!('indexedDB' in window)) return Promise.reject(new Error('IndexedDB unavailable'));
+    if(soundDbPromise) return soundDbPromise;
+    soundDbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open('gosleep-sound-clips', 2);
+        request.onupgradeneeded = () => {
+            const db = request.result;
+            if(!db.objectStoreNames.contains('clips')) db.createObjectStore('clips', {keyPath:'id'});
+            if(!db.objectStoreNames.contains('recordingChunks')){
+                const chunks = db.createObjectStore('recordingChunks', {keyPath:'id'});
+                chunks.createIndex('sessionId', 'sessionId', {unique:false});
+            }
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error || new Error('IndexedDB failed'));
+    });
+    return soundDbPromise;
+}
+
+function saveSoundClipBlob(id, blob){
+    return openSoundClipDb().then(db => new Promise((resolve, reject) => {
+        const request = db.transaction('clips', 'readwrite').objectStore('clips').put({id, blob});
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error || new Error('Clip could not be saved'));
+    }));
+}
+
+function loadSoundClipBlob(id){
+    return openSoundClipDb().then(db => new Promise((resolve, reject) => {
+        const request = db.transaction('clips', 'readonly').objectStore('clips').get(id);
+        request.onsuccess = () => resolve(request.result ? request.result.blob : null);
+        request.onerror = () => reject(request.error || new Error('Clip could not be loaded'));
+    }));
+}
+
+function saveSoundRecordingChunk(sessionId, index, blob){
+    return openSoundClipDb().then(db => new Promise((resolve, reject) => {
+        const request = db.transaction('recordingChunks', 'readwrite').objectStore('recordingChunks').put({
+            id:sessionId + ':' + index, sessionId, index, blob
+        });
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error || new Error('Recording chunk could not be saved'));
+    }));
+}
+
+function loadSoundRecordingBlob(session){
+    return openSoundClipDb().then(db => new Promise((resolve, reject) => {
+        const index = db.transaction('recordingChunks', 'readonly').objectStore('recordingChunks').index('sessionId');
+        const request = index.getAll(session.id);
+        request.onsuccess = () => {
+            const chunks = (request.result || []).sort((a,b) => Number(a.index) - Number(b.index));
+            if(!chunks.length){
+                resolve(null);
+                return;
+            }
+            resolve(new Blob(chunks.map(chunk => chunk.blob), {type:session.audioMimeType || chunks[0].blob.type || 'audio/webm'}));
+        };
+        request.onerror = () => reject(request.error || new Error('Recording could not be loaded'));
+    }));
+}
+
+function recorderMimeType(){
+    if(typeof MediaRecorder === 'undefined' || typeof MediaRecorder.isTypeSupported !== 'function') return '';
+    return ['audio/mp4', 'audio/webm;codecs=opus', 'audio/webm', 'video/mp4'].find(type => MediaRecorder.isTypeSupported(type)) || '';
+}
+
+function startMicRecorder(stream, session){
+    if(typeof MediaRecorder === 'undefined' || !('indexedDB' in window)) return;
+    try{
+        const mimeType = recorderMimeType();
+        micRecorder = mimeType ? new MediaRecorder(stream, {mimeType}) : new MediaRecorder(stream);
+        micRecorderMimeType = micRecorder.mimeType || mimeType || 'audio/webm';
+        micRecorderSessionId = session.id;
+        micRecorderChunkIndex = 0;
+        pendingRecordingWrites = [];
+        session.audioMimeType = micRecorderMimeType;
+        session.audioRecorded = true;
+        micRecorder.ondataavailable = event => {
+            if(!event.data || !event.data.size) return;
+            const index = micRecorderChunkIndex++;
+            const write = saveSoundRecordingChunk(session.id, index, event.data).catch(() => {});
+            pendingRecordingWrites.push(write);
+            if(activeSoundSession && activeSoundSession.id === session.id){
+                activeSoundSession.audioChunkCount = index + 1;
+                activeSoundSession.audioRecorded = true;
+                activeSoundSession.audioMimeType = micRecorderMimeType;
+                if(index % 6 === 0) persistSoundSession();
+            }
+        };
+        micRecorder.start(10000);
+    } catch(error){
+        micRecorder = null;
+        micRecorderMimeType = '';
+        micRecorderSessionId = null;
+        session.audioRecorded = false;
+    }
+}
+
+function stopMicRecorder(){
+    const writes = () => {
+        const pending = pendingRecordingWrites.slice();
+        return Promise.all(pending).then(() => { pendingRecordingWrites = []; });
+    };
+    if(!micRecorder) return writes();
+    const recorder = micRecorder;
+    micRecorder = null;
+    const stopped = new Promise(resolve => {
+        let finished = false;
+        const finish = () => {
+            if(finished) return;
+            finished = true;
+            resolve();
+        };
+        recorder.addEventListener('stop', finish, {once:true});
+        try{
+            if(recorder.state !== 'inactive') recorder.stop();
+            else finish();
+        } catch(error){ finish(); }
+    });
+    return stopped.then(writes).then(() => { micRecorderSessionId = null; });
+}
 
 function soundDetectionSupported(){
     return Boolean(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function' &&
@@ -2620,6 +3026,7 @@ function analyseSoundFrame(){
     const likelySound = level >= 62 && lowRatio >= 0.22;
     const now = Date.now();
     activeSoundSession.peakLevel = Math.max(activeSoundSession.peakLevel || 0, level);
+    activeSoundSession.lastLevel = level;
     activeSoundSession.samples = (activeSoundSession.samples || 0) + 1;
 
     if(likelySound){
@@ -2637,15 +3044,36 @@ function analyseSoundFrame(){
             finalizeSoundEvent(now - (soundQuietFrames - 1) * 1000);
         }
     }
+    if(activeSoundSession.samples === 1 || activeSoundSession.samples % 30 === 0){
+        const sessionStart = Date.parse(activeSoundSession.startedAt);
+        const offsetSec = Number.isFinite(sessionStart) ? Math.max(0, Math.round((now - sessionStart) / 1000)) : activeSoundSession.samples;
+        activeSoundSession.timeline.push({offsetSec, level, event:Boolean(soundCurrentEventStart || likelySound)});
+        if(activeSoundSession.timeline.length > 1000) activeSoundSession.timeline.shift();
+    }
     if(activeSoundSession.samples % 30 === 0) persistSoundSession();
 }
 
 function finalizeSoundEvent(endMs){
     if(!activeSoundSession || !soundCurrentEventStart) return;
-    const durationSec = Math.max(3, Math.round((endMs - soundCurrentEventStart) / 1000));
+    const eventStartMs = soundCurrentEventStart;
+    const durationSec = Math.max(3, Math.round((endMs - eventStartMs) / 1000));
     activeSoundSession.eventCount += 1;
     activeSoundSession.eventSeconds += durationSec;
     activeSoundSession.peakLevel = Math.max(activeSoundSession.peakLevel || 0, soundCurrentPeakLevel);
+    const sessionStart = Date.parse(activeSoundSession.startedAt);
+    if(Number.isFinite(sessionStart)){
+        const offsetSec = Math.max(0, Math.round((eventStartMs - sessionStart) / 1000));
+        activeSoundSession.timeline.push({
+            offsetSec,
+            level:Math.max(0, Math.min(100, Math.round(soundCurrentPeakLevel))),
+            event:true
+        });
+        activeSoundSession.events.push({
+            offsetSec,
+            durationSec,
+            peakLevel:Math.max(0, Math.min(100, Math.round(soundCurrentPeakLevel)))
+        });
+    }
     soundCurrentEventStart = null;
     soundCurrentPeakLevel = 0;
     soundQuietFrames = 0;
@@ -2680,12 +3108,26 @@ async function startSoundDetection(){
         micAnalyser = analyser;
         micTimeData = new Uint8Array(analyser.fftSize);
         micFrequencyData = new Uint8Array(analyser.frequencyBinCount);
-        activeSoundSession = { startedAt:new Date().toISOString(), eventCount:0, eventSeconds:0, peakLevel:0, samples:0 };
+        activeSoundSession = {
+            id:'sound-' + Date.now().toString(36) + Math.random().toString(36).slice(2,7),
+            startedAt:state.sleepStart,
+            eventCount:0,
+            eventSeconds:0,
+            peakLevel:0,
+            samples:0,
+            timeline:[],
+            events:[],
+            clips:[],
+            audioRecorded:false,
+            audioChunkCount:0,
+            audioMimeType:''
+        };
         soundLoudFrames = 0;
         soundQuietFrames = 0;
         soundCurrentEventStart = null;
         soundCurrentPeakLevel = 0;
         persistSoundSession();
+        startMicRecorder(stream, activeSoundSession);
         micAnalysisTimer = setInterval(analyseSoundFrame, 1000);
         setSoundDetectionStatus('soundStatusActive', 'success');
     } catch(error){
@@ -2703,10 +3145,22 @@ async function startSoundDetection(){
     }
 }
 
-function stopSoundDetection(endIso){
+async function stopSoundDetection(endIso){
     if(!activeSoundSession && !micStream) return;
     if(micAnalysisTimer){ clearInterval(micAnalysisTimer); micAnalysisTimer = null; }
-    if(activeSoundSession && soundCurrentEventStart) finalizeSoundEvent(Date.now());
+    const sessionInProgress = activeSoundSession;
+    const endedAt = endIso || new Date().toISOString();
+    const endMs = Number.isFinite(Date.parse(endedAt)) ? Date.parse(endedAt) : Date.now();
+    if(sessionInProgress && soundCurrentEventStart) finalizeSoundEvent(endMs);
+    if(sessionInProgress){
+        const sessionStart = Date.parse(sessionInProgress.startedAt);
+        const offsetSec = Number.isFinite(sessionStart) ? Math.max(0, Math.round((endMs - sessionStart) / 1000)) : 0;
+        const lastPoint = sessionInProgress.timeline[sessionInProgress.timeline.length - 1];
+        if(Number.isFinite(sessionStart) && (!lastPoint || Number(lastPoint.offsetSec) !== offsetSec)){
+            sessionInProgress.timeline.push({offsetSec, level:Math.max(0, Math.min(100, Number(sessionInProgress.lastLevel) || 0)), event:false});
+        }
+    }
+    await stopMicRecorder();
     if(micSourceNode){
         try{ micSourceNode.disconnect(); } catch(error){ /* already disconnected */ }
         micSourceNode = null;
@@ -2717,14 +3171,28 @@ function stopSoundDetection(endIso){
     }
     if(micStream){ micStream.getTracks().forEach(track => track.stop()); micStream = null; }
     if(micAudioContext){ micAudioContext.close().catch(() => {}); micAudioContext = null; }
-    if(activeSoundSession){
+    if(sessionInProgress){
+        const sessionStart = Date.parse(sessionInProgress.startedAt);
+        const session = {
+            id:sessionInProgress.id,
+            startedAt:sessionInProgress.startedAt,
+            endedAt,
+            durationSec:Number.isFinite(sessionStart) && Number.isFinite(Date.parse(endedAt)) ? Math.max(1, Math.round((Date.parse(endedAt) - sessionStart) / 1000)) : 0,
+            eventCount:Math.max(0, Math.round(sessionInProgress.eventCount || 0)),
+            eventSeconds:Math.max(0, Math.round(sessionInProgress.eventSeconds || 0)),
+            peakLevel:Math.max(0, Math.round(sessionInProgress.peakLevel || 0)),
+            timeline:Array.isArray(sessionInProgress.timeline) ? sessionInProgress.timeline.slice().sort((a,b) => a.offsetSec - b.offsetSec) : [],
+            events:Array.isArray(sessionInProgress.events) ? sessionInProgress.events.slice().sort((a,b) => a.offsetSec - b.offsetSec) : [],
+            clips:Array.isArray(sessionInProgress.clips) ? sessionInProgress.clips : [],
+            audioRecorded:Boolean(sessionInProgress.audioRecorded && sessionInProgress.audioChunkCount),
+            audioChunkCount:Math.max(0, Math.round(sessionInProgress.audioChunkCount || 0)),
+            audioMimeType:typeof sessionInProgress.audioMimeType === 'string' ? sessionInProgress.audioMimeType : ''
+        };
         state.soundHistory.push({
-            date:endIso || new Date().toISOString(),
-            eventCount:Math.max(0, Math.round(activeSoundSession.eventCount || 0)),
-            eventSeconds:Math.max(0, Math.round(activeSoundSession.eventSeconds || 0)),
-            peakLevel:Math.max(0, Math.round(activeSoundSession.peakLevel || 0))
+            ...session,
+            date:endedAt
         });
-        state.soundHistory = state.soundHistory.slice(-180);
+        state.soundHistory = state.soundHistory.slice(-60);
         save('gs_soundHistory', state.soundHistory);
         activeSoundSession = null;
         localStorage.removeItem(pk('gs_soundCurrent'));
@@ -2749,6 +3217,9 @@ function renderAll(){
 const sleepBtn = document.getElementById('sleepBtn');
 const heroText = document.getElementById('heroText');
 const moonSleepAction = document.getElementById('moonSleepAction');
+const MAX_SLEEP_MS = 8 * 60 * 60 * 1000;
+let sleepAutoStopTimer = null;
+let sleepFinishing = false;
 
 function updateSleepButton(){
     if(state.sleepStart){
@@ -2762,36 +3233,69 @@ function updateSleepButton(){
         sleepBtn.setAttribute('aria-pressed','false');
         heroText.textContent = t('heroReady');
     }
+    sleepBtn.disabled = sleepFinishing;
     moonSleepAction.classList.toggle('active', Boolean(state.sleepStart));
     moonSleepAction.setAttribute('aria-label', state.sleepStart ? t('sleepBtnStop') : t('sleepBtnStart'));
     moonSleepAction.setAttribute('aria-pressed', String(Boolean(state.sleepStart)));
 }
 
-sleepBtn.addEventListener('click', () => {
+function scheduleSleepAutoStop(){
+    clearTimeout(sleepAutoStopTimer);
+    sleepAutoStopTimer = null;
+    if(!state.sleepStart) return;
+    const startMs = Date.parse(state.sleepStart);
+    if(!Number.isFinite(startMs)) return;
+    const stopAt = startMs + MAX_SLEEP_MS;
+    const remaining = Math.max(0, stopAt - Date.now());
+    sleepAutoStopTimer = setTimeout(() => finishSleepTracking(new Date(stopAt), true), remaining);
+}
+
+async function finishSleepTracking(end = new Date(), automatic = false){
+    if(!state.sleepStart || sleepFinishing) return;
+    sleepFinishing = true;
+    updateSleepButton();
+    const startMs = Date.parse(state.sleepStart);
+    const requestedEndMs = end instanceof Date ? end.getTime() : Date.parse(end);
+    const safeRequestedEndMs = Number.isFinite(requestedEndMs) ? requestedEndMs : Date.now();
+    const cappedEndMs = Number.isFinite(startMs) ? Math.min(safeRequestedEndMs, startMs + MAX_SLEEP_MS) : safeRequestedEndMs;
+    const effectiveEnd = new Date(Math.max(Number.isFinite(startMs) ? startMs : cappedEndMs, cappedEndMs));
+    let durationMin = Number.isFinite(startMs) ? (effectiveEnd.getTime() - startMs) / 60000 : 1;
+    if(durationMin < 1) durationMin = 1;
+    const quality = calcQuality(durationMin);
+    const endedAt = effectiveEnd.toISOString();
+    const stoppedByLimit = automatic || safeRequestedEndMs > cappedEndMs;
+    try{
+        await stopSoundDetection(endedAt);
+    } catch(error){
+        /* Sleep data is still saved if microphone storage finishes unexpectedly. */
+    }
+    state.log.push({ date:endedAt, durationMin, quality });
+    save('gs_log', state.log);
+    state.sleepStart = null;
+    localStorage.removeItem(pk('gs_sleepStart'));
+    clearTimeout(sleepAutoStopTimer);
+    sleepAutoStopTimer = null;
+    renderSleepCard();
+    renderStatsCard();
+    showToast(t(stoppedByLimit ? 'toastSleepAutoStopped' : 'toastSleepSaved', {duration:fmtDuration(durationMin)}));
+    const streak = computeStreak();
+    if([3,7,14,30,60,100].includes(streak)){
+        setTimeout(() => showToast(t('toastStreakMilestone', {count:streak})), 2900);
+    }
+    sleepFinishing = false;
+    updateSleepButton();
+}
+
+sleepBtn.addEventListener('click', async () => {
+    if(sleepFinishing) return;
     if(!state.sleepStart){
         state.sleepStart = new Date().toISOString();
         save('gs_sleepStart', state.sleepStart);
+        scheduleSleepAutoStop();
         if(state.soundDetectionEnabled) startSoundDetection();
         showToast(t('toastSleepStarted'));
     } else {
-        const start = new Date(state.sleepStart);
-        const end = new Date();
-        let durationMin = (end - start) / 60000;
-        if(durationMin < 1) durationMin = 1;
-        const quality = calcQuality(durationMin);
-
-        stopSoundDetection(end.toISOString());
-        state.log.push({ date: end.toISOString(), durationMin, quality });
-        save('gs_log', state.log);
-        state.sleepStart = null;
-        localStorage.removeItem(pk('gs_sleepStart'));
-        renderSleepCard();
-        renderStatsCard();
-        showToast(t('toastSleepSaved', {duration:fmtDuration(durationMin)}));
-        const streak = computeStreak();
-        if([3,7,14,30,60,100].includes(streak)){
-            setTimeout(() => showToast(t('toastStreakMilestone', {count:streak})), 2900);
-        }
+        await finishSleepTracking(new Date(), false);
     }
     updateSleepButton();
 });
@@ -2991,6 +3495,82 @@ document.getElementById('statsBtn').addEventListener('click', () => {
     setActiveTab('statsBtn');
 });
 
+async function playSoundClip(button){
+    const entryKey = button.dataset.soundEntry;
+    const clipId = button.dataset.playSound;
+    const entry = state.soundHistory.find(item => (item.id || item.date) === entryKey);
+    const clip = entry && Array.isArray(entry.clips) ? entry.clips.find(item => item.id === clipId) : null;
+    if(!entry || !clip) return;
+    const label = t('soundClipPlay', {time:formatSoundClipTime(entry, clip)}) + ' · ' + t('soundClipSeconds', {seconds:Math.max(1, Math.round(Number(clip.durationSec) || 1))});
+    button.disabled = true;
+    button.textContent = t('soundClipLoading');
+    try{
+        const blob = await loadSoundClipBlob(clip.id);
+        if(!blob) throw new Error('Clip not found');
+        const list = button.closest('.sound-clip-list');
+        const previous = list.querySelector('audio');
+        if(previous){
+            previous.pause();
+            if(previous.dataset.objectUrl) URL.revokeObjectURL(previous.dataset.objectUrl);
+            previous.remove();
+        }
+        const url = URL.createObjectURL(blob);
+        const audio = document.createElement('audio');
+        audio.className = 'sound-clip-player';
+        audio.controls = true;
+        audio.autoplay = true;
+        audio.src = url;
+        audio.dataset.objectUrl = url;
+        list.appendChild(audio);
+        audio.play().catch(() => {});
+    } catch(error){
+        showToast(t('soundClipUnavailable'));
+    } finally {
+        button.disabled = false;
+        button.textContent = '▶ ' + label;
+    }
+}
+
+async function playSoundRecording(button, seekSec){
+    const entryKey = button.dataset.soundEntry;
+    const entry = state.soundHistory.find(item => (item.id || item.date) === entryKey);
+    const detail = button.closest('.sleep-detail-section');
+    if(!entry || !detail) return;
+    const existing = detail.querySelector('audio[data-recording-player]');
+    if(existing && existing.src){
+        if(Number.isFinite(Number(seekSec))) existing.currentTime = Math.max(0, Number(seekSec));
+        existing.play().catch(() => {});
+        return;
+    }
+    const trigger = detail.querySelector('[data-play-recording]') || button;
+    const originalLabel = trigger.textContent;
+    trigger.disabled = true;
+    trigger.textContent = t('soundRecordingLoading');
+    try{
+        const blob = await loadSoundRecordingBlob(entry);
+        if(!blob) throw new Error('Recording not found');
+        const url = URL.createObjectURL(blob);
+        const audio = document.createElement('audio');
+        audio.className = 'sound-clip-player';
+        audio.controls = true;
+        audio.autoplay = true;
+        audio.dataset.recordingPlayer = 'true';
+        audio.dataset.objectUrl = url;
+        audio.src = url;
+        audio.addEventListener('loadedmetadata', () => {
+            if(Number.isFinite(Number(seekSec))) audio.currentTime = Math.max(0, Number(seekSec));
+            audio.play().catch(() => {});
+        }, {once:true});
+        detail.appendChild(audio);
+        audio.play().catch(() => {});
+    } catch(error){
+        showToast(t('soundRecordingUnavailable'));
+    } finally {
+        trigger.disabled = false;
+        trigger.textContent = '▶ ' + originalLabel.replace(/^▶\s*/, '');
+    }
+}
+
 document.querySelectorAll('[data-open]').forEach(button => {
     button.addEventListener('click', () => {
         const targets = {
@@ -3005,11 +3585,27 @@ document.querySelectorAll('[data-open]').forEach(button => {
 });
 
 document.getElementById('statsHistory').addEventListener('click', event => {
+    const toggleButton = event.target.closest('[data-toggle-sleep]');
+    const soundButton = event.target.closest('[data-play-sound]');
+    const recordingButton = event.target.closest('[data-play-recording]');
+    const seekButton = event.target.closest('[data-seek-sound]');
     const editButton = event.target.closest('[data-edit-sleep]');
     const saveButton = event.target.closest('[data-save-sleep]');
     const deleteButton = event.target.closest('[data-delete-sleep]');
-    if(editButton){
+    if(toggleButton){
+        const index = Number(toggleButton.dataset.toggleSleep);
+        expandedSleepIndex = expandedSleepIndex === index ? null : index;
+        editingSleepIndex = null;
+        renderStatsHistory();
+    } else if(recordingButton){
+        playSoundRecording(recordingButton);
+    } else if(seekButton){
+        playSoundRecording(seekButton, Number(seekButton.dataset.seekSound) || 0);
+    } else if(soundButton){
+        playSoundClip(soundButton);
+    } else if(editButton){
         editingSleepIndex = Number(editButton.dataset.editSleep);
+        expandedSleepIndex = editingSleepIndex;
         renderStatsHistory();
         document.getElementById('sleepDate-' + editingSleepIndex).focus();
     } else if(saveButton){
@@ -3023,12 +3619,26 @@ document.getElementById('statsHistory').addEventListener('click', event => {
             return;
         }
         const date = new Date(state.log[index].date);
+        const oldDateMs = date.getTime();
         const [year,month,day] = dateValue.split('-').map(Number);
         date.setFullYear(year,month-1,day);
         state.log[index] = { ...state.log[index], date:date.toISOString(), durationMin, quality:calcQuality(durationMin) };
+        const soundEntry = state.soundHistory.find(item => Math.abs(Date.parse(item.date) - oldDateMs) < 2000);
+        if(soundEntry){
+            const shiftMs = date.getTime() - oldDateMs;
+            soundEntry.date = date.toISOString();
+            if(typeof soundEntry.endedAt === 'string' && Number.isFinite(Date.parse(soundEntry.endedAt))){
+                soundEntry.endedAt = new Date(Date.parse(soundEntry.endedAt) + shiftMs).toISOString();
+            }
+            if(typeof soundEntry.startedAt === 'string' && Number.isFinite(Date.parse(soundEntry.startedAt))){
+                soundEntry.startedAt = new Date(Date.parse(soundEntry.startedAt) + shiftMs).toISOString();
+            }
+            save('gs_soundHistory', state.soundHistory);
+        }
         state.log.sort((a,b) => new Date(a.date) - new Date(b.date));
         save('gs_log', state.log);
         editingSleepIndex = null;
+        expandedSleepIndex = state.log.findIndex(item => item.date === date.toISOString());
         renderStatsHistory();
         renderSleepCard();
         renderStatsCard();
@@ -3041,12 +3651,14 @@ document.getElementById('statsHistory').addEventListener('click', event => {
         state.log.splice(index, 1);
         save('gs_log', state.log);
         editingSleepIndex = null;
+        expandedSleepIndex = null;
         renderStatsHistory();
         renderSleepCard();
         renderStatsCard();
         showToast(t('toastSleepDeleted'));
     } else if(event.target.closest('[data-cancel-sleep]')){
         editingSleepIndex = null;
+        expandedSleepIndex = expandedSleepIndex == null ? null : expandedSleepIndex;
         renderStatsHistory();
     }
 });
@@ -3368,11 +3980,37 @@ function sanitizeImportedAlarm(alarm){
 
 function sanitizeImportedSound(entry){
     if(!entry || typeof entry.date !== 'string' || !Number.isFinite(Date.parse(entry.date))) return null;
+    const timeline = Array.isArray(entry.timeline) ? entry.timeline.map(point => ({
+        offsetSec:Math.max(0, Math.min(86400, Math.round(Number(point && point.offsetSec) || 0))),
+        level:Math.max(0, Math.min(100, Math.round(Number(point && point.level) || 0))),
+        event:Boolean(point && point.event)
+    })).slice(-1000) : [];
+    const clips = Array.isArray(entry.clips) ? entry.clips.map((clip, index) => ({
+        id:typeof clip.id === 'string' && clip.id ? clip.id : 'clip-import-' + index + '-' + Date.now().toString(36),
+        offsetSec:Math.max(0, Math.min(86400, Math.round(Number(clip.offsetSec) || 0))),
+        durationSec:Math.max(1, Math.min(900, Math.round(Number(clip.durationSec) || 1))),
+        mimeType:typeof clip.mimeType === 'string' ? clip.mimeType.slice(0, 80) : 'audio/webm'
+    })).slice(0, 100) : [];
+    const events = Array.isArray(entry.events) ? entry.events.map(event => ({
+        offsetSec:Math.max(0, Math.min(86400, Math.round(Number(event && event.offsetSec) || 0))),
+        durationSec:Math.max(1, Math.min(900, Math.round(Number(event && event.durationSec) || 1))),
+        peakLevel:Math.max(0, Math.min(100, Math.round(Number(event && event.peakLevel) || 0)))
+    })).slice(0, 1000) : [];
     return {
+        id:typeof entry.id === 'string' && entry.id ? entry.id : 'sound-import-' + Date.parse(entry.date).toString(36),
         date:entry.date,
+        startedAt:typeof entry.startedAt === 'string' && Number.isFinite(Date.parse(entry.startedAt)) ? entry.startedAt : null,
+        endedAt:typeof entry.endedAt === 'string' && Number.isFinite(Date.parse(entry.endedAt)) ? entry.endedAt : entry.date,
+        durationSec:Math.max(0, Math.min(86400, Math.round(Number(entry.durationSec) || 0))),
         eventCount:Math.max(0, Math.min(10000, Math.round(Number(entry.eventCount) || 0))),
         eventSeconds:Math.max(0, Math.min(86400, Math.round(Number(entry.eventSeconds) || 0))),
-        peakLevel:Math.max(0, Math.min(100, Math.round(Number(entry.peakLevel) || 0)))
+        peakLevel:Math.max(0, Math.min(100, Math.round(Number(entry.peakLevel) || 0))),
+        timeline,
+        events,
+        clips,
+        audioRecorded:Boolean(entry.audioRecorded && Number(entry.audioChunkCount) > 0),
+        audioChunkCount:Math.max(0, Math.min(100000, Math.round(Number(entry.audioChunkCount) || 0))),
+        audioMimeType:typeof entry.audioMimeType === 'string' ? entry.audioMimeType.slice(0, 80) : ''
     };
 }
 
@@ -3469,7 +4107,7 @@ document.getElementById('importDataInput').addEventListener('change', async even
             save('gs_soundDetectionEnabled', state.soundDetectionEnabled);
         }
         if(Array.isArray(data.soundHistory)){
-            state.soundHistory = data.soundHistory.map(sanitizeImportedSound).filter(Boolean).slice(-180);
+            state.soundHistory = data.soundHistory.map(sanitizeImportedSound).filter(Boolean).slice(-60);
             save('gs_soundHistory', state.soundHistory);
         }
         if(data.lang === 'de' || data.lang === 'en'){ state.lang = data.lang; save('gs_lang', state.lang); }
@@ -3541,6 +4179,7 @@ updateLangSelection();
 updateSleepButton();
 renderAll();
 renderAlarmsList();
+if(state.sleepStart) scheduleSleepAutoStop();
 setInterval(renderCycles, 60000);
 setInterval(renderAlarmCard, 30000);
 
