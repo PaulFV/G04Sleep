@@ -1,0 +1,25 @@
+<svg width="1024" height="1024" viewBox="220 135 735 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">G04Sleep Halbmond</title>
+  <desc id="desc">Leuchtender blau-violetter Halbmond mit einer kleinen Welle</desc>
+  <defs>
+    <linearGradient id="moon" x1="20%" y1="10%" x2="82%" y2="90%">
+      <stop offset="0%" stop-color="#76F7FF"/>
+      <stop offset="35%" stop-color="#00B7FF"/>
+      <stop offset="72%" stop-color="#5648FF"/>
+      <stop offset="100%" stop-color="#A15CFF"/>
+    </linearGradient>
+    <linearGradient id="wave" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" stop-color="#5B4BFF"/>
+      <stop offset="52%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#50FFC4"/>
+    </linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="18" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <g filter="url(#glow)">
+    <path fill="url(#moon)" d="M606 160c-202 16-360 185-360 390 0 216 175 391 391 391 112 0 213-47 284-123-55 31-118 49-186 49-207 0-375-168-375-375 0-148 85-276 209-337 12-6 25-11 37-15Z"/>
+    <path fill="none" stroke="url(#wave)" stroke-linecap="round" stroke-width="42" d="M332 663c65 0 78-96 145-96 73 0 86 113 164 113 83 0 92-126 173-126 35 0 62 19 86 43"/>
+  </g>
+</svg>

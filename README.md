@@ -1,4 +1,4 @@
-# 🌙 GoSleep
+# 🌙 G04Sleep
 
 Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, Statistiken und persönliche Schlafnotizen. Alles läuft lokal im Browser – ohne Konto und ohne Backend.
 
@@ -11,8 +11,9 @@ Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, St
 - 🌙 Schlafzyklus-Berechnung (Aufstehzeit basierend auf vollständigen Zyklen)
 - 📱 Installierbare und offlinefähige PWA
 - 🔔 Optionale Hintergrund-Wecker per Web Push und Cloudflare Worker
+- 🌐 Deutsch und Englisch umschaltbar (in den Einstellungen), inklusive Push-Benachrichtigungstexten
 - ♿ Zugängliche Dialoge, Formularbeschriftungen und Tastatursteuerung
-- 🎨 Neues GoSleep-App-Logo in mehreren Größen
+- 🎨 Neues G04Sleep-App-Logo in mehreren Größen
 
 ## Nutzung
 
@@ -25,7 +26,7 @@ open index.html
 ## Projektstruktur
 
 ```
-GoSleep/
+G04Sleep/
 ├── index.html         # Komplette App (HTML, CSS und JavaScript)
 ├── manifest.json      # Web-App-Manifest
 ├── sw.js              # Offline-Cache der PWA
@@ -43,11 +44,11 @@ blau-violette Halbmond-Wellen-Icon aus `icons/` verwendet.
 
 ## Hintergrund-Benachrichtigungen auf dem iPhone
 
-Ab iOS 16.4 kann GoSleep auch bei geschlossener App eine Push-Benachrichtigung senden:
+Ab iOS 16.4 kann G04Sleep auch bei geschlossener App eine Push-Benachrichtigung senden:
 
-1. Die veröffentlichte GoSleep-Seite in Safari öffnen.
+1. Die veröffentlichte G04Sleep-Seite in Safari öffnen.
 2. Über „Teilen“ → „Zum Home-Bildschirm“ installieren.
-3. GoSleep vom Home-Bildschirm starten.
+3. G04Sleep vom Home-Bildschirm starten.
 4. Unter „Profil“ die Hintergrund-Benachrichtigungen einschalten und die iOS-Abfrage erlauben.
 5. Mit „Test-Benachrichtigung senden“ die Verbindung prüfen.
 
@@ -57,4 +58,4 @@ Der eigentliche Weckzeitpunkt wird im Cloudflare Worker gespeichert. Der private
 
 ---
 
-GoSleep v2.0 • Sleep Better
+G04Sleep v2.0 • Sleep Better
