@@ -1,6 +1,6 @@
 # 🌙 G04Sleep
 
-Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, Statistiken und persönliche Schlafnotizen. Alles läuft lokal im Browser – ohne Konto und ohne Backend.
+Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, Statistiken und persönliche Schlafnotizen. Die Schlafdaten laufen lokal im Browser; nur die optionalen Hintergrund-Benachrichtigungen verwenden den konfigurierten Push-Dienst.
 
 ## Features
 
@@ -11,7 +11,8 @@ Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, St
 - 🌙 Schlafzyklus-Berechnung (Aufstehzeit basierend auf vollständigen Zyklen)
 - 📱 Installierbare und offlinefähige PWA
 - 🔔 Optionale Hintergrund-Wecker per Web Push und Cloudflare Worker
-- 🌐 Deutsch und Englisch umschaltbar (in den Einstellungen), inklusive Push-Benachrichtigungstexten
+- 🌐 Englisch beim ersten Start, Deutsch jederzeit in den Einstellungen umschaltbar
+- 🔒 Datenschutz- und Copyright-Seiten direkt aus der App, inklusive lokaler Datenlöschung
 - ♿ Zugängliche Dialoge, Formularbeschriftungen und Tastatursteuerung
 - 🎨 Neues G04Sleep-App-Logo in mehreren Größen
 
@@ -32,13 +33,17 @@ G04Sleep/
 ├── sw.js              # Offline-Cache der PWA
 ├── icon-source.svg    # Editierbare Vektorversion des App-Logos
 ├── icons/             # App-Icons von 32 bis 1024 Pixel
+├── privacy.html       # Datenschutzerklärung (Betreiberangaben ergänzen)
+├── copyright.html     # Copyright- und Lizenzhinweise
+├── PLAY_STORE.md      # Checkliste für TWA/Google Play
+├── play-store/        # Vorlage für Digital Asset Links
 └── README.md
 ```
 
 ## App-Icon
 
 Beim Hinzufügen zum Home-Bildschirm (iOS/Android) wird automatisch das
-blau-violette Halbmond-Wellen-Icon aus `icons/` verwendet.
+leuchtende Halbmond-Engel-Icon aus `icons/` verwendet.
 
 > Ohne aktivierte Hintergrund-Benachrichtigungen benötigt der Web-Wecker eine geöffnete Browser-App. Mobile Betriebssysteme können Webseiten im Hintergrund anhalten.
 

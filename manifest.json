@@ -1,13 +1,19 @@
 {
   "name": "G04Sleep",
   "short_name": "G04Sleep",
-  "description": "Schlafzeiten, Wecker und Schlaftagebuch einfach an einem Ort.",
+  "description": "Sleep tracking, alarms and a personal sleep journal in one place.",
+  "lang": "en",
+  "dir": "ltr",
   "id": "./",
   "start_url": "./",
   "scope": "./",
+  "display_override": ["standalone", "browser"],
   "display": "standalone",
+  "orientation": "portrait",
   "background_color": "#05060B",
   "theme_color": "#05060B",
+  "categories": ["health", "lifestyle"],
+  "prefer_related_applications": false,
   "icons": [
     { "src": "icons/moon-angel.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }
   ],

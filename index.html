@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1087,7 +1087,8 @@ button:disabled{
 
 .sheet-actions{ display:flex; gap:10px; }
 
-.sheet-actions button{
+.sheet-actions button,
+.sheet-actions a{
     flex:1;
     border:none;
     border-radius:12px;
@@ -1096,6 +1097,42 @@ button:disabled{
     font-weight:600;
     min-height:50px;
     font-family:var(--display);
+}
+
+.legal-link{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-decoration:none;
+}
+
+.legal-delete{
+    width:100%;
+    margin-top:10px;
+}
+
+.app-footer{
+    max-width:720px;
+    margin:8px auto 0;
+    padding:0 18px 18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:8px;
+    color:var(--text-dim);
+    font:12px var(--mono);
+    text-align:center;
+}
+
+.app-footer a{
+    color:var(--cyan);
+    text-decoration:none;
+}
+
+.app-footer a:hover,
+.app-footer a:focus-visible{
+    text-decoration:underline;
 }
 
 .btn-primary{
@@ -1852,6 +1889,7 @@ textarea:focus-visible{
     <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2c2 3-1 4-1 7a3 3 0 0 0 6 0c2 2 3 5 3 7a8 8 0 1 1-16 0c0-3 2-5 4-8 1-1.5 2-3 1-6a5 5 0 0 1 3 0Z"/></symbol>
     <symbol id="i-wave2" viewBox="0 0 24 24"><path d="M2 12c2 0 2-6 4-6s2 6 4 6 2-6 4-6 2 6 4 6 2-6 4-6"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.2-7 10-4.2-1.8-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
 <header class="header">
@@ -1925,6 +1963,13 @@ textarea:focus-visible{
     </div>
 
 </main>
+
+<footer class="app-footer" aria-label="Rechtliche Informationen">
+    <span data-i18n="footerCopyright">© 2026 G04Sleep</span>
+    <span aria-hidden="true">·</span>
+    <a href="privacy.html" target="_blank" rel="noopener" data-i18n="btnPrivacy">Datenschutz</a>
+    <a href="copyright.html" target="_blank" rel="noopener" data-i18n="btnCopyright">Copyright</a>
+</footer>
 
 <!-- Bottom Tab Bar -->
 <nav class="tabbar" aria-label="Hauptnavigation">
@@ -2164,6 +2209,20 @@ textarea:focus-visible{
                 <button type="button" class="btn-secondary" id="exportCsvBtn" data-i18n="btnExportCsv">Als CSV exportieren</button>
             </div>
         </div>
+        <div class="setting-panel legal-panel">
+            <div class="setting-row">
+                <div class="setting-copy">
+                    <svg class="ui-icon" aria-hidden="true"><use href="#i-shield"></use></svg>
+                    <div><strong data-i18n="legalTitle">Datenschutz &amp; Copyright</strong><span data-i18n="legalDesc">Lies, welche Daten G04Sleep verarbeitet und welche Rechte für App-Code und Medien gelten.</span></div>
+                </div>
+            </div>
+            <div class="sheet-actions legal-links">
+                <a class="btn-secondary legal-link" href="privacy.html" target="_blank" rel="noopener" data-i18n="btnPrivacy">Datenschutz</a>
+                <a class="btn-secondary legal-link" href="copyright.html" target="_blank" rel="noopener" data-i18n="btnCopyright">Copyright</a>
+            </div>
+            <p class="field-help" data-i18n="legalStoreNote">Vor dem Play-Store-Start Betreibername und Kontakt in den Rechtstexten ergänzen.</p>
+            <button type="button" class="btn-danger legal-delete" id="deleteAllDataBtn" data-i18n="btnDeleteAllData">Alle lokalen Daten löschen</button>
+        </div>
         <p class="form-message" id="settingsMessage" role="alert"></p>
         <div class="sheet-actions">
             <button type="button" class="btn-secondary" data-close="settingsOverlay" data-i18n="btnCancel">Abbrechen</button>
@@ -2336,7 +2395,7 @@ const state = {
     soundDetectionEnabled: localStorage.getItem(pk('gs_soundDetectionEnabled')) === 'true',
     soundHistory: loadArray('gs_soundHistory', []),
     pushEnabled: localStorage.getItem('gs_pushEnabled') === 'true',
-    lang: localStorage.getItem('gs_lang') || (navigator.language && navigator.language.toLowerCase().startsWith('en') ? 'en' : 'de')
+    lang: localStorage.getItem('gs_lang') || 'en'
 };
 
 function saveAlarms(){
@@ -2514,6 +2573,9 @@ const I18N = {
         backupMsgImportError:'Die Datei konnte nicht gelesen werden. Ist es eine gültige G04Sleep-Sicherung?',
         healthExportTitle:'Export für Gesundheits-Apps', healthExportDesc:'G04Sleep kann sich nicht direkt mit Apple Health oder Google Fit verbinden – das geht nur mit einer nativen App. Als CSV-Datei lassen sich deine Schlafdaten aber in viele Gesundheits-Apps importieren (z. B. über eine Import-App oder Kurzbefehle).',
         btnExportCsv:'Als CSV exportieren', backupMsgCsvExported:'CSV-Datei wurde heruntergeladen.',
+        legalTitle:'Datenschutz & Copyright', legalDesc:'Lies, welche Daten G04Sleep verarbeitet und welche Rechte für App-Code und Medien gelten.',
+        btnPrivacy:'Datenschutz', btnCopyright:'Copyright', legalStoreNote:'Vor dem Play-Store-Start Betreibername und Kontakt in den Rechtstexten ergänzen.',
+        btnDeleteAllData:'Alle lokalen Daten löschen', confirmDeleteAllData:'Alle lokalen G04Sleep-Daten, Aufnahmen und Push-Daten wirklich löschen?', toastDataDeleted:'Lokale Daten wurden gelöscht.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push-Server ist noch nicht konfiguriert.', errPushUnreachable:'Push-Server nicht erreichbar.',
         errNoActiveSubscription:'Keine aktive Push-Anmeldung gefunden.', errPushNotConnected:'Der Cloudflare Push-Server ist noch nicht verbunden.',
         errAddToHomeScreen:'Füge G04Sleep zuerst zum iPhone-Home-Bildschirm hinzu und öffne es von dort.',
@@ -2647,6 +2709,9 @@ const I18N = {
         backupMsgImportError:'The file could not be read. Is it a valid G04Sleep backup?',
         healthExportTitle:'Export for health apps', healthExportDesc:"G04Sleep can't connect directly to Apple Health or Google Fit — that only works from a native app. As a CSV file, though, your sleep data can be imported into many health apps (e.g. via an import app or Shortcuts).",
         btnExportCsv:'Export as CSV', backupMsgCsvExported:'CSV file downloaded.',
+        legalTitle:'Privacy & copyright', legalDesc:'See which data G04Sleep processes and which rights apply to the app code and media.',
+        btnPrivacy:'Privacy policy', btnCopyright:'Copyright', legalStoreNote:'Before publishing on Google Play, replace the operator name and contact placeholders in the legal texts.',
+        btnDeleteAllData:'Delete all local data', confirmDeleteAllData:'Really delete all local G04Sleep data, recordings and push data?', toastDataDeleted:'Local data was deleted.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push server is not configured yet.', errPushUnreachable:'Push server unreachable.',
         errNoActiveSubscription:'No active push subscription found.', errPushNotConnected:'The Cloudflare push server is not connected yet.',
         errAddToHomeScreen:'First add G04Sleep to your iPhone home screen and open it from there.',
@@ -3245,6 +3310,7 @@ let soundCurrentEventStart = null;
 let soundCurrentPeakLevel = 0;
 let soundTimelineBucket = null;
 let soundDbPromise = null;
+let soundDbConnection = null;
 
 function openSoundClipDb(){
     if(!('indexedDB' in window)) return Promise.reject(new Error('IndexedDB unavailable'));
@@ -3259,7 +3325,11 @@ function openSoundClipDb(){
                 chunks.createIndex('sessionId', 'sessionId', {unique:false});
             }
         };
-        request.onsuccess = () => resolve(request.result);
+        request.onsuccess = () => {
+            soundDbConnection = request.result;
+            soundDbConnection.onversionchange = () => soundDbConnection.close();
+            resolve(soundDbConnection);
+        };
         request.onerror = () => reject(request.error || new Error('IndexedDB failed'));
     });
     return soundDbPromise;
@@ -4611,6 +4681,35 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
     openSheet('settingsOverlay');
     setActiveTab('settingsBtn');
 });
+
+function deleteSoundDatabase(){
+    if(soundDbConnection){
+        try{ soundDbConnection.close(); } catch(error){ /* already closed */ }
+        soundDbConnection = null;
+    }
+    soundDbPromise = null;
+    if(!('indexedDB' in window)) return Promise.resolve();
+    return new Promise(resolve => {
+        const request = indexedDB.deleteDatabase('gosleep-sound-clips');
+        request.onsuccess = request.onerror = request.onblocked = () => resolve();
+    });
+}
+
+async function deleteAllAppData(){
+    if(!window.confirm(t('confirmDeleteAllData'))) return;
+    const deviceId = localStorage.getItem('gs_pushDeviceId');
+    if(PUSH_API_URL && deviceId){
+        await pushRequest('/api/devices/' + encodeURIComponent(deviceId), {method:'DELETE'}).catch(() => {});
+    }
+    await stopSoundDetection().catch(() => {});
+    stopSound();
+    Object.keys(localStorage).filter(key => key.startsWith('gs_')).forEach(key => localStorage.removeItem(key));
+    await deleteSoundDatabase();
+    showToast(t('toastDataDeleted'));
+    setTimeout(() => location.reload(), 450);
+}
+
+document.getElementById('deleteAllDataBtn').addEventListener('click', deleteAllAppData);
 
 // ---------- Profile switcher UI ----------
 function profileName(profile){

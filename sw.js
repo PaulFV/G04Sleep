@@ -1,9 +1,11 @@
-const CACHE_NAME = 'gosleep-v27';
+const CACHE_NAME = 'gosleep-v29';
 const APP_ASSETS = [
     './',
     './index.html',
     './push-config.js',
     './manifest.json',
+    './privacy.html',
+    './copyright.html',
     './icons/favicon-32.png',
     './icons/apple-touch-icon.png',
     './icons/icon-192.png',
@@ -14,6 +16,12 @@ const APP_ASSETS = [
     './icons/moon-angel.png',
     './icons/galaxy-background.png'
 ];
+
+function navigationCacheKey(url){
+    if(url.pathname.endsWith('/privacy.html')) return './privacy.html';
+    if(url.pathname.endsWith('/copyright.html')) return './copyright.html';
+    return './index.html';
+}
 
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_ASSETS)));
@@ -37,11 +45,11 @@ self.addEventListener('fetch', event => {
     if(needsFreshCopy){
         event.respondWith(fetch(event.request).then(response => {
             if(response.ok && url.origin === self.location.origin){
-                const cacheKey = event.request.mode === 'navigate' ? './index.html' : event.request;
+                const cacheKey = event.request.mode === 'navigate' ? navigationCacheKey(url) : event.request;
                 event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(cacheKey, response.clone())));
             }
             return response;
-        }).catch(() => caches.match(event.request.mode === 'navigate' ? './index.html' : event.request)));
+        }).catch(() => caches.match(event.request.mode === 'navigate' ? navigationCacheKey(url) : event.request)));
         return;
     }
 
