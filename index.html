@@ -220,7 +220,7 @@ body::before{
 /* ---------- Hero: orbit + waveform ---------- */
 .hero{
     text-align:center;
-    padding:44px 0 10px;
+    padding:44px 0 16px;
     position:relative;
     overflow:visible;
 }
@@ -230,7 +230,7 @@ body::before{
     top:0;
     left:50%;
     width:min(760px,112%);
-    height:430px;
+    height:500px;
     transform:translateX(-50%);
     overflow:hidden;
     border-radius:34px;
@@ -470,8 +470,8 @@ body::before{
 
 .orbit-wrap{
     position:relative;
-    width:380px;
-    height:380px;
+    width:440px;
+    height:440px;
     margin:0 auto;
     display:flex;
     align-items:center;
@@ -484,18 +484,18 @@ body::before{
     border:1px solid rgba(0,229,255,0.18);
 }
 
-.orbit-ring.r1{ width:380px; height:380px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
-.orbit-ring.r2{ width:288px; height:288px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
-.orbit-ring.r3{ width:204px; height:204px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
-.orbit-ring.r4{ width:334px; height:334px; border-style:dashed; border-color:rgba(0,229,255,0.1); border-left-color:var(--violet); animation:spin 30s linear infinite reverse; }
+.orbit-ring.r1{ width:440px; height:440px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
+.orbit-ring.r2{ width:334px; height:334px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
+.orbit-ring.r3{ width:236px; height:236px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
+.orbit-ring.r4{ width:386px; height:386px; border-style:dashed; border-color:rgba(0,229,255,0.1); border-left-color:var(--violet); animation:spin 30s linear infinite reverse; }
 
 @keyframes spin{
     to{ transform:rotate(360deg); }
 }
 
 .moon{
-    width:250px;
-    height:250px;
+    width:270px;
+    height:270px;
     position:relative;
     z-index:2;
     padding:0;
@@ -565,6 +565,8 @@ body::before{
 @media (min-width:640px){
     .cards{ grid-template-columns:1fr 1fr; }
     .card.wide{ grid-column:auto; }
+    .cards > .card:nth-child(3),
+    .cards > .card:nth-child(4){ grid-column:1 / -1; }
 }
 
 @media (min-width:900px){
@@ -814,7 +816,7 @@ body::before{
     letter-spacing:0.3px;
     color:var(--bg);
     background:linear-gradient(135deg,var(--cyan),var(--violet));
-    margin-top:6px;
+    margin-top:50px;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -1792,8 +1794,8 @@ textarea:focus-visible{
     .header-sound-action .sound-label{ display:none; }
     .avatar{ max-width:132px; }
     .container{ padding-left:14px; padding-right:14px; }
-    .hero{ padding-top:20px; }
-    .galaxy-scene{ height:315px; width:125%; opacity:0.86; }
+    .hero{ padding-top:20px; padding-bottom:20px; }
+    .galaxy-scene{ height:400px; width:125%; opacity:0.86; }
     .galaxy-sun{ width:46px; height:46px; }
     .galaxy-planet.p1{ width:30px; height:30px; }
     .galaxy-planet.p2{ width:28px; height:28px; }
@@ -1801,14 +1803,14 @@ textarea:focus-visible{
     .galaxy-planet.p4{ width:19px; height:19px; }
     .galaxy-planet.p5{ width:18px; height:18px; }
     .galaxy-planet.p6{ width:17px; height:17px; }
-    .orbit-wrap{ width:280px; height:280px; }
-    .orbit-ring.r1{ width:280px; height:280px; }
-    .orbit-ring.r2{ width:212px; height:212px; }
-    .orbit-ring.r3{ width:150px; height:150px; }
-    .orbit-ring.r4{ width:246px; height:246px; }
-    .moon{ width:210px; height:210px; }
+    .orbit-wrap{ width:330px; height:330px; }
+    .orbit-ring.r1{ width:330px; height:330px; }
+    .orbit-ring.r2{ width:250px; height:250px; }
+    .orbit-ring.r3{ width:177px; height:177px; }
+    .orbit-ring.r4{ width:290px; height:290px; }
+    .moon{ width:235px; height:235px; }
     .cards{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
-    .cards > .card:nth-child(n+3){ grid-column:auto; }
+    .cards > .card:nth-child(n+3){ grid-column:1 / -1; }
     .card{ padding:16px; }
     .card-label{ font-size:11px; gap:6px; letter-spacing:0.7px; }
     .card-label .ui-icon{ width:16px; height:16px; }
