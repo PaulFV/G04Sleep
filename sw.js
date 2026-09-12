@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gosleep-v9';
+const CACHE_NAME = 'gosleep-v10';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -9,7 +9,8 @@ const APP_ASSETS = [
     './icons/icon-192.png',
     './icons/icon-512.png',
     './icons/icon-1024.png',
-    './icons/moon-floating.svg'
+    './icons/moon-floating.svg',
+    './icons/moon-hero.png'
 ];
 
 self.addEventListener('install', event => {

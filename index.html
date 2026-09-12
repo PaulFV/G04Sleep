@@ -104,56 +104,6 @@ body::before{
     border-bottom:1px solid rgba(var(--tint-rgb),0.05);
 }
 
-.header-actions{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:14px;
-    flex:1;
-    margin:0 24px;
-}
-
-.header-action{
-    width:auto;
-    min-width:250px;
-    min-height:42px;
-    margin:0;
-    padding:9px 16px;
-    border-radius:9px;
-    box-sizing:border-box;
-    font-size:13px;
-}
-
-.main-action.header-action{
-    border:2px solid var(--cyan);
-    color:var(--cyan);
-    background:rgba(0,229,255,0.035);
-    box-shadow:none;
-    margin-top:0;
-}
-
-.main-action.header-action.active{
-    border-color:var(--magenta);
-    color:#ff9bc1;
-    background:rgba(255,61,138,0.12);
-    box-shadow:0 0 18px rgba(255,61,138,0.22);
-}
-
-.secondary-action.header-action{
-    border:2px solid var(--cyan);
-    color:var(--cyan);
-    background:rgba(0,229,255,0.035);
-    margin-top:0;
-}
-
-.secondary-action.header-action:hover,
-.secondary-action.header-action:focus-visible,
-.main-action.header-action:hover,
-.main-action.header-action:focus-visible{
-    background:rgba(0,229,255,0.12);
-    box-shadow:0 0 18px rgba(0,229,255,0.18);
-}
-
 .logo{
     font-size:22px;
     font-weight:700;
@@ -221,14 +171,15 @@ body::before{
 /* ---------- Hero: orbit + waveform ---------- */
 .hero{
     text-align:center;
-    padding:26px 0 10px;
+    padding:44px 0 10px;
     position:relative;
+    overflow:visible;
 }
 
 .orbit-wrap{
     position:relative;
-    width:270px;
-    height:270px;
+    width:320px;
+    height:320px;
     margin:0 auto;
     display:flex;
     align-items:center;
@@ -241,29 +192,63 @@ body::before{
     border:1px solid rgba(0,229,255,0.18);
 }
 
-.orbit-ring.r1{ width:270px; height:270px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
-.orbit-ring.r2{ width:204px; height:204px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
-.orbit-ring.r3{ width:144px; height:144px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
+.orbit-ring.r1{ width:320px; height:320px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
+.orbit-ring.r2{ width:242px; height:242px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
+.orbit-ring.r3{ width:170px; height:170px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
 
 @keyframes spin{
     to{ transform:rotate(360deg); }
 }
 
 .moon{
-    width:148px;
-    height:148px;
+    width:190px;
+    height:190px;
     position:relative;
     z-index:2;
     padding:0;
-    border:0;
-    background:transparent;
+    border:1px solid rgba(0,229,255,0.34);
+    border-radius:50%;
+    background:
+        radial-gradient(circle at 34% 28%, rgba(0,229,255,0.2), transparent 38%),
+        radial-gradient(circle, rgba(18,28,61,0.86) 0%, rgba(5,8,22,0.96) 72%);
     color:inherit;
     cursor:pointer;
-    filter:drop-shadow(0 0 18px rgba(0,229,255,0.72)) drop-shadow(0 0 38px rgba(140,107,255,0.46));
+    box-shadow:
+        inset 0 0 22px rgba(0,229,255,0.16),
+        inset 0 0 48px rgba(140,107,255,0.12),
+        0 0 20px rgba(0,229,255,0.46),
+        0 0 48px rgba(140,107,255,0.28);
     animation:moonFloat 5.5s ease-in-out infinite;
 }
 
+.moon::before{
+    content:'';
+    position:absolute;
+    inset:9px;
+    border:1px solid rgba(0,229,255,0.2);
+    border-radius:50%;
+    box-shadow:inset 0 0 18px rgba(0,229,255,0.1);
+    pointer-events:none;
+}
+
+.moon::after{
+    content:'';
+    position:absolute;
+    top:25px;
+    left:34px;
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:rgba(118,247,255,0.42);
+    filter:blur(8px);
+    pointer-events:none;
+}
+
 .moon.active{
+    border-color:rgba(255,61,138,0.62);
+    background:
+        radial-gradient(circle at 34% 28%, rgba(255,61,138,0.2), transparent 38%),
+        radial-gradient(circle, rgba(38,18,61,0.9) 0%, rgba(12,5,22,0.96) 72%);
     filter:drop-shadow(0 0 24px rgba(255,61,138,0.88)) drop-shadow(0 0 48px rgba(140,107,255,0.62));
 }
 
@@ -275,13 +260,20 @@ body::before{
 
 .moon svg,
 .moon img{
-    width:100%;
-    height:100%;
+    width:88%;
+    height:88%;
+    margin:auto;
     display:block;
+    position:relative;
+    z-index:1;
 }
 
 .moon img{
     object-fit:contain;
+    mix-blend-mode:screen;
+    width:112%;
+    height:112%;
+    margin:-6%;
 }
 
 @keyframes moonFloat{
@@ -323,6 +315,9 @@ body::before{
     grid-template-columns:1fr;
     gap:14px;
     margin-top:14px;
+    max-width:700px;
+    margin-left:auto;
+    margin-right:auto;
 }
 
 @media (min-width:640px){
@@ -346,15 +341,21 @@ body::before{
     overflow:hidden;
 }
 
-.card > .card-action{
-    position:absolute;
-    top:20px;
-    right:20px;
-    margin-top:0;
+.card-link{
+    cursor:pointer;
+    transition:border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.card.has-card-action{
-    padding-bottom:74px;
+.card-link:hover,
+.card-link:focus-visible{
+    border-color:rgba(0,229,255,0.42) !important;
+    box-shadow:0 12px 34px rgba(0,0,0,0.42), 0 0 20px rgba(0,229,255,0.12), inset 0 1px 0 rgba(var(--tint-rgb),0.06);
+    transform:translateY(-2px);
+}
+
+.card-link:focus-visible{
+    outline:3px solid rgba(0,229,255,0.35);
+    outline-offset:3px;
 }
 
 .card::before{
@@ -1519,29 +1520,13 @@ textarea:focus-visible{
     .header{ padding-left:16px; padding-right:16px; }
     .avatar{ max-width:132px; }
     .container{ padding-left:14px; padding-right:14px; }
-    .hero{ padding-top:12px; }
-    .orbit-wrap{ width:220px; height:220px; }
-    .orbit-ring.r1{ width:220px; height:220px; }
-    .orbit-ring.r2{ width:166px; height:166px; }
-    .orbit-ring.r3{ width:118px; height:118px; }
-    .moon{ width:124px; height:124px; }
+    .hero{ padding-top:34px; }
+    .orbit-wrap{ width:260px; height:260px; }
+    .orbit-ring.r1{ width:260px; height:260px; }
+    .orbit-ring.r2{ width:198px; height:198px; }
+    .orbit-ring.r3{ width:140px; height:140px; }
+    .moon{ width:158px; height:158px; }
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
-}
-
-@media (max-width:900px){
-    .header{ flex-wrap:wrap; row-gap:10px; }
-    .header-actions{
-        order:3;
-        flex:0 0 100%;
-        margin:0;
-        gap:8px;
-    }
-    .header-action{
-        flex:1 1 0;
-        min-width:0;
-        padding-left:8px;
-        padding-right:8px;
-    }
 }
 
 </style>
@@ -1573,10 +1558,6 @@ textarea:focus-visible{
 
 <header class="header">
     <div class="logo"><img class="brand-icon" src="icons/favicon-32.png" alt="">G04SLEEP</div>
-    <div class="header-actions">
-        <button type="button" class="main-action header-action" id="sleepBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>Schlaf aufzeichnen</span></button>
-        <button type="button" class="secondary-action header-action" id="soundsBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg><span data-i18n="btnOpenSounds">Einschlafhilfe abspielen</span></button>
-    </div>
     <div class="profile">
         <div class="avatar" id="avatarInitial">Hallo, User</div>
     </div>
@@ -1590,7 +1571,7 @@ textarea:focus-visible{
             <div class="orbit-ring r2"></div>
             <div class="orbit-ring r3"></div>
             <button type="button" class="moon" id="moonSleepAction" aria-label="Schlaf aufzeichnen" aria-pressed="false">
-                <img src="icons/moon-floating.svg" alt="G04Sleep – leuchtender Halbmond" data-i18n-alt="moonAlt">
+                <img src="icons/moon-hero.png" alt="G04Sleep – leuchtender Halbmond" data-i18n-alt="moonAlt">
             </button>
         </div>
         <p id="heroText">Bereit für eine erholsame Nacht</p>
@@ -1614,9 +1595,12 @@ textarea:focus-visible{
         </div>
     </div>
 
+    <button type="button" class="main-action" id="sleepBtn" aria-label="Schlaf aufzeichnen" title="Schlaf aufzeichnen"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>Schlaf aufzeichnen</span></button>
+    <button type="button" class="secondary-action" id="soundsBtn" aria-label="Einschlafhilfe abspielen" title="Einschlafhilfe abspielen"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg><span data-i18n="btnOpenSounds">Einschlafhilfe abspielen</span></button>
+
     <div class="cards">
 
-        <div class="card has-card-action">
+        <div class="card card-link" data-open="stats" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-bed"></use></svg><span data-i18n="cardQualityLabel">Schlafqualität</span></div>
             <div class="quality-row">
                 <div class="ring" id="qualityRing">
@@ -1627,26 +1611,23 @@ textarea:focus-visible{
                     <p data-i18n="cardQualitySub">Letzte Nacht</p>
                 </div>
             </div>
-            <button type="button" class="card-action" data-open="stats"><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span data-i18n="cardQualityAction">Verlauf ansehen</span></button>
         </div>
 
-        <div class="card has-card-action">
+        <div class="card card-link" data-open="alarm" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Nächster Wecker</span></div>
             <p class="big-value" id="alarmValue">–:–</p>
             <p class="sub-value" id="alarmDaysLabel">Kein Wecker aktiv</p>
-            <button type="button" class="card-action" data-open="alarm"><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span data-i18n="cardAlarmAction">Wecker verwalten</span></button>
         </div>
 
-        <div class="card has-card-action">
+        <div class="card card-link" data-open="stats" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-chart"></use></svg><span data-i18n="cardOverviewLabel">Dein Überblick</span></div>
             <div class="stat-line"><span data-i18n="labelWeek">Woche</span><span id="statWeek">–</span></div>
             <div class="stat-line"><span data-i18n="labelMonth">Monat</span><span id="statMonth">–</span></div>
             <div class="stat-line"><span data-i18n="labelQuality">Qualität</span><span id="statQuality">–</span></div>
             <div class="stat-line"><span data-i18n="labelStreak">Serie</span><span id="statStreak">–</span></div>
-            <button type="button" class="card-action" data-open="stats"><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg><span data-i18n="cardOverviewAction">Alle Nächte</span></button>
         </div>
 
-        <div class="card wide">
+        <div class="card wide card-link" data-open="stats" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span data-i18n="cycleCardLabel">Passende Aufstehzeiten</span></div>
             <ul class="cycle-list" id="cycleList"></ul>
             <p class="cycle-help" data-i18n="cycleHelp">Berechnet mit etwa 90 Minuten pro Schlafzyklus. Die Zeiten dienen als Orientierung.</p>
@@ -3400,6 +3381,9 @@ function updateSleepButton(){
         heroText.textContent = t('heroReady');
     }
     sleepBtn.disabled = sleepFinishing;
+    const sleepActionLabel = state.sleepStart ? t('sleepBtnStop') : t('sleepBtnStart');
+    sleepBtn.setAttribute('aria-label', sleepActionLabel);
+    sleepBtn.title = sleepActionLabel;
     moonSleepAction.classList.toggle('active', Boolean(state.sleepStart));
     moonSleepAction.setAttribute('aria-label', state.sleepStart ? t('sleepBtnStop') : t('sleepBtnStart'));
     moonSleepAction.setAttribute('aria-pressed', String(Boolean(state.sleepStart)));
@@ -3804,7 +3788,10 @@ function drawSleepVideoFrame(context, entry, currentSec, durationSec, logo){
     context.fillText('Schlafaufnahme', width / 2, 195);
 
     if(logo){
+        context.save();
+        context.globalCompositeOperation = 'screen';
         context.drawImage(logo, width / 2 - 190, 270, 380, 380);
+        context.restore();
     } else {
         context.fillStyle = '#00B7FF';
         context.font = '260px serif';
@@ -3878,7 +3865,7 @@ async function saveSoundRecordingVideo(button){
         const context = canvas.getContext('2d');
         if(!context) throw new Error('Canvas unavailable');
         const logo = new Image();
-        logo.src = './icons/moon-floating.svg';
+        logo.src = './icons/moon-hero.png';
         await new Promise(resolve => {
             logo.onload = resolve;
             logo.onerror = resolve;
@@ -3977,16 +3964,23 @@ async function saveSoundRecordingVideo(button){
     }
 }
 
-document.querySelectorAll('[data-open]').forEach(button => {
-    button.addEventListener('click', () => {
+document.querySelectorAll('[data-open]').forEach(control => {
+    const openTarget = () => {
         const targets = {
             alarm:'alarmBtn',
             stats:'statsBtn',
             journal:'journalBtn',
             settings:'settingsBtn'
         };
-        const target = document.getElementById(targets[button.dataset.open]);
+        const target = document.getElementById(targets[control.dataset.open]);
         if(target) target.click();
+    };
+    control.addEventListener('click', openTarget);
+    control.addEventListener('keydown', event => {
+        if(event.key === 'Enter' || event.key === ' '){
+            event.preventDefault();
+            openTarget();
+        }
     });
 });
 
