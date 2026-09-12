@@ -485,9 +485,9 @@ body::before{
 }
 
 .orbit-ring.r1{ width:440px; height:440px; animation:spin 22s linear infinite; border-top-color:var(--cyan); }
-.orbit-ring.r2{ width:334px; height:334px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.16); }
-.orbit-ring.r3{ width:236px; height:236px; border:1px dashed rgba(var(--tint-rgb),0.12); animation:spin 40s linear infinite; }
-.orbit-ring.r4{ width:386px; height:386px; border-style:dashed; border-color:rgba(0,229,255,0.1); border-left-color:var(--violet); animation:spin 30s linear infinite reverse; }
+.orbit-ring.r2{ width:334px; height:334px; animation:spin 16s linear infinite reverse; border-right-color:var(--violet); border-color:rgba(140,107,255,0.3); box-shadow:0 0 10px rgba(140,107,255,0.12); }
+.orbit-ring.r3{ width:236px; height:236px; border:2px dashed rgba(var(--tint-rgb),0.34); animation:spin 40s linear infinite; box-shadow:0 0 14px rgba(0,229,255,0.14); }
+.orbit-ring.r4{ width:386px; height:386px; border-style:dashed; border-color:rgba(0,229,255,0.2); border-left-color:var(--violet); animation:spin 30s linear infinite reverse; box-shadow:0 0 12px rgba(0,229,255,0.1); }
 
 @keyframes spin{
     to{ transform:rotate(360deg); }
