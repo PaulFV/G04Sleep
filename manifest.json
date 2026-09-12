@@ -9,9 +9,7 @@
   "background_color": "#05060B",
   "theme_color": "#05060B",
   "icons": [
-    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
-    { "src": "icons/icon-1024.png", "sizes": "1024x1024", "type": "image/png", "purpose": "any" }
+    { "src": "icons/moon-angel.png", "sizes": "1254x1254", "type": "image/png", "purpose": "any maskable" }
   ],
   "shortcuts": [
     {
@@ -19,14 +17,14 @@
       "short_name": "Schlaf",
       "description": "Schlafaufzeichnung direkt starten",
       "url": "./?action=sleep",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/moon-angel.png", "sizes": "1254x1254", "type": "image/png" }]
     },
     {
       "name": "Wecker verwalten",
       "short_name": "Wecker",
       "description": "Wecker-Liste öffnen",
       "url": "./?action=alarms",
-      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" }]
+      "icons": [{ "src": "icons/moon-angel.png", "sizes": "1254x1254", "type": "image/png" }]
     }
   ]
 }

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gosleep-v10';
+const CACHE_NAME = 'gosleep-v15';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -10,7 +10,9 @@ const APP_ASSETS = [
     './icons/icon-512.png',
     './icons/icon-1024.png',
     './icons/moon-floating.svg',
-    './icons/moon-hero.png'
+    './icons/moon-hero.png',
+    './icons/moon-angel.png',
+    './icons/galaxy-background.png'
 ];
 
 self.addEventListener('install', event => {
@@ -68,7 +70,7 @@ self.addEventListener('push', event => {
     }
     event.waitUntil(self.registration.showNotification(data.title, {
         body:data.body,
-        icon:'./icons/icon-192.png',
+        icon:'./icons/moon-angel.png',
         badge:'./icons/favicon-32.png',
         tag:data.tag,
         renotify:true,
