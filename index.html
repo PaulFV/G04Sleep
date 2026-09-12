@@ -204,8 +204,23 @@ body::before{
     height:112px;
     position:relative;
     z-index:2;
+    padding:0;
+    border:0;
+    background:transparent;
+    color:inherit;
+    cursor:pointer;
     filter:drop-shadow(0 0 18px rgba(0,229,255,0.72)) drop-shadow(0 0 38px rgba(140,107,255,0.46));
     animation:moonFloat 5.5s ease-in-out infinite;
+}
+
+.moon.active{
+    filter:drop-shadow(0 0 24px rgba(255,61,138,0.88)) drop-shadow(0 0 48px rgba(140,107,255,0.62));
+}
+
+.moon:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:8px;
+    border-radius:50%;
 }
 
 .moon svg,
@@ -976,6 +991,19 @@ button:disabled{
 
 .stats-chart{ margin:0 0 18px; }
 .stats-chart svg{ width:100%; height:140px; display:block; }
+.stats-subtitle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin:18px 0 4px;
+    font-size:15px;
+}
+.stats-subtitle .ui-icon{ color:var(--cyan); }
+.stats-chart-intro{
+    margin:0 0 8px;
+    color:var(--text-dim);
+    font-size:12.5px;
+}
 .stats-chart-empty{
     color:var(--text-dim);
     font-size:13px;
@@ -1091,6 +1119,14 @@ input[type="range"]{
     color:var(--text);
     font-weight:600;
 }
+
+.history-sound{
+    margin-top:6px;
+    color:var(--text-dim);
+    font-size:12px;
+}
+
+.history-sound.detected{ color:#ff8ab7; }
 
 .history-actions{
     display:flex;
@@ -1355,9 +1391,9 @@ textarea:focus-visible{
             <div class="orbit-ring r1"></div>
             <div class="orbit-ring r2"></div>
             <div class="orbit-ring r3"></div>
-            <div class="moon">
+            <button type="button" class="moon" id="moonSleepAction" aria-label="Schlaf aufzeichnen" aria-pressed="false">
                 <img src="icons/moon-floating.svg" alt="G04Sleep – leuchtender Halbmond" data-i18n-alt="moonAlt">
-            </div>
+            </button>
         </div>
         <p id="heroText">Bereit für eine erholsame Nacht</p>
 
@@ -1531,6 +1567,9 @@ textarea:focus-visible{
             <button type="button" data-range="90" data-i18n="chartRange90">90 Tage</button>
         </div>
         <div id="statsChart" class="stats-chart"></div>
+        <h3 class="stats-subtitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg> <span data-i18n="soundChartTitle">Geräuscherkennung</span></h3>
+        <p class="stats-chart-intro" data-i18n="soundChartIntro">Wahrscheinliche Schnarch-/Geräuschereignisse pro Nacht</p>
+        <div id="soundChart" class="stats-chart"></div>
         <div id="statsHistory"></div>
         <div class="sheet-actions">
             <button type="button" class="btn-primary" data-close="statsOverlay" data-i18n="btnDone">Fertig</button>
@@ -1621,6 +1660,19 @@ textarea:focus-visible{
             </div>
             <p class="push-status" id="pushStatus" data-i18n="pushStatusChecking">Status wird geprüft …</p>
             <button type="button" class="push-test" id="testPushBtn" disabled data-i18n="btnTestPush">Test-Benachrichtigung senden</button>
+        </div>
+        <div class="setting-panel">
+            <div class="setting-row">
+                <div class="setting-copy">
+                    <svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg>
+                    <div><strong data-i18n="soundDetectionTitle">Geräuscherkennung</strong><span data-i18n="soundDetectionDesc">Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Es werden keine Audiodateien gespeichert. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.</span></div>
+                </div>
+                <label class="switch" aria-label="Geräuscherkennung aktivieren" data-i18n-aria-label="soundDetectionToggleAria">
+                    <input type="checkbox" id="soundDetectionToggle" role="switch">
+                    <span class="switch-track"></span>
+                </label>
+            </div>
+            <p class="push-status" id="soundDetectionStatus" data-i18n="soundStatusOff">Ausgeschaltet.</p>
         </div>
         <div class="setting-panel">
             <div class="setting-row">
@@ -1753,7 +1805,8 @@ function loadObject(key, fallback){
 // name, goal, snooze settings) is namespaced per profile; device-level things (push
 // subscription, language, theme, onboarding) stay shared across profiles on this device.
 const PROFILE_SCOPED_KEYS = ['gs_userName','gs_targetHours','gs_snoozeMinutes','gs_snoozeMaxCount',
-    'gs_bedtimeReminder','gs_alarms','gs_sleepStart','gs_log','gs_journal','gs_triggered','gs_snoozeUntil','gs_snoozeCount'];
+    'gs_bedtimeReminder','gs_alarms','gs_sleepStart','gs_log','gs_journal','gs_soundDetectionEnabled','gs_soundHistory','gs_soundCurrent',
+    'gs_triggered','gs_snoozeUntil','gs_snoozeCount'];
 
 function loadStoredProfiles(){
     try{
@@ -1815,6 +1868,8 @@ const state = {
     sleepStart: localStorage.getItem(pk('gs_sleepStart')) || null,
     log: loadArray('gs_log', []),
     journal: loadArray('gs_journal', []),
+    soundDetectionEnabled: localStorage.getItem(pk('gs_soundDetectionEnabled')) === 'true',
+    soundHistory: loadArray('gs_soundHistory', []),
     pushEnabled: localStorage.getItem('gs_pushEnabled') === 'true',
     lang: localStorage.getItem('gs_lang') || (navigator.language && navigator.language.toLowerCase().startsWith('en') ? 'en' : 'de')
 };
@@ -1921,6 +1976,10 @@ const I18N = {
         chartRange30:'30 Tage', chartRange90:'90 Tage', statsChartAria:'Balkendiagramm der Schlafdauer',
         statsChartEmpty:'Für diesen Zeitraum liegen noch keine Schlafdaten vor.',
         statsChartLegend:'Gestrichelte Linie: Schlafziel ({hours} Std.)',
+        soundChartTitle:'Geräuscherkennung', soundChartIntro:'Wahrscheinliche Schnarch-/Geräuschereignisse pro Nacht',
+        soundChartAria:'Balkendiagramm der Geräuschereignisse', soundChartEmpty:'Noch keine Geräuschdaten vorhanden.',
+        soundChartLegend:'Balken: erkannte Geräuschereignisse', soundEventCount:'{count} Ereignisse', soundEventMinutes:'{minutes} Min.',
+        soundNoEvents:'Keine auffälligen Geräusche erkannt',
         editSleepTitle:'Schlafeintrag bearbeiten', labelDate:'Datum', labelHours:'Stunden', labelMinutes:'Minuten',
         btnSave:'Speichern', btnDelete:'Löschen', editButton:'Bearbeiten',
         ariaEditSleep:'Schlafeintrag vom {date} bearbeiten', qualitySuffix:'% Qualität',
@@ -1948,6 +2007,13 @@ const I18N = {
         bedtimeToggleAria:'Bettzeit-Erinnerung aktivieren',
         toastBedtimeReminder:'Zeit, schlafen zu gehen – so klappt dein Schlafziel bis {time} Uhr.',
         bedtimeNotifTitle:'Zeit für Bettruhe', bedtimeNotifBody:'Dein G04Sleep-Schlafziel beginnt jetzt am besten.',
+        soundDetectionTitle:'Geräuscherkennung', soundDetectionDesc:'Erkennt wahrscheinliche Schnarch- und laute Geräuschereignisse lokal. Es werden keine Audiodateien gespeichert. Für die Messung muss die App geöffnet und der Bildschirm aktiv bleiben.',
+        soundDetectionToggleAria:'Geräuscherkennung aktivieren', soundStatusOff:'Ausgeschaltet.',
+        soundStatusReady:'Aktiv – startet mit der nächsten Schlafaufzeichnung.',
+        soundStatusActive:'Mikrofon aktiv – Geräusche werden nur lokal ausgewertet.',
+        soundStatusUnsupported:'Mikrofonzugriff wird von diesem Browser nicht unterstützt.',
+        soundStatusPermission:'Mikrofonzugriff wurde nicht erlaubt.', soundStatusError:'Geräuscherkennung konnte nicht gestartet werden.',
+        soundStatusStopped:'Geräuscherkennung beendet.',
         pushTitle:'Hintergrund-Benachrichtigungen', pushDesc:'Weckt dich auch, wenn G04Sleep geschlossen ist.',
         pushToggleAria:'Hintergrund-Benachrichtigungen aktivieren', pushStatusChecking:'Status wird geprüft …',
         btnTestPush:'Test-Benachrichtigung senden', btnSaveSettings:'Änderungen speichern',
@@ -1967,7 +2033,7 @@ const I18N = {
         pushStatusTestError:'Test konnte nicht gesendet werden.',
         backupTitle:'Datensicherung', backupDesc:'Sichere alle Daten als Datei oder stelle sie auf einem anderen Gerät wieder her.',
         btnExportData:'Exportieren', btnImportData:'Importieren',
-        confirmImportData:'Import ersetzt deine aktuellen Daten (Name, Ziel, Wecker, Verlauf, Tagebuch). Fortfahren?',
+        confirmImportData:'Import ersetzt deine aktuellen Daten (Name, Ziel, Wecker, Verlauf, Geräuschdaten, Tagebuch). Fortfahren?',
         backupMsgExported:'Sicherungsdatei wurde heruntergeladen.', backupMsgImported:'Daten wurden importiert.',
         backupMsgImportError:'Die Datei konnte nicht gelesen werden. Ist es eine gültige G04Sleep-Sicherung?',
         healthExportTitle:'Export für Gesundheits-Apps', healthExportDesc:'G04Sleep kann sich nicht direkt mit Apple Health oder Google Fit verbinden – das geht nur mit einer nativen App. Als CSV-Datei lassen sich deine Schlafdaten aber in viele Gesundheits-Apps importieren (z. B. über eine Import-App oder Kurzbefehle).',
@@ -2032,6 +2098,10 @@ const I18N = {
         chartRange30:'30 days', chartRange90:'90 days', statsChartAria:'Bar chart of sleep duration',
         statsChartEmpty:'No sleep data for this time range yet.',
         statsChartLegend:'Dashed line: sleep goal ({hours} h)',
+        soundChartTitle:'Sound detection', soundChartIntro:'Likely snoring/sound events per night',
+        soundChartAria:'Bar chart of sound events', soundChartEmpty:'No sound data recorded yet.',
+        soundChartLegend:'Bars: detected sound events', soundEventCount:'{count} events', soundEventMinutes:'{minutes} min.',
+        soundNoEvents:'No notable sounds detected',
         editSleepTitle:'Edit sleep entry', labelDate:'Date', labelHours:'Hours', labelMinutes:'Minutes',
         btnSave:'Save', btnDelete:'Delete', editButton:'Edit',
         ariaEditSleep:'Edit sleep entry from {date}', qualitySuffix:'% quality',
@@ -2059,6 +2129,13 @@ const I18N = {
         bedtimeToggleAria:'Enable bedtime reminder',
         toastBedtimeReminder:'Time to go to bed – that gets you to your sleep goal by {time}.',
         bedtimeNotifTitle:'Time for bed', bedtimeNotifBody:'Now is a good time to start your G04Sleep goal.',
+        soundDetectionTitle:'Sound detection', soundDetectionDesc:'Detects likely snoring and loud sound events locally. No audio files are stored. Keep the app open with the screen on for measurement.',
+        soundDetectionToggleAria:'Enable sound detection', soundStatusOff:'Off.',
+        soundStatusReady:'Active – starts with the next sleep session.',
+        soundStatusActive:'Microphone active – sounds are analyzed locally only.',
+        soundStatusUnsupported:'Microphone access is not supported by this browser.',
+        soundStatusPermission:'Microphone access was not allowed.', soundStatusError:'Sound detection could not be started.',
+        soundStatusStopped:'Sound detection stopped.',
         pushTitle:'Background notifications', pushDesc:'Wakes you even when G04Sleep is closed.',
         pushToggleAria:'Enable background notifications', pushStatusChecking:'Checking status …',
         btnTestPush:'Send test notification', btnSaveSettings:'Save changes',
@@ -2078,7 +2155,7 @@ const I18N = {
         pushStatusTestError:'Test could not be sent.',
         backupTitle:'Backup', backupDesc:'Back up all your data as a file or restore it on another device.',
         btnExportData:'Export', btnImportData:'Import',
-        confirmImportData:'Importing will replace your current data (name, goal, alarms, history, journal). Continue?',
+        confirmImportData:'Importing will replace your current data (name, goal, alarms, history, sound data, journal). Continue?',
         backupMsgExported:'Backup file downloaded.', backupMsgImported:'Data imported.',
         backupMsgImportError:'The file could not be read. Is it a valid G04Sleep backup?',
         healthExportTitle:'Export for health apps', healthExportDesc:"G04Sleep can't connect directly to Apple Health or Google Fit — that only works from a native app. As a CSV file, though, your sleep data can be imported into many health apps (e.g. via an import app or Shortcuts).",
@@ -2155,6 +2232,7 @@ function setLanguage(lang){
     renderJournalHistory();
     renderStatsHistory();
     refreshPushControls();
+    refreshSoundDetectionControls();
     syncPushSchedule().catch(() => {});
 }
 
@@ -2360,6 +2438,7 @@ function renderJournalHistory(){
 
 function renderStatsHistory(){
     renderStatsChart();
+    renderSoundChart();
     const container = document.getElementById('statsHistory');
     if(state.log.length === 0){
         container.innerHTML = '<p class="empty">' + t('statsEmpty') + '</p>';
@@ -2370,6 +2449,10 @@ function renderStatsHistory(){
         const duration = Math.max(1, Math.round(entry.durationMin));
         const hours = Math.floor(duration/60);
         const minutes = duration%60;
+        const sound = state.soundHistory.find(item => Math.abs(Date.parse(item.date) - d.getTime()) < 2000);
+        const soundSummary = sound ? '<div class="history-sound' + (sound.eventCount ? ' detected' : '') + '">' +
+            (sound.eventCount ? t('soundEventCount', {count:sound.eventCount}) + ' · ' + t('soundEventMinutes', {minutes:Math.round((sound.eventSeconds || 0) / 60)}) : t('soundNoEvents')) +
+            '</div>' : '';
         if(editingSleepIndex === index){
             return '<article class="history-entry"><div class="history-date">' + t('editSleepTitle') + '</div>' +
                 '<div class="history-editor"><label for="sleepDate-' + index + '">' + t('labelDate') + '<input id="sleepDate-' + index + '" type="date" value="' + formatDateInput(d) + '"></label>' +
@@ -2379,7 +2462,7 @@ function renderStatsHistory(){
         }
         return '<article class="history-entry"><div class="history-row"><div><div class="history-date">' + d.toLocaleDateString(dateLocale()) +
             '</div><div class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + entry.quality +
-            t('qualitySuffix') + '</div></div><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) +
+            t('qualitySuffix') + '</div>' + soundSummary + '</div><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) +
             '">' + t('editButton') + '</button></div></article>';
     }).join('');
 }
@@ -2419,13 +2502,241 @@ function renderStatsChart(){
         '<p class="chart-legend">' + t('statsChartLegend', {hours:state.targetHours}) + '</p>';
 }
 
+function renderSoundChart(){
+    const container = document.getElementById('soundChart');
+    if(!container) return;
+    const now = new Date();
+    const since = new Date(now.getTime() - statsChartRange*24*60*60*1000);
+    const entries = state.soundHistory
+        .filter(entry => entry && Number.isFinite(Date.parse(entry.date)) && new Date(entry.date) >= since)
+        .sort((a,b) => new Date(a.date) - new Date(b.date));
+    if(entries.length === 0){
+        container.innerHTML = '<p class="stats-chart-empty">' + t('soundChartEmpty') + '</p>';
+        return;
+    }
+    const width = 600, height = 140, padding = 6;
+    const maxEvents = Math.max(1, ...entries.map(entry => Math.max(0, Number(entry.eventCount) || 0))) * 1.15;
+    const slot = (width - padding*2) / entries.length;
+    const barWidth = Math.max(3, slot - 3);
+    const bars = entries.map((entry, index) => {
+        const count = Math.max(0, Math.round(Number(entry.eventCount) || 0));
+        const minutes = Math.round(Math.max(0, Number(entry.eventSeconds) || 0) / 60);
+        const h = count ? Math.max(4, (count / maxEvents) * (height - padding*2)) : 2;
+        const x = padding + index * slot;
+        const y = height - padding - h;
+        const label = count
+            ? t('soundEventCount', {count:count}) + ' · ' + t('soundEventMinutes', {minutes:minutes})
+            : t('soundNoEvents');
+        return '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + barWidth.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="' + (count ? '#FF3D8A' : 'rgba(' + getTintRgb() + ',0.22)') + '" fill-opacity="0.85"><title>' +
+            escapeHtml(new Date(entry.date).toLocaleDateString(dateLocale()) + ': ' + label) + '</title></rect>';
+    }).join('');
+
+    container.innerHTML =
+        '<svg viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" role="img" aria-label="' + escapeHtml(t('soundChartAria')) + '">' +
+        bars +
+        '</svg>' +
+        '<p class="chart-legend">' + t('soundChartLegend') + '</p>';
+}
+
 document.querySelectorAll('#statsRangeToggle button').forEach(btn => {
     btn.addEventListener('click', () => {
         statsChartRange = Number(btn.dataset.range);
         document.querySelectorAll('#statsRangeToggle button').forEach(b => b.classList.toggle('selected', b === btn));
         renderStatsChart();
+        renderSoundChart();
     });
 });
+
+// ---------- Local sleep sound detection ----------
+// The microphone stream is analysed in memory only. No MediaRecorder is used, so there is no
+// audio file to upload or keep in local storage; only aggregated event counts are saved.
+let micStream = null;
+let micAudioContext = null;
+let micSourceNode = null;
+let micAnalyser = null;
+let micTimeData = null;
+let micFrequencyData = null;
+let micAnalysisTimer = null;
+let activeSoundSession = null;
+let soundLoudFrames = 0;
+let soundQuietFrames = 0;
+let soundCurrentEventStart = null;
+let soundCurrentPeakLevel = 0;
+
+function soundDetectionSupported(){
+    return Boolean(navigator.mediaDevices && typeof navigator.mediaDevices.getUserMedia === 'function' &&
+        (window.AudioContext || window.webkitAudioContext));
+}
+
+function setSoundDetectionStatus(key, tone){
+    const status = document.getElementById('soundDetectionStatus');
+    if(!status) return;
+    status.textContent = t(key);
+    status.style.color = tone === 'error' ? '#ff8cae' : tone === 'success' ? '#7cf6bd' : '';
+}
+
+function refreshSoundDetectionControls(){
+    const toggle = document.getElementById('soundDetectionToggle');
+    if(toggle) toggle.checked = state.soundDetectionEnabled;
+    if(activeSoundSession && micStream){
+        setSoundDetectionStatus('soundStatusActive', 'success');
+    } else if(!soundDetectionSupported()){
+        setSoundDetectionStatus('soundStatusUnsupported', 'error');
+    } else if(state.soundDetectionEnabled){
+        setSoundDetectionStatus('soundStatusReady');
+    } else {
+        setSoundDetectionStatus('soundStatusOff');
+    }
+}
+
+function persistSoundSession(){
+    if(activeSoundSession) save('gs_soundCurrent', activeSoundSession);
+}
+
+function analyseSoundFrame(){
+    if(!micAnalyser || !micAudioContext || !activeSoundSession) return;
+    micAnalyser.getByteTimeDomainData(micTimeData);
+    let sum = 0;
+    for(const sample of micTimeData){
+        const centered = (sample - 128) / 128;
+        sum += centered * centered;
+    }
+    const rms = Math.sqrt(sum / micTimeData.length);
+    const db = 20 * Math.log10(Math.max(rms, 0.0001));
+    const level = Math.max(0, Math.min(100, Math.round(((db + 60) / 30) * 100)));
+
+    micAnalyser.getByteFrequencyData(micFrequencyData);
+    const binHz = micAudioContext.sampleRate / micAnalyser.fftSize;
+    let lowEnergy = 0;
+    let totalEnergy = 0;
+    for(let index = 1; index < micFrequencyData.length; index += 1){
+        const frequency = index * binHz;
+        if(frequency > 8000) break;
+        const energy = micFrequencyData[index];
+        totalEnergy += energy;
+        if(frequency >= 80 && frequency <= 1200) lowEnergy += energy;
+    }
+    const lowRatio = totalEnergy ? lowEnergy / totalEnergy : 0;
+    const likelySound = level >= 62 && lowRatio >= 0.22;
+    const now = Date.now();
+    activeSoundSession.peakLevel = Math.max(activeSoundSession.peakLevel || 0, level);
+    activeSoundSession.samples = (activeSoundSession.samples || 0) + 1;
+
+    if(likelySound){
+        soundLoudFrames += 1;
+        soundQuietFrames = 0;
+        if(!soundCurrentEventStart && soundLoudFrames >= 3){
+            soundCurrentEventStart = now - 2000;
+            soundCurrentPeakLevel = level;
+        }
+        if(soundCurrentEventStart) soundCurrentPeakLevel = Math.max(soundCurrentPeakLevel, level);
+    } else {
+        soundLoudFrames = 0;
+        soundQuietFrames += 1;
+        if(soundCurrentEventStart && soundQuietFrames >= 5){
+            finalizeSoundEvent(now - (soundQuietFrames - 1) * 1000);
+        }
+    }
+    if(activeSoundSession.samples % 30 === 0) persistSoundSession();
+}
+
+function finalizeSoundEvent(endMs){
+    if(!activeSoundSession || !soundCurrentEventStart) return;
+    const durationSec = Math.max(3, Math.round((endMs - soundCurrentEventStart) / 1000));
+    activeSoundSession.eventCount += 1;
+    activeSoundSession.eventSeconds += durationSec;
+    activeSoundSession.peakLevel = Math.max(activeSoundSession.peakLevel || 0, soundCurrentPeakLevel);
+    soundCurrentEventStart = null;
+    soundCurrentPeakLevel = 0;
+    soundQuietFrames = 0;
+    persistSoundSession();
+}
+
+async function startSoundDetection(){
+    if(!state.soundDetectionEnabled || micStream || !state.sleepStart) return;
+    if(!soundDetectionSupported()){
+        setSoundDetectionStatus('soundStatusUnsupported', 'error');
+        return;
+    }
+    let stream = null;
+    let context = null;
+    try{
+        stream = await navigator.mediaDevices.getUserMedia({ audio:true });
+        if(!state.sleepStart){
+            stream.getTracks().forEach(track => track.stop());
+            return;
+        }
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        context = new AudioContextClass();
+        if(context.state === 'suspended') await context.resume();
+        const sourceNode = context.createMediaStreamSource(stream);
+        const analyser = context.createAnalyser();
+        analyser.fftSize = 2048;
+        analyser.smoothingTimeConstant = 0.75;
+        sourceNode.connect(analyser);
+        micStream = stream;
+        micAudioContext = context;
+        micSourceNode = sourceNode;
+        micAnalyser = analyser;
+        micTimeData = new Uint8Array(analyser.fftSize);
+        micFrequencyData = new Uint8Array(analyser.frequencyBinCount);
+        activeSoundSession = { startedAt:new Date().toISOString(), eventCount:0, eventSeconds:0, peakLevel:0, samples:0 };
+        soundLoudFrames = 0;
+        soundQuietFrames = 0;
+        soundCurrentEventStart = null;
+        soundCurrentPeakLevel = 0;
+        persistSoundSession();
+        micAnalysisTimer = setInterval(analyseSoundFrame, 1000);
+        setSoundDetectionStatus('soundStatusActive', 'success');
+    } catch(error){
+        if(stream) stream.getTracks().forEach(track => track.stop());
+        if(context) context.close().catch(() => {});
+        micStream = null;
+        micAudioContext = null;
+        micSourceNode = null;
+        micAnalyser = null;
+        if(error && (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError')){
+            setSoundDetectionStatus('soundStatusPermission', 'error');
+        } else {
+            setSoundDetectionStatus('soundStatusError', 'error');
+        }
+    }
+}
+
+function stopSoundDetection(endIso){
+    if(!activeSoundSession && !micStream) return;
+    if(micAnalysisTimer){ clearInterval(micAnalysisTimer); micAnalysisTimer = null; }
+    if(activeSoundSession && soundCurrentEventStart) finalizeSoundEvent(Date.now());
+    if(micSourceNode){
+        try{ micSourceNode.disconnect(); } catch(error){ /* already disconnected */ }
+        micSourceNode = null;
+    }
+    if(micAnalyser){
+        try{ micAnalyser.disconnect(); } catch(error){ /* already disconnected */ }
+        micAnalyser = null;
+    }
+    if(micStream){ micStream.getTracks().forEach(track => track.stop()); micStream = null; }
+    if(micAudioContext){ micAudioContext.close().catch(() => {}); micAudioContext = null; }
+    if(activeSoundSession){
+        state.soundHistory.push({
+            date:endIso || new Date().toISOString(),
+            eventCount:Math.max(0, Math.round(activeSoundSession.eventCount || 0)),
+            eventSeconds:Math.max(0, Math.round(activeSoundSession.eventSeconds || 0)),
+            peakLevel:Math.max(0, Math.round(activeSoundSession.peakLevel || 0))
+        });
+        state.soundHistory = state.soundHistory.slice(-180);
+        save('gs_soundHistory', state.soundHistory);
+        activeSoundSession = null;
+        localStorage.removeItem(pk('gs_soundCurrent'));
+        renderSoundChart();
+    }
+    soundLoudFrames = 0;
+    soundQuietFrames = 0;
+    soundCurrentEventStart = null;
+    soundCurrentPeakLevel = 0;
+    if(state.soundDetectionEnabled) setSoundDetectionStatus('soundStatusStopped', 'success');
+    else setSoundDetectionStatus('soundStatusOff');
+}
 
 function renderAll(){
     renderHeader();
@@ -2437,6 +2748,7 @@ function renderAll(){
 
 const sleepBtn = document.getElementById('sleepBtn');
 const heroText = document.getElementById('heroText');
+const moonSleepAction = document.getElementById('moonSleepAction');
 
 function updateSleepButton(){
     if(state.sleepStart){
@@ -2450,12 +2762,16 @@ function updateSleepButton(){
         sleepBtn.setAttribute('aria-pressed','false');
         heroText.textContent = t('heroReady');
     }
+    moonSleepAction.classList.toggle('active', Boolean(state.sleepStart));
+    moonSleepAction.setAttribute('aria-label', state.sleepStart ? t('sleepBtnStop') : t('sleepBtnStart'));
+    moonSleepAction.setAttribute('aria-pressed', String(Boolean(state.sleepStart)));
 }
 
 sleepBtn.addEventListener('click', () => {
     if(!state.sleepStart){
         state.sleepStart = new Date().toISOString();
         save('gs_sleepStart', state.sleepStart);
+        if(state.soundDetectionEnabled) startSoundDetection();
         showToast(t('toastSleepStarted'));
     } else {
         const start = new Date(state.sleepStart);
@@ -2464,6 +2780,7 @@ sleepBtn.addEventListener('click', () => {
         if(durationMin < 1) durationMin = 1;
         const quality = calcQuality(durationMin);
 
+        stopSoundDetection(end.toISOString());
         state.log.push({ date: end.toISOString(), durationMin, quality });
         save('gs_log', state.log);
         state.sleepStart = null;
@@ -2478,6 +2795,8 @@ sleepBtn.addEventListener('click', () => {
     }
     updateSleepButton();
 });
+
+moonSleepAction.addEventListener('click', () => sleepBtn.click());
 
 function openSheet(id){
     const overlay = document.getElementById(id);
@@ -2946,6 +3265,14 @@ document.getElementById('pushToggle').addEventListener('change', async event => 
     }
 });
 
+document.getElementById('soundDetectionToggle').addEventListener('change', event => {
+    state.soundDetectionEnabled = event.currentTarget.checked;
+    save('gs_soundDetectionEnabled', state.soundDetectionEnabled);
+    if(state.soundDetectionEnabled && state.sleepStart) startSoundDetection();
+    if(!state.soundDetectionEnabled) stopSoundDetection();
+    refreshSoundDetectionControls();
+});
+
 document.getElementById('testPushBtn').addEventListener('click', async event => {
     const button = event.currentTarget;
     button.disabled = true;
@@ -2972,6 +3299,7 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
     document.getElementById('backupMessage').style.color = '';
     renderProfileSwitcher();
     refreshPushControls();
+    refreshSoundDetectionControls();
     openSheet('settingsOverlay');
     setActiveTab('settingsBtn');
 });
@@ -3038,11 +3366,22 @@ function sanitizeImportedAlarm(alarm){
     };
 }
 
+function sanitizeImportedSound(entry){
+    if(!entry || typeof entry.date !== 'string' || !Number.isFinite(Date.parse(entry.date))) return null;
+    return {
+        date:entry.date,
+        eventCount:Math.max(0, Math.min(10000, Math.round(Number(entry.eventCount) || 0))),
+        eventSeconds:Math.max(0, Math.min(86400, Math.round(Number(entry.eventSeconds) || 0))),
+        peakLevel:Math.max(0, Math.min(100, Math.round(Number(entry.peakLevel) || 0)))
+    };
+}
+
 document.getElementById('exportDataBtn').addEventListener('click', () => {
     const payload = {
         app:'G04Sleep', exportedAt:new Date().toISOString(), version:1,
         userName:state.userName, targetHours:state.targetHours,
-        alarms:state.alarms, log:state.log, journal:state.journal, lang:state.lang
+        alarms:state.alarms, log:state.log, journal:state.journal,
+        soundDetectionEnabled:state.soundDetectionEnabled, soundHistory:state.soundHistory, lang:state.lang
     };
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
     const url = URL.createObjectURL(blob);
@@ -3125,6 +3464,14 @@ document.getElementById('importDataInput').addEventListener('change', async even
         }
         if(Array.isArray(data.log)) { state.log = data.log; save('gs_log', state.log); }
         if(Array.isArray(data.journal)) { state.journal = data.journal; save('gs_journal', state.journal); }
+        if(typeof data.soundDetectionEnabled === 'boolean'){
+            state.soundDetectionEnabled = data.soundDetectionEnabled;
+            save('gs_soundDetectionEnabled', state.soundDetectionEnabled);
+        }
+        if(Array.isArray(data.soundHistory)){
+            state.soundHistory = data.soundHistory.map(sanitizeImportedSound).filter(Boolean).slice(-180);
+            save('gs_soundHistory', state.soundHistory);
+        }
         if(data.lang === 'de' || data.lang === 'en'){ state.lang = data.lang; save('gs_lang', state.lang); }
 
         applyStaticTranslations();
@@ -3135,6 +3482,7 @@ document.getElementById('importDataInput').addEventListener('change', async even
         renderAlarmsList();
         renderJournalHistory();
         renderStatsHistory();
+        refreshSoundDetectionControls();
         messageEl.style.color = '#7cf6bd';
         messageEl.textContent = t('backupMsgImported');
         showToast(t('backupMsgImported'));
