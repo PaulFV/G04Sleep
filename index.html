@@ -564,9 +564,8 @@ body::before{
 
 @media (min-width:640px){
     .cards{ grid-template-columns:1fr 1fr; }
-    .card.wide{ grid-column:auto; }
-    .cards > .card:nth-child(3),
-    .cards > .card:nth-child(4){ grid-column:1 / -1; }
+    .cards > .card:nth-child(2),
+    .cards > .card:nth-child(3){ grid-column:1 / -1; }
 }
 
 @media (min-width:900px){
@@ -585,33 +584,75 @@ body::before{
     overflow:hidden;
 }
 
+.summary-card{
+    grid-column:1 / -1;
+    display:grid;
+    grid-template-columns:1.35fr 1fr;
+    background:var(--card);
+    border:1px solid rgba(0,170,255,0.58);
+    border-radius:22px;
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    box-shadow:0 8px 30px rgba(0,0,0,0.35), 0 0 22px rgba(0,140,255,0.1), inset 0 1px 0 rgba(95,196,255,0.08);
+    position:relative;
+    overflow:hidden;
+}
+
+.summary-card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background:linear-gradient(90deg,transparent,rgba(80,190,255,0.85),transparent);
+}
+
+.summary-card > .card{
+    min-height:205px;
+    padding:28px 30px;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+}
+
+.summary-card > .card::before{ display:none; }
+
+.summary-card > .card + .card{
+    border-left:1px solid rgba(82,177,255,0.28);
+}
+
+.summary-card > .card-link:hover,
+.summary-card > .card-link:focus-visible{
+    transform:none;
+    box-shadow:none;
+}
+
 .card-link{
     cursor:pointer;
     transition:border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
-.cards > .card-link:nth-child(1){
+.summary-card > .card-link:nth-child(1){
     --card-accent:#00E5FF;
-    border-color:rgba(0,229,255,0.3);
 }
 
-.cards > .card-link:nth-child(2){
+.summary-card > .card-link:nth-child(2){
     --card-accent:#8C6BFF;
-    border-color:rgba(140,107,255,0.32);
 }
 
-.cards > .card-link:nth-child(3){
+.cards > .overview-card{
     --card-accent:#FF3D8A;
     border-color:rgba(255,61,138,0.68);
     box-shadow:0 0 22px rgba(255,61,138,0.16), inset 0 1px 0 rgba(255,140,190,0.08);
 }
 
-.cards > .card-link:nth-child(4){
+.cards > .cycle-card{
     --card-accent:#50FFC4;
     border-color:rgba(80,255,196,0.3);
 }
 
-.cards > .card-link::before{
+.cards > .card-link::before,
+.summary-card > .card-link::before{
     background:linear-gradient(90deg, transparent, var(--card-accent), transparent);
     opacity:0.65;
 }
@@ -673,6 +714,25 @@ body::before{
     color:var(--cyan);
 }
 
+.summary-card .card-label,
+.overview-card .card-label,
+.cycle-card .card-label{
+    color:var(--text);
+    font-family:var(--display);
+    font-size:20px;
+    letter-spacing:0;
+    text-transform:none;
+    margin-bottom:22px;
+}
+
+.summary-card .card-label .ui-icon,
+.overview-card .card-label .ui-icon,
+.cycle-card .card-label .ui-icon{
+    width:28px;
+    height:28px;
+    stroke-width:1.8;
+}
+
 .card-action{
     display:inline-flex;
     align-items:center;
@@ -707,7 +767,7 @@ body::before{
 .quality-row{
     display:flex;
     align-items:center;
-    gap:18px;
+    gap:24px;
 }
 
 .ring{
@@ -724,6 +784,12 @@ body::before{
     filter:drop-shadow(0 0 10px rgba(0,229,255,0.35));
 }
 
+.summary-card .ring{
+    width:118px;
+    height:118px;
+    filter:drop-shadow(0 0 14px rgba(0,229,255,0.38));
+}
+
 .ring-inner{
     width:64px;
     height:64px;
@@ -736,6 +802,12 @@ body::before{
     font-weight:600;
     font-family:var(--mono);
     color:var(--cyan);
+}
+
+.summary-card .ring-inner{
+    width:92px;
+    height:92px;
+    font-size:25px;
 }
 
 .quality-text h1{
@@ -765,44 +837,105 @@ body::before{
     margin:0;
 }
 
-.stat-line{
-    display:flex;
-    justify-content:space-between;
-    padding:7px 0;
-    font-size:15px;
-    border-bottom:1px solid rgba(var(--tint-rgb),0.05);
-    font-family:var(--mono);
+.overview-card,
+.cycle-card{
+    padding:28px;
 }
 
-.stat-line:last-child{ border-bottom:none; }
+.overview-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:14px;
+}
+
+.stat-line{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    grid-template-rows:auto auto;
+    align-items:center;
+    column-gap:14px;
+    row-gap:4px;
+    min-height:104px;
+    padding:18px;
+    font-size:15px;
+    border:1px solid rgba(66,139,230,0.3);
+    border-radius:18px;
+    background:linear-gradient(145deg,rgba(19,54,96,0.38),rgba(11,28,57,0.26));
+    font-family:var(--display);
+}
+
+.stat-line:last-child{ border-bottom:1px solid rgba(66,139,230,0.3); }
+
+.stat-line .stat-line-icon{
+    grid-row:1 / span 2;
+    color:#72b9ff;
+    display:flex;
+    align-items:center;
+}
+
+.stat-line .stat-line-icon .ui-icon{
+    width:30px;
+    height:30px;
+    stroke-width:1.8;
+}
+
+.stat-line > span:nth-child(2){
+    color:#a9b9d8;
+    font-size:15px;
+}
 
 .stat-line span:last-child{
     color:var(--cyan);
     font-weight:600;
+    font-size:24px;
+    font-family:var(--mono);
 }
 
 .cycle-list{
     list-style:none;
     padding:0;
     margin:0;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
 }
 
 .cycle-list li{
     display:flex;
     justify-content:space-between;
     align-items:center;
-    padding:10px 0;
-    border-bottom:1px solid rgba(var(--tint-rgb),0.05);
-    font-size:15px;
+    gap:12px;
+    padding:16px 18px;
+    border:1px solid rgba(66,139,230,0.3);
+    border-radius:20px;
+    background:linear-gradient(145deg,rgba(19,54,96,0.38),rgba(11,28,57,0.26));
+    font-size:17px;
+    font-weight:600;
 }
 
-.cycle-list li:last-child{ border-bottom:none; }
+.cycle-list li:last-child{ border-bottom:1px solid rgba(66,139,230,0.3); }
+
+.cycle-time{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:8px 14px 8px 18px;
+    border:1px solid rgba(79,115,238,0.48);
+    border-radius:999px;
+    background:linear-gradient(100deg,rgba(35,53,119,0.46),rgba(43,32,107,0.5));
+}
 
 .cycle-list b{
     color:var(--violet);
-    font-size:17px;
+    font-size:21px;
     font-family:var(--mono);
     text-shadow:0 0 12px rgba(140,107,255,0.5);
+}
+
+.cycle-time .ui-icon{
+    width:21px;
+    height:21px;
+    color:#c4d2f5;
 }
 
 /* ---------- Main sleep action ---------- */
@@ -871,7 +1004,7 @@ button:disabled{
     display:flex;
     justify-content:space-around;
     align-items:center;
-    padding:8px 6px calc(8px + var(--safe-bottom));
+    padding:8px 8px calc(8px + var(--safe-bottom));
     background:rgba(9,11,20,0.78);
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
@@ -899,26 +1032,30 @@ button:disabled{
 }
 
 .tab .icon{
-    width:22px;
-    height:22px;
+    width:26px;
+    height:26px;
     display:flex;
     align-items:center;
     justify-content:center;
 }
 
-.tab .ui-icon{ width:21px; height:21px; }
+.tab .ui-icon{ width:25px; height:25px; }
 
-.tab.active{ color:var(--cyan); }
+.tab.active{
+    color:var(--cyan);
+    background:linear-gradient(180deg,rgba(0,229,255,0.13),rgba(0,118,180,0.08));
+    box-shadow:0 0 24px rgba(0,229,255,0.12), inset 0 0 22px rgba(0,229,255,0.05);
+}
 
 .tab.active::after{
     content:'';
     position:absolute;
-    top:2px;
-    width:4px;
+    top:-1px;
+    width:42px;
     height:4px;
-    border-radius:50%;
+    border-radius:999px;
     background:var(--cyan);
-    box-shadow:0 0 8px 2px var(--cyan);
+    box-shadow:0 0 10px 2px rgba(0,229,255,0.72);
 }
 
 .tab:active{ background:rgba(var(--tint-rgb),0.06); }
@@ -950,6 +1087,163 @@ button:disabled{
 }
 
 .sheet-overlay.open .sheet{ transform:translateY(0); }
+
+/* ---------- Alarm sheet: full, calm setup view ---------- */
+.alarm-sheet{
+    max-height:calc(100vh - 8px);
+    min-height:calc(100vh - 8px);
+    padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
+    border-radius:36px 36px 0 0;
+    border-color:rgba(82,139,220,0.28);
+    background:
+        radial-gradient(ellipse 680px 420px at 50% 42%, rgba(0,129,224,0.12), transparent 68%),
+        linear-gradient(145deg,rgba(12,28,54,0.98),rgba(8,12,28,0.99));
+    box-shadow:0 -16px 70px rgba(0,120,220,0.16), inset 0 1px 0 rgba(120,180,255,0.1);
+    display:flex;
+    flex-direction:column;
+}
+
+.alarm-sheet .sheet-handle{
+    width:122px;
+    height:14px;
+    margin:18px auto 46px;
+    background:linear-gradient(90deg,rgba(115,137,177,0.72),rgba(165,184,220,0.82));
+    box-shadow:0 2px 9px rgba(95,130,190,0.18);
+}
+
+.alarm-sheet h2{
+    margin:0 0 20px;
+    gap:18px;
+    font-size:clamp(30px,5vw,52px);
+    font-weight:600;
+    letter-spacing:-1px;
+}
+
+.alarm-sheet h2 .ui-icon{
+    width:clamp(40px,5vw,58px);
+    height:clamp(40px,5vw,58px);
+    stroke-width:1.7;
+}
+
+.alarm-sheet .sheet-intro{
+    margin:0 0 20px;
+    color:#9aaed4;
+    font-size:clamp(16px,2.6vw,28px);
+    line-height:1.35;
+}
+
+.alarm-sheet #alarmListView:not([hidden]){
+    min-height:0;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+}
+
+.alarm-sheet #alarmList{
+    flex:1;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    margin:0 0 34px;
+}
+
+.alarm-empty-state{
+    text-align:center;
+    color:var(--text);
+}
+
+.alarm-empty-illustration{
+    position:relative;
+    width:260px;
+    height:190px;
+    margin:0 auto 8px;
+    color:#35b7ff;
+    filter:drop-shadow(0 0 18px rgba(0,160,255,0.42));
+}
+
+.alarm-empty-illustration::after{
+    content:'';
+    position:absolute;
+    left:16%; right:16%; bottom:28px;
+    height:42px;
+    border-radius:50% 50% 35% 35%;
+    background:linear-gradient(180deg,rgba(39,103,166,0.3),rgba(10,45,83,0.04));
+    box-shadow:0 -10px 20px rgba(0,150,255,0.12);
+}
+
+.alarm-empty-illustration > .ui-icon{
+    position:absolute;
+    left:50%; top:25px;
+    width:142px;
+    height:142px;
+    transform:translateX(-50%);
+    stroke-width:1.45;
+}
+
+.alarm-empty-star,
+.alarm-empty-moon{
+    position:absolute;
+    z-index:1;
+    color:#49adff;
+    font-family:var(--display);
+}
+
+.alarm-empty-star{ font-size:25px; }
+.alarm-empty-star.star-one{ left:25px; top:76px; }
+.alarm-empty-star.star-two{ right:22px; top:104px; font-size:18px; }
+.alarm-empty-moon{ right:38px; top:16px; font-size:68px; line-height:1; transform:rotate(-35deg); }
+
+.alarm-empty-state h3{
+    margin:0 0 8px;
+    font-size:clamp(23px,3.4vw,38px);
+    line-height:1.2;
+}
+
+.alarm-empty-state p{
+    margin:0;
+    color:#9aaed4;
+    font-size:clamp(17px,2.5vw,28px);
+}
+
+.alarm-sheet .sheet-actions{
+    gap:16px;
+    flex:0 0 auto;
+}
+
+.alarm-sheet .btn-add,
+.alarm-sheet .btn-secondary{
+    min-height:78px;
+    border-radius:24px;
+    font-size:clamp(20px,3vw,32px);
+    font-weight:600;
+}
+
+.alarm-sheet .btn-add{
+    border:1px solid rgba(91,181,255,0.38);
+    background:linear-gradient(110deg,#24e2ed,#1967f5);
+    color:#f0f7ff;
+    box-shadow:0 8px 30px rgba(0,128,255,0.26), inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+.alarm-sheet .btn-add .ui-icon{
+    width:clamp(26px,3vw,38px);
+    height:clamp(26px,3vw,38px);
+    stroke-width:1.5;
+}
+
+.alarm-sheet .btn-secondary{
+    border:1px solid rgba(112,139,190,0.46) !important;
+    background:rgba(36,49,81,0.46);
+    color:#d7e1f7;
+    box-shadow:inset 0 1px 0 rgba(161,188,235,0.06);
+}
+
+.alarm-sheet .alarm-row{
+    padding:20px 22px;
+    border-radius:20px;
+    border-color:rgba(79,142,218,0.24);
+    background:rgba(12,30,57,0.58);
+}
 
 .permission-overlay{
     display:none;
@@ -1879,6 +2173,641 @@ textarea:focus-visible{
     border:1px solid rgba(var(--tint-rgb),0.12) !important;
 }
 
+/* ---------- History sheet: clear sleep dashboard ---------- */
+.history-sheet{
+    max-height:calc(100vh - 8px);
+    min-height:calc(100vh - 8px);
+    padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
+    border-radius:36px 36px 0 0;
+    border-color:rgba(70,139,220,0.3);
+    background:
+        radial-gradient(ellipse 720px 460px at 50% 38%,rgba(0,123,220,0.13),transparent 70%),
+        linear-gradient(145deg,rgba(12,29,55,0.98),rgba(8,12,28,0.99));
+    box-shadow:0 -16px 70px rgba(0,120,220,0.16),inset 0 1px 0 rgba(120,180,255,0.1);
+}
+
+.history-sheet .sheet-handle{
+    width:122px;
+    height:14px;
+    margin:18px auto 42px;
+    background:linear-gradient(90deg,rgba(115,137,177,0.72),rgba(165,184,220,0.82));
+    box-shadow:0 2px 9px rgba(95,130,190,0.18);
+}
+
+.history-sheet h2{
+    margin:0 0 18px;
+    gap:18px;
+    font-size:clamp(30px,5vw,52px);
+    font-weight:600;
+    letter-spacing:-1px;
+}
+
+.history-sheet h2 .ui-icon{
+    width:clamp(40px,5vw,58px);
+    height:clamp(40px,5vw,58px);
+    stroke-width:1.7;
+}
+
+.history-sheet > .sheet-intro{
+    margin:0 0 24px;
+    color:#9aaed4;
+    font-size:clamp(16px,2.6vw,28px);
+    line-height:1.35;
+}
+
+.history-sheet .chart-range{
+    gap:0;
+    margin:0 0 26px;
+    padding:3px;
+    border:1px solid rgba(45,153,235,0.35);
+    border-radius:22px;
+    background:rgba(6,17,34,0.56);
+    box-shadow:0 0 22px rgba(0,126,220,0.08);
+}
+
+.history-sheet .chart-range button{
+    min-height:56px;
+    border:0;
+    border-radius:18px;
+    color:#a9b9d9;
+    font-size:clamp(15px,2vw,24px);
+    letter-spacing:0.7px;
+}
+
+.history-sheet .chart-range button.selected{
+    color:#f3f8ff;
+    background:linear-gradient(110deg,#0ca6dc,#1470c9);
+    box-shadow:0 0 0 1px rgba(36,199,255,0.65),0 0 20px rgba(0,157,255,0.22);
+}
+
+.history-chart-card,
+.history-sound-card,
+.history-recent-section{
+    margin:0 0 26px;
+    padding:26px 28px;
+    border:1px solid rgba(57,139,220,0.34);
+    border-radius:26px;
+    background:rgba(13,31,58,0.64);
+    box-shadow:inset 0 1px 0 rgba(140,190,255,0.04);
+}
+
+.history-chart-heading{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:16px;
+    margin-bottom:10px;
+}
+
+.history-chart-heading h3,
+.history-recent-title{
+    margin:0;
+    color:#f2f6ff;
+    font-size:clamp(22px,3vw,34px);
+    letter-spacing:-0.4px;
+}
+
+#statsGoalLabel{
+    color:#a9b9d9;
+    font-size:clamp(15px,2vw,25px);
+    white-space:nowrap;
+}
+
+.history-sheet .stats-chart{
+    margin:0;
+}
+
+.history-sheet .stats-chart svg{
+    height:250px;
+}
+
+.chart-trend-note{
+    margin:8px 0 0;
+    color:#a9b9d9;
+    font-size:clamp(15px,2vw,23px);
+    font-style:italic;
+    text-align:center;
+}
+
+.history-sound-card .stats-subtitle{
+    margin:0 0 6px;
+    gap:14px;
+    color:#f2f6ff;
+    font-size:clamp(22px,3vw,34px);
+}
+
+.history-sound-card .stats-subtitle .ui-icon{
+    width:34px;
+    height:34px;
+    stroke-width:1.8;
+}
+
+.history-sound-card .stats-chart-intro{
+    margin:0 0 20px 48px;
+    color:#9aaed4;
+    font-size:clamp(15px,2vw,23px);
+}
+
+.history-sound-card .stats-chart svg{
+    height:220px;
+}
+
+.sound-empty-state{
+    min-height:150px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    color:#52729f;
+    text-align:center;
+}
+
+.sound-empty-state svg{
+    width:180px;
+    height:64px;
+    filter:drop-shadow(0 0 12px rgba(53,126,216,0.22));
+}
+
+.sound-empty-state p{
+    max-width:720px;
+    margin:0;
+    color:#a9b9d9;
+    font-size:clamp(15px,2vw,23px);
+    font-style:italic;
+}
+
+.history-recent-title{
+    margin-bottom:18px;
+}
+
+.history-recent-section .history-entry{
+    margin:0 0 12px;
+    padding:0;
+    border-color:rgba(71,139,220,0.3);
+    border-radius:20px;
+    background:rgba(13,35,66,0.58);
+    overflow:hidden;
+}
+
+.history-recent-section .history-entry:last-child{ margin-bottom:0; }
+
+.history-recent-section .history-toggle{
+    min-height:112px;
+    padding:18px 22px;
+}
+
+.history-recent-section .history-date{
+    font-size:clamp(15px,2vw,24px);
+    letter-spacing:0;
+    text-transform:none;
+}
+
+.history-recent-section .history-value{
+    margin-top:8px;
+    font-size:clamp(17px,2.3vw,27px);
+}
+
+.history-entry-end{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    flex:0 0 auto;
+}
+
+.history-quality-ring{
+    position:relative;
+    width:76px;
+    height:76px;
+    display:grid;
+    place-items:center;
+    border-radius:50%;
+    background:conic-gradient(#19c9f5 calc(var(--quality) * 1%),rgba(103,141,190,0.28) 0);
+    box-shadow:0 0 16px rgba(0,164,244,0.14);
+}
+
+.history-quality-ring::before{
+    content:'';
+    position:absolute;
+    width:58px;
+    height:58px;
+    border-radius:50%;
+    background:#0d203d;
+}
+
+.history-quality-ring span{
+    position:relative;
+    color:#f2f6ff;
+    font:600 16px var(--mono);
+}
+
+.history-recent-section .history-chevron{
+    font-size:44px;
+    font-weight:400;
+}
+
+.history-sheet .sheet-actions{
+    margin-top:auto;
+    padding-top:2px;
+}
+
+.history-sheet .sheet-actions .btn-primary{
+    min-height:78px;
+    border-radius:24px;
+    border:1px solid rgba(119,174,255,0.82);
+    background:rgba(22,39,72,0.68);
+    color:#d9e5ff;
+    font-size:clamp(20px,3vw,32px);
+    box-shadow:inset 0 1px 0 rgba(175,207,255,0.1);
+}
+
+/* ---------- Journal sheet: calm writing space ---------- */
+.journal-sheet{
+    max-height:calc(100vh - 8px);
+    min-height:calc(100vh - 8px);
+    padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
+    border-radius:36px 36px 0 0;
+    border-color:rgba(70,139,220,0.3);
+    background:
+        radial-gradient(ellipse 720px 460px at 75% 18%,rgba(0,123,220,0.11),transparent 68%),
+        linear-gradient(145deg,rgba(12,29,55,0.98),rgba(8,12,28,0.99));
+    box-shadow:0 -16px 70px rgba(0,120,220,0.16),inset 0 1px 0 rgba(120,180,255,0.1);
+}
+
+.journal-sheet .sheet-handle{
+    width:122px;
+    height:14px;
+    margin:18px auto 42px;
+    background:linear-gradient(90deg,rgba(115,137,177,0.72),rgba(165,184,220,0.82));
+    box-shadow:0 2px 9px rgba(95,130,190,0.18);
+}
+
+.journal-sheet h2{
+    margin:0 0 18px;
+    gap:18px;
+    font-size:clamp(30px,5vw,52px);
+    font-weight:600;
+    letter-spacing:-1px;
+}
+
+.journal-sheet h2 .ui-icon{
+    width:clamp(40px,5vw,58px);
+    height:clamp(40px,5vw,58px);
+    stroke-width:1.7;
+}
+
+.journal-sheet > .sheet-intro{
+    margin:0 0 42px;
+    color:#9aaed4;
+    font-size:clamp(16px,2.6vw,28px);
+    line-height:1.35;
+}
+
+.journal-field-label,
+.journal-quick-tags h3{
+    display:block;
+    margin:0 0 14px;
+    color:#aabbdc;
+    font:600 clamp(16px,2.3vw,25px) var(--mono);
+    letter-spacing:2px;
+    text-transform:uppercase;
+}
+
+.journal-input-wrap{
+    position:relative;
+}
+
+.journal-sheet #journalInput{
+    width:100%;
+    min-height:220px;
+    margin:0 !important;
+    padding:24px 26px 50px !important;
+    resize:vertical;
+    border:2px solid rgba(62,129,214,0.42);
+    border-radius:24px;
+    background:rgba(10,23,45,0.5);
+    color:#e7efff;
+    font-size:clamp(17px,2.7vw,30px) !important;
+    line-height:1.4;
+    box-shadow:inset 0 1px 0 rgba(142,190,255,0.04),0 0 20px rgba(0,118,220,0.05);
+}
+
+.journal-sheet #journalInput::placeholder{ color:#a1afd0; opacity:1; }
+
+.journal-sheet #journalInput:focus{
+    border-color:rgba(79,173,255,0.85);
+    box-shadow:0 0 0 3px rgba(0,160,255,0.12),0 0 28px rgba(0,118,220,0.1);
+}
+
+.journal-input-meta{
+    position:absolute;
+    right:24px;
+    bottom:16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#a9b9d9;
+    font:500 clamp(14px,2vw,23px) var(--mono);
+    pointer-events:none;
+}
+
+.journal-resize-mark{
+    width:17px;
+    height:17px;
+    border-right:3px solid #65aff7;
+    border-bottom:3px solid #65aff7;
+    transform:skew(-20deg);
+}
+
+.journal-sheet .form-message{
+    min-height:20px;
+    margin:8px 0 22px;
+}
+
+.journal-quick-tags{
+    margin:0 0 30px;
+}
+
+.journal-quick-tags h3{ margin-bottom:14px; }
+
+.journal-tag-list{
+    display:grid;
+    grid-template-columns:repeat(4,minmax(0,1fr));
+    gap:14px;
+}
+
+.journal-tag{
+    min-height:74px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:14px;
+    padding:12px 18px;
+    border:2px solid rgba(86,123,178,0.38);
+    border-radius:999px;
+    background:rgba(20,34,61,0.44);
+    color:#dce7ff;
+    font-size:clamp(15px,2.2vw,24px);
+    white-space:nowrap;
+    transition:border-color .2s ease,background .2s ease,transform .2s ease;
+}
+
+.journal-tag .ui-icon{
+    width:30px;
+    height:30px;
+    color:#5cbcff;
+    stroke-width:1.8;
+    flex:0 0 auto;
+}
+
+.journal-tag:hover,
+.journal-tag:focus-visible{
+    border-color:#4caaff;
+    background:rgba(34,73,125,0.52);
+}
+
+.journal-tag:active{ transform:scale(0.98); }
+
+.journal-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    margin-top:0;
+}
+
+.journal-sheet .journal-actions button{
+    min-height:78px;
+    border-radius:24px;
+    font-size:clamp(20px,3vw,32px);
+    font-weight:600;
+}
+
+.journal-sheet .journal-actions .btn-secondary{
+    border:2px solid rgba(105,137,190,0.48) !important;
+    background:rgba(26,39,69,0.48);
+    color:#d6e2fa;
+}
+
+.journal-sheet .journal-actions .btn-primary{
+    border:1px solid rgba(91,181,255,0.38);
+    background:linear-gradient(110deg,#24e2ed,#1967f5);
+    color:#06101d;
+    box-shadow:0 8px 30px rgba(0,128,255,0.26),inset 0 1px 0 rgba(255,255,255,0.22);
+}
+
+.journal-sheet #journalHistory{
+    margin-top:30px !important;
+}
+
+.journal-empty-state{
+    display:flex;
+    align-items:center;
+    gap:34px;
+    padding:28px 34px;
+    border:2px solid rgba(62,129,214,0.28);
+    border-radius:24px;
+    background:rgba(13,31,58,0.45);
+}
+
+.journal-empty-illustration{
+    position:relative;
+    width:150px;
+    height:110px;
+    display:grid;
+    place-items:center;
+    flex:0 0 auto;
+    color:#66bfff;
+    filter:drop-shadow(0 0 14px rgba(0,153,255,0.2));
+}
+
+.journal-empty-illustration .ui-icon{
+    width:82px;
+    height:82px;
+    stroke-width:1.6;
+}
+
+.journal-empty-illustration span{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
+    color:#74c9ff;
+    font-size:28px;
+}
+
+.journal-empty-state h3{
+    margin:0 0 8px;
+    color:#f2f6ff;
+    font-size:clamp(20px,2.8vw,31px);
+}
+
+.journal-empty-state p{
+    margin:0;
+    color:#a9b9d9;
+    font-size:clamp(16px,2.3vw,25px);
+}
+
+.journal-sheet .journal-entry{
+    padding:20px 22px;
+    border-color:rgba(62,129,214,0.3);
+    border-radius:20px;
+    background:rgba(13,35,66,0.58);
+}
+
+.journal-sheet .journal-entry .history-date{ font-size:15px; text-transform:none; letter-spacing:0; }
+.journal-sheet .journal-entry p{ color:#e3ebff; font-size:17px; }
+
+/* ---------- Settings sheet: organized app controls ---------- */
+.settings-sheet{
+    max-height:calc(100vh - 8px);
+    min-height:calc(100vh - 8px);
+    padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
+    border-radius:36px 36px 0 0;
+    border-color:rgba(70,139,220,0.3);
+    background:
+        radial-gradient(ellipse 720px 500px at 78% 16%,rgba(0,123,220,0.12),transparent 68%),
+        linear-gradient(145deg,rgba(12,29,55,0.98),rgba(8,12,28,0.99));
+    box-shadow:0 -16px 70px rgba(0,120,220,0.16),inset 0 1px 0 rgba(120,180,255,0.1);
+}
+
+.settings-sheet .sheet-handle{
+    width:122px;
+    height:14px;
+    margin:18px auto 42px;
+    background:linear-gradient(90deg,rgba(115,137,177,0.72),rgba(165,184,220,0.82));
+    box-shadow:0 2px 9px rgba(95,130,190,0.18);
+}
+
+.settings-sheet h2{
+    margin:0 0 8px;
+    gap:18px;
+    font-size:clamp(30px,5vw,52px);
+    font-weight:600;
+    letter-spacing:-1px;
+}
+
+.settings-sheet h2 .ui-icon{
+    width:clamp(40px,5vw,58px);
+    height:clamp(40px,5vw,58px);
+    stroke-width:1.7;
+}
+
+.settings-sheet > .sheet-intro{
+    margin:0 0 28px;
+    color:#9aaed4;
+    font-size:clamp(16px,2.6vw,28px);
+    line-height:1.35;
+}
+
+.settings-sheet .settings-section,
+.settings-sheet .legal-panel{
+    margin:0 0 18px;
+    padding:22px;
+    border:1px solid rgba(67,117,181,0.34);
+    border-radius:22px;
+    background:rgba(13,31,58,0.58);
+    box-shadow:inset 0 1px 0 rgba(140,190,255,0.04);
+}
+
+.settings-sheet .settings-section .setting-row,
+.settings-sheet .legal-panel .setting-row{
+    align-items:flex-start;
+}
+
+.settings-sheet .setting-copy{ gap:16px; }
+.settings-sheet .setting-copy > .ui-icon{ width:30px; height:30px; color:var(--cyan); }
+
+.settings-sheet .setting-copy strong{
+    margin-bottom:6px;
+    color:#f1f6ff;
+    font-size:clamp(17px,2.3vw,25px);
+}
+
+.settings-sheet .setting-copy span{
+    color:#9aaed4;
+    font-size:clamp(13px,1.7vw,18px);
+    line-height:1.45;
+}
+
+.settings-sheet .settings-personal-section > label{
+    margin-top:20px;
+    color:#9aaed4;
+    font-size:clamp(13px,1.8vw,18px);
+    letter-spacing:1.1px;
+}
+
+.settings-sheet .settings-personal-section input[type="text"],
+.settings-sheet .settings-personal-section input[type="number"]{
+    min-height:54px;
+    margin-bottom:0;
+    border:1px solid rgba(80,130,204,0.28);
+    border-radius:14px;
+    background:rgba(3,9,20,0.72);
+    font-size:clamp(16px,2vw,22px);
+}
+
+.settings-sheet .settings-section .sheet-actions{ margin-top:16px !important; }
+
+.settings-sheet .settings-section .sheet-actions button,
+.settings-sheet .legal-panel .sheet-actions a{
+    min-height:54px;
+    border:1px solid rgba(102,130,180,0.32) !important;
+    border-radius:14px;
+    background:rgba(35,47,76,0.46);
+    color:#e1eaff;
+    font-size:clamp(15px,2vw,21px);
+}
+
+.settings-section-title{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    margin:0 0 18px;
+    color:#f1f6ff;
+    font-size:clamp(19px,2.6vw,28px);
+}
+
+.settings-section-title .ui-icon{
+    width:30px;
+    height:30px;
+    color:var(--cyan);
+    stroke-width:1.8;
+}
+
+.settings-section > .setting-panel{
+    margin:0;
+    padding:18px 0 0;
+    border:0;
+    border-top:1px solid rgba(104,139,194,0.2);
+    border-radius:0;
+    background:transparent;
+}
+
+.settings-section > .setting-panel + .setting-panel{ margin-top:18px; }
+
+.settings-sheet .settings-personal-section .lang-picker{ margin-bottom:0; }
+.settings-sheet .settings-personal-section .field-help{ margin-top:8px; }
+
+.settings-sheet .legal-panel{
+    margin-bottom:18px;
+}
+
+.settings-sheet .legal-panel .legal-links{ margin-top:16px; }
+.settings-sheet .legal-panel .field-help{ margin:12px 0 0; }
+
+.settings-sheet > .sheet-actions:last-child{
+    position:sticky;
+    bottom:0;
+    padding-top:14px;
+    background:linear-gradient(180deg,transparent,rgba(8,12,28,0.98) 22%);
+}
+
+.settings-sheet > .sheet-actions:last-child button{
+    min-height:68px;
+    border-radius:20px;
+    font-size:clamp(18px,2.5vw,27px);
+}
+
 @media (prefers-reduced-motion:reduce){
     .ringing-icon{ animation:none !important; }
 }
@@ -1918,8 +2847,37 @@ textarea:focus-visible{
     .orbit-ring.r4{ width:264px; height:264px; }
     .moon{ width:235px; height:235px; }
     .cards{ grid-template-columns:repeat(2, minmax(0, 1fr)); gap:10px; }
-    .cards > .card:nth-child(n+3){ grid-column:1 / -1; }
+    .cards > .card:nth-child(n+2){ grid-column:1 / -1; }
+    .summary-card{ grid-template-columns:1.3fr 1fr; border-radius:20px; }
+    .summary-card > .card{ min-height:176px; padding:20px 14px; }
+    .summary-card .card-label,
+    .overview-card .card-label,
+    .cycle-card .card-label{ font-size:15px; margin-bottom:16px; gap:6px; }
+    .summary-card .card-label .ui-icon,
+    .overview-card .card-label .ui-icon,
+    .cycle-card .card-label .ui-icon{ width:22px; height:22px; }
+    .summary-card .quality-row{ gap:10px; }
+    .summary-card .ring{ width:84px; height:84px; }
+    .summary-card .ring-inner{ width:64px; height:64px; font-size:18px; }
+    .summary-card .quality-text h1{ font-size:15px; }
+    .summary-card .quality-text p{ font-size:12px; }
+    .summary-card .big-value{ font-size:24px; }
+    .summary-card .sub-value{ font-size:12px; }
+    .overview-card,
+    .cycle-card{ padding:20px; }
+    .overview-grid{ gap:8px; }
+    .stat-line{ min-height:88px; padding:12px; column-gap:8px; border-radius:14px; }
+    .stat-line .stat-line-icon .ui-icon{ width:24px; height:24px; }
+    .stat-line > span:nth-child(2){ font-size:12px; }
+    .stat-line span:last-child{ font-size:18px; }
+    .cycle-list{ gap:8px; }
+    .cycle-list li{ padding:12px; border-radius:15px; font-size:14px; }
+    .cycle-time{ gap:5px; padding:6px 9px 6px 12px; }
+    .cycle-list b{ font-size:16px; }
+    .cycle-time .ui-icon{ width:17px; height:17px; }
     .card{ padding:16px; }
+    .overview-card,
+    .cycle-card{ padding:20px; }
     .card-label{ font-size:11px; gap:6px; letter-spacing:0.7px; }
     .card-label .ui-icon{ width:16px; height:16px; }
     .quality-row{ gap:8px; }
@@ -1929,12 +2887,194 @@ textarea:focus-visible{
     .quality-text p,
     .sub-value{ font-size:12px; }
     .big-value{ font-size:23px; }
-    .cycle-list li{ gap:6px; font-size:13px; }
-    .cycle-list b{ font-size:14px; }
+    .cycle-list li{ gap:6px; font-size:14px; }
+    .cycle-list b{ font-size:16px; }
     .cycle-help{ font-size:10px; }
     .tabbar{ padding:4px 4px 0; }
-    .tab{ min-height:42px; padding:4px 2px; gap:2px; }
+    .tab{ min-height:46px; padding:4px 2px; gap:3px; border-radius:20px; font-size:12px; }
+    .tab .icon{ width:24px; height:24px; }
+    .tab .ui-icon{ width:23px; height:23px; }
+    .tab.active::after{ top:0; width:34px; height:3px; }
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
+
+    .alarm-sheet{
+        max-height:calc(100vh - 4px);
+        min-height:calc(100vh - 4px);
+        padding:10px 16px calc(16px + var(--safe-bottom));
+        border-radius:28px 28px 0 0;
+    }
+    .alarm-sheet .sheet-handle{
+        width:82px;
+        height:8px;
+        margin:10px auto 28px;
+    }
+    .alarm-sheet h2{
+        gap:10px;
+        margin-bottom:10px;
+        font-size:30px;
+        letter-spacing:-0.5px;
+    }
+    .alarm-sheet h2 .ui-icon{ width:34px; height:34px; }
+    .alarm-sheet .sheet-intro{ margin-bottom:8px; font-size:16px; }
+    .alarm-sheet #alarmList{ margin-bottom:16px; }
+    .alarm-empty-illustration{ width:190px; height:140px; margin-bottom:4px; }
+    .alarm-empty-illustration > .ui-icon{ width:104px; height:104px; top:18px; }
+    .alarm-empty-illustration::after{ bottom:16px; height:30px; }
+    .alarm-empty-star{ font-size:18px; }
+    .alarm-empty-star.star-one{ left:16px; top:56px; }
+    .alarm-empty-star.star-two{ right:14px; top:75px; font-size:14px; }
+    .alarm-empty-moon{ right:24px; top:8px; font-size:48px; }
+    .alarm-empty-state h3{ margin-bottom:6px; font-size:23px; }
+    .alarm-empty-state p{ font-size:16px; }
+    .alarm-sheet .sheet-actions{ gap:10px; }
+    .alarm-sheet .btn-add,
+    .alarm-sheet .btn-secondary{
+        min-height:58px;
+        border-radius:18px;
+        font-size:20px;
+    }
+    .alarm-sheet .btn-add .ui-icon{ width:25px; height:25px; }
+    .alarm-sheet .alarm-row{ padding:14px; border-radius:16px; }
+
+    .history-sheet{
+        max-height:calc(100vh - 4px);
+        min-height:calc(100vh - 4px);
+        padding:10px 16px calc(16px + var(--safe-bottom));
+        border-radius:28px 28px 0 0;
+    }
+    .history-sheet .sheet-handle{
+        width:82px;
+        height:8px;
+        margin:10px auto 28px;
+    }
+    .history-sheet h2{
+        gap:10px;
+        margin-bottom:10px;
+        font-size:30px;
+        letter-spacing:-0.5px;
+    }
+    .history-sheet h2 .ui-icon{ width:34px; height:34px; }
+    .history-sheet > .sheet-intro{ margin-bottom:12px; font-size:16px; }
+    .history-sheet .chart-range{ margin-bottom:14px; border-radius:18px; }
+    .history-sheet .chart-range button{ min-height:44px; border-radius:14px; font-size:14px; }
+    .history-chart-card,
+    .history-sound-card,
+    .history-recent-section{
+        margin-bottom:14px;
+        padding:16px;
+        border-radius:20px;
+    }
+    .history-chart-heading h3,
+    .history-recent-title,
+    .history-sound-card .stats-subtitle{ font-size:22px; }
+    #statsGoalLabel{ font-size:14px; }
+    .history-sheet .stats-chart svg{ height:170px; }
+    .chart-trend-note,
+    .sound-empty-state p{ font-size:15px; }
+    .history-sound-card .stats-subtitle .ui-icon{ width:27px; height:27px; }
+    .history-sound-card .stats-chart-intro{ margin:0 0 12px 40px; font-size:15px; }
+    .history-sound-card .stats-chart svg{ height:160px; }
+    .sound-empty-state{ min-height:106px; gap:8px; }
+    .sound-empty-state svg{ width:138px; height:50px; }
+    .history-recent-title{ margin-bottom:12px; }
+    .history-recent-section .history-toggle{ min-height:82px; padding:12px 14px; }
+    .history-recent-section .history-date{ font-size:15px; }
+    .history-recent-section .history-value{ margin-top:5px; font-size:16px; }
+    .history-entry-end{ gap:10px; }
+    .history-quality-ring{ width:54px; height:54px; }
+    .history-quality-ring::before{ width:40px; height:40px; }
+    .history-quality-ring span{ font-size:12px; }
+    .history-recent-section .history-chevron{ font-size:34px; }
+    .history-sheet .sheet-actions .btn-primary{ min-height:58px; border-radius:18px; font-size:20px; }
+
+    .journal-sheet{
+        max-height:calc(100vh - 4px);
+        min-height:calc(100vh - 4px);
+        padding:10px 16px calc(16px + var(--safe-bottom));
+        border-radius:28px 28px 0 0;
+    }
+    .journal-sheet .sheet-handle{
+        width:82px;
+        height:8px;
+        margin:10px auto 28px;
+    }
+    .journal-sheet h2{
+        gap:10px;
+        margin-bottom:10px;
+        font-size:30px;
+        letter-spacing:-0.5px;
+    }
+    .journal-sheet h2 .ui-icon{ width:34px; height:34px; }
+    .journal-sheet > .sheet-intro{ margin-bottom:22px; font-size:16px; }
+    .journal-field-label,
+    .journal-quick-tags h3{ margin-bottom:9px; font-size:15px; letter-spacing:1.3px; }
+    .journal-sheet #journalInput{
+        min-height:150px;
+        padding:16px 17px 42px !important;
+        border-radius:18px;
+        font-size:16px !important;
+    }
+    .journal-input-meta{ right:16px; bottom:12px; gap:8px; font-size:14px; }
+    .journal-resize-mark{ width:13px; height:13px; border-width:2px; }
+    .journal-sheet .form-message{ margin:5px 0 10px; }
+    .journal-quick-tags{ margin-bottom:18px; }
+    .journal-tag-list{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .journal-tag{ min-height:48px; gap:8px; padding:8px 10px; font-size:14px; }
+    .journal-tag .ui-icon{ width:22px; height:22px; }
+    .journal-actions{ gap:10px; }
+    .journal-sheet .journal-actions button{ min-height:58px; border-radius:18px; font-size:18px; }
+    .journal-sheet #journalHistory{ margin-top:18px !important; }
+    .journal-empty-state{ gap:14px; padding:16px; border-radius:18px; }
+    .journal-empty-illustration{ width:76px; height:72px; }
+    .journal-empty-illustration .ui-icon{ width:55px; height:55px; }
+    .journal-empty-illustration span{ font-size:19px; }
+    .journal-empty-state h3{ margin-bottom:4px; font-size:18px; }
+    .journal-empty-state p{ font-size:14px; }
+    .journal-sheet .journal-entry{ padding:14px; border-radius:16px; }
+    .journal-sheet .journal-entry .history-date{ font-size:13px; }
+    .journal-sheet .journal-entry p{ font-size:15px; }
+
+    .settings-sheet{
+        max-height:calc(100vh - 4px);
+        min-height:calc(100vh - 4px);
+        padding:10px 16px calc(16px + var(--safe-bottom));
+        border-radius:28px 28px 0 0;
+    }
+    .settings-sheet .sheet-handle{
+        width:82px;
+        height:8px;
+        margin:10px auto 28px;
+    }
+    .settings-sheet h2{
+        gap:10px;
+        margin-bottom:8px;
+        font-size:30px;
+        letter-spacing:-0.5px;
+    }
+    .settings-sheet h2 .ui-icon{ width:34px; height:34px; }
+    .settings-sheet > .sheet-intro{ margin-bottom:18px; font-size:16px; }
+    .settings-sheet .settings-section,
+    .settings-sheet .legal-panel{
+        margin-bottom:12px;
+        padding:16px;
+        border-radius:18px;
+    }
+    .settings-sheet .setting-copy{ gap:10px; }
+    .settings-sheet .setting-copy > .ui-icon{ width:24px; height:24px; }
+    .settings-sheet .setting-copy strong{ font-size:17px; }
+    .settings-sheet .setting-copy span{ font-size:13px; }
+    .settings-sheet .settings-personal-section > label{ margin-top:14px; font-size:13px; }
+    .settings-sheet .settings-personal-section input[type="text"],
+    .settings-sheet .settings-personal-section input[type="number"]{ min-height:48px; font-size:16px; }
+    .settings-sheet .settings-section .sheet-actions button,
+    .settings-sheet .legal-panel .sheet-actions a{ min-height:48px; font-size:14px; }
+    .settings-section-title{ gap:10px; margin-bottom:12px; font-size:19px; }
+    .settings-section-title .ui-icon{ width:24px; height:24px; }
+    .settings-section > .setting-panel{ padding-top:14px; }
+    .settings-section > .setting-panel + .setting-panel{ margin-top:14px; }
+    .settings-sheet .history-editor{ gap:8px; }
+    .settings-sheet > .sheet-actions:last-child{ padding-top:10px; }
+    .settings-sheet > .sheet-actions:last-child button{ min-height:56px; border-radius:17px; font-size:18px; }
 }
 
 </style>
@@ -1948,8 +3088,10 @@ textarea:focus-visible{
     <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 5v16"/><path d="M21 12v9"/><path d="M3 17h18"/><path d="M7 12V8h5a3 3 0 0 1 3 3v1"/><path d="M3 12h18"/></symbol>
     <symbol id="i-alarm" viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 1.5"/><path d="m5 3-2 2M19 3l2 2M6 21l1.5-2M18 21l-1.5-2"/></symbol>
     <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10h4v10M10 20V4h4v16M16 20v-7h4v7"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01M16 17h.01"/></symbol>
     <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2H11v17H7.5A3.5 3.5 0 0 0 4 22Z"/><path d="M20 5.5A3.5 3.5 0 0 0 16.5 2H13v17h3.5A3.5 3.5 0 0 1 20 22Z"/></symbol>
     <symbol id="i-settings" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-2.8 2.8-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2h-4V21a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1L4.2 17l.1-.1a1.7 1.7 0 0 0 .3-1.9A1.7 1.7 0 0 0 3 14H2.8v-4H3a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9L4.2 7 7 4.2l.1.1A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.6v-.2h4V3a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1L19.8 7l-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.6 1h.2v4H21a1.7 1.7 0 0 0-1.6 1Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="9" cy="6" r="2"/><circle cx="15" cy="12" r="2"/><circle cx="10" cy="18" r="2"/></symbol>
     <symbol id="i-sunrise" viewBox="0 0 24 24"><path d="M4 18h16M6 14a6 6 0 0 1 12 0M12 2v3M4.2 6.2l2.1 2.1M19.8 6.2l-2.1 2.1"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
     <symbol id="i-play" viewBox="0 0 24 24"><path d="m8 5 11 7-11 7Z"/></symbol>
@@ -1961,6 +3103,10 @@ textarea:focus-visible{
     <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M2 12h2M20 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"/></symbol>
     <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 2c2 3-1 4-1 7a3 3 0 0 0 6 0c2 2 3 5 3 7a8 8 0 1 1-16 0c0-3 2-5 4-8 1-1.5 2-3 1-6a5 5 0 0 1 3 0Z"/></symbol>
     <symbol id="i-wave2" viewBox="0 0 24 24"><path d="M2 12c2 0 2-6 4-6s2 6 4 6 2-6 4-6 2 6 4 6 2-6 4-6"/></symbol>
+    <symbol id="i-coffee" viewBox="0 0 24 24"><path d="M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5Z"/><path d="M17 10h2a3 3 0 0 1 0 6h-2M3 21h16"/><path d="M8 4c-1-1 1-2 0-3M12 4c-1-1 1-2 0-3"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="m13 2-9 12h7l-1 8 9-12h-7Z"/></symbol>
+    <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></symbol>
+    <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.2-7 10-4.2-1.8-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
@@ -2000,34 +3146,38 @@ textarea:focus-visible{
     <button type="button" class="main-action" id="sleepBtn" aria-label="Schlaf aufzeichnen" title="Schlaf aufzeichnen"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span>Schlaf aufzeichnen</span></button>
     <div class="cards">
 
-        <div class="card card-link" data-open="stats" role="link" tabindex="0">
-            <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-bed"></use></svg><span data-i18n="cardQualityLabel">Schlafqualität</span></div>
-            <div class="quality-row">
-                <div class="ring" id="qualityRing">
-                    <div class="ring-inner" id="qualityValue">–</div>
+        <div class="summary-card">
+            <div class="card card-link" data-open="stats" role="link" tabindex="0">
+                <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-bed"></use></svg><span data-i18n="cardQualityLabel">Schlafqualität</span></div>
+                <div class="quality-row">
+                    <div class="ring" id="qualityRing">
+                        <div class="ring-inner" id="qualityValue">–</div>
+                    </div>
+                    <div class="quality-text">
+                        <h1 id="durationText">Keine Daten</h1>
+                        <p data-i18n="cardQualitySub">Letzte Nacht</p>
+                    </div>
                 </div>
-                <div class="quality-text">
-                    <h1 id="durationText">Keine Daten</h1>
-                    <p data-i18n="cardQualitySub">Letzte Nacht</p>
-                </div>
+            </div>
+
+            <div class="card card-link" data-open="alarm" role="link" tabindex="0">
+                <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Wecker</span></div>
+                <p class="big-value" id="alarmValue">–:–</p>
+                <p class="sub-value" id="alarmDaysLabel">Kein Wecker aktiv</p>
             </div>
         </div>
 
-        <div class="card card-link" data-open="alarm" role="link" tabindex="0">
-            <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="cardAlarmLabel">Wecker</span></div>
-            <p class="big-value" id="alarmValue">–:–</p>
-            <p class="sub-value" id="alarmDaysLabel">Kein Wecker aktiv</p>
-        </div>
-
-        <div class="card card-link" data-open="stats" role="link" tabindex="0">
+        <div class="card overview-card card-link" data-open="stats" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-chart"></use></svg><span data-i18n="cardOverviewLabel">Dein Überblick</span></div>
-            <div class="stat-line"><span data-i18n="labelWeek">Woche</span><span id="statWeek">–</span></div>
-            <div class="stat-line"><span data-i18n="labelMonth">Monat</span><span id="statMonth">–</span></div>
-            <div class="stat-line"><span data-i18n="labelQuality">Qualität</span><span id="statQuality">–</span></div>
-            <div class="stat-line"><span data-i18n="labelStreak">Serie</span><span id="statStreak">–</span></div>
+            <div class="overview-grid">
+                <div class="stat-line"><span class="stat-line-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-calendar"></use></svg></span><span data-i18n="labelWeek">Woche</span><span id="statWeek">–</span></div>
+                <div class="stat-line"><span class="stat-line-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-calendar"></use></svg></span><span data-i18n="labelMonth">Monat</span><span id="statMonth">–</span></div>
+                <div class="stat-line"><span class="stat-line-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-chart"></use></svg></span><span data-i18n="labelQuality">Qualität</span><span id="statQuality">–</span></div>
+                <div class="stat-line"><span class="stat-line-icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-flame"></use></svg></span><span data-i18n="labelStreak">Serie</span><span id="statStreak">–</span></div>
+            </div>
         </div>
 
-        <div class="card wide card-link" data-open="stats" role="link" tabindex="0">
+        <div class="card wide cycle-card card-link" data-open="stats" role="link" tabindex="0">
             <div class="card-label"><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span data-i18n="cycleCardLabel">Passende Aufstehzeiten</span></div>
             <ul class="cycle-list" id="cycleList"></ul>
             <p class="cycle-help" data-i18n="cycleHelp">Berechnet mit etwa 90 Minuten pro Schlafzyklus. Die Zeiten dienen als Orientierung.</p>
@@ -2059,13 +3209,13 @@ textarea:focus-visible{
         <span class="icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-book"></use></svg></span><span data-i18n="navJournal">Notizen</span>
     </button>
     <button type="button" class="tab" id="settingsBtn">
-        <span class="icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-settings"></use></svg></span><span data-i18n="navSettings">Profil</span>
+        <span class="icon"><svg class="ui-icon" aria-hidden="true"><use href="#i-settings"></use></svg></span><span data-i18n="navSettings">Einstellungen</span>
     </button>
 </nav>
 
 <!-- Wecker Sheet -->
 <div class="sheet-overlay" id="alarmOverlay" role="dialog" aria-modal="true" aria-labelledby="alarmTitle" aria-hidden="true">
-    <div class="sheet" tabindex="-1">
+    <div class="sheet alarm-sheet" tabindex="-1">
         <div class="sheet-handle"></div>
         <h2 id="alarmTitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg> <span id="alarmSheetHeading" data-i18n="alarmListTitle">Wecker</span></h2>
 
@@ -2141,7 +3291,7 @@ textarea:focus-visible{
 
 <!-- Statistik Sheet -->
 <div class="sheet-overlay" id="statsOverlay" role="dialog" aria-modal="true" aria-labelledby="statsTitle" aria-hidden="true">
-    <div class="sheet" tabindex="-1">
+    <div class="sheet history-sheet" tabindex="-1">
         <div class="sheet-handle"></div>
         <h2 id="statsTitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-chart"></use></svg> <span data-i18n="statsSheetTitle">Deine Schlafhistorie</span></h2>
         <p class="sheet-intro" data-i18n="statsIntro">Tippe auf „Bearbeiten“, um Datum oder Schlafdauer zu korrigieren.</p>
@@ -2149,11 +3299,22 @@ textarea:focus-visible{
             <button type="button" class="selected" data-range="30" data-i18n="chartRange30">30 Tage</button>
             <button type="button" data-range="90" data-i18n="chartRange90">90 Tage</button>
         </div>
-        <div id="statsChart" class="stats-chart"></div>
-        <h3 class="stats-subtitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg> <span data-i18n="soundChartTitle">Geräuscherkennung</span></h3>
-        <p class="stats-chart-intro" data-i18n="soundChartIntro">Wahrscheinliche Schnarch-/Geräuschereignisse pro Nacht</p>
-        <div id="soundChart" class="stats-chart"></div>
-        <div id="statsHistory"></div>
+        <section class="history-chart-card">
+            <div class="history-chart-heading">
+                <h3 data-i18n="statsDurationTitle">Schlafdauer</h3>
+                <span id="statsGoalLabel"></span>
+            </div>
+            <div id="statsChart" class="stats-chart"></div>
+        </section>
+        <section class="history-sound-card">
+            <h3 class="stats-subtitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg> <span data-i18n="soundChartTitle">Geräuschverlauf</span></h3>
+            <p class="stats-chart-intro" data-i18n="soundChartIntro">Geräuschintensität und Aufnahme pro Nacht</p>
+            <div id="soundChart" class="stats-chart"></div>
+        </section>
+        <section class="history-recent-section">
+            <h3 class="history-recent-title" data-i18n="recentNights">Letzte Nächte</h3>
+            <div id="statsHistory"></div>
+        </section>
         <div class="sheet-actions">
             <button type="button" class="btn-primary" data-close="statsOverlay" data-i18n="btnDone">Fertig</button>
         </div>
@@ -2162,41 +3323,41 @@ textarea:focus-visible{
 
 <!-- Tagebuch Sheet -->
 <div class="sheet-overlay" id="journalOverlay" role="dialog" aria-modal="true" aria-labelledby="journalTitle" aria-hidden="true">
-    <div class="sheet" tabindex="-1">
+    <div class="sheet journal-sheet" tabindex="-1">
         <div class="sheet-handle"></div>
         <h2 id="journalTitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-book"></use></svg> <span data-i18n="journalSheetTitle">Schlaftagebuch</span></h2>
         <p class="sheet-intro" data-i18n="journalIntro">Halte kurz fest, was deinen Schlaf beeinflusst hat.</p>
-        <label for="journalInput" data-i18n="journalInputLabel">Neuer Eintrag</label>
-        <textarea id="journalInput" maxlength="1000" placeholder="Zum Beispiel: spät Kaffee getrunken, schnell eingeschlafen …" data-i18n-placeholder="journalPlaceholder"></textarea>
+        <label class="journal-field-label" for="journalInput" data-i18n="journalInputLabel">Neuer Eintrag</label>
+        <div class="journal-input-wrap">
+            <textarea id="journalInput" maxlength="300" placeholder="Zum Beispiel: spät Kaffee getrunken, schnell eingeschlafen …" data-i18n-placeholder="journalPlaceholder"></textarea>
+            <div class="journal-input-meta"><span id="journalCount">0 / 300</span><span class="journal-resize-mark" aria-hidden="true"></span></div>
+        </div>
         <p class="form-message" id="journalMessage" role="alert"></p>
-        <div class="sheet-actions">
+        <section class="journal-quick-tags" aria-labelledby="journalTagsTitle">
+            <h3 id="journalTagsTitle" data-i18n="journalQuickTags">Schnell-Tags</h3>
+            <div class="journal-tag-list">
+                <button type="button" class="journal-tag" data-journal-tag="coffee"><svg class="ui-icon" aria-hidden="true"><use href="#i-coffee"></use></svg><span data-i18n="journalTagCoffee">Kaffee</span></button>
+                <button type="button" class="journal-tag" data-journal-tag="stress"><svg class="ui-icon" aria-hidden="true"><use href="#i-bolt"></use></svg><span data-i18n="journalTagStress">Stress</span></button>
+                <button type="button" class="journal-tag" data-journal-tag="exercise"><svg class="ui-icon" aria-hidden="true"><use href="#i-dumbbell"></use></svg><span data-i18n="journalTagExercise">Sport</span></button>
+                <button type="button" class="journal-tag" data-journal-tag="screen"><svg class="ui-icon" aria-hidden="true"><use href="#i-monitor"></use></svg><span data-i18n="journalTagScreen">Bildschirmzeit</span></button>
+            </div>
+        </section>
+        <div class="sheet-actions journal-actions">
             <button type="button" class="btn-secondary" data-close="journalOverlay" data-i18n="btnClose">Schließen</button>
             <button type="button" class="btn-primary" id="saveJournalBtn" data-i18n="btnSaveJournal">Eintrag speichern</button>
         </div>
-        <div id="journalHistory" style="margin-top:18px;"></div>
+        <div id="journalHistory"></div>
     </div>
 </div>
 
 <!-- Einstellungen Sheet -->
 <div class="sheet-overlay" id="settingsOverlay" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" aria-hidden="true">
-    <div class="sheet" tabindex="-1">
+    <div class="sheet settings-sheet" tabindex="-1">
         <div class="sheet-handle"></div>
         <h2 id="settingsTitle"><svg class="ui-icon" aria-hidden="true"><use href="#i-settings"></use></svg> <span data-i18n="settingsSheetTitle">Einstellungen</span></h2>
         <p class="sheet-intro" data-i18n="settingsIntro">Passe G04Sleep an deinen persönlichen Schlafrhythmus an.</p>
-        <div class="setting-panel">
-            <div class="setting-row">
-                <div class="setting-copy">
-                    <svg class="ui-icon" aria-hidden="true"><use href="#i-user"></use></svg>
-                    <div><strong data-i18n="profilesTitle">Profile</strong><span data-i18n="profilesDesc">Teilt ihr euch ein Gerät? Jedes Profil hat eigene Wecker, Schlafdaten und Tagebuch.</span></div>
-                </div>
-            </div>
-            <label for="profileSelect" id="profileSelectLabel" data-i18n="profileSwitchLabel">Aktives Profil</label>
-            <select id="profileSelect"></select>
-            <div class="sheet-actions" style="margin-top:12px;">
-                <button type="button" class="btn-secondary" id="addProfileBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-plus"></use></svg> <span data-i18n="btnAddProfile">Neues Profil</span></button>
-                <button type="button" class="btn-secondary" id="deleteProfileBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-trash"></use></svg> <span data-i18n="btnDeleteProfile">Profil löschen</span></button>
-            </div>
-        </div>
+        <section class="settings-section settings-personal-section">
+            <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-sliders"></use></svg><span data-i18n="personalSectionTitle">Persönlich</span></h3>
         <label id="themeLabel" data-i18n="themeLabel">Erscheinungsbild</label>
         <div class="lang-picker" id="themePicker" role="group" aria-labelledby="themeLabel">
             <button type="button" class="lang-option" data-theme-option="dark" data-i18n="themeDark">Dunkel</button>
@@ -2218,6 +3379,9 @@ textarea:focus-visible{
             <label for="snoozeMaxInput" data-i18n="snoozeMaxLabel">Max. Schlummern (0 = unbegrenzt)</label>
             <input type="number" id="snoozeMaxInput" min="0" max="10" step="1">
         </div>
+        </section>
+        <section class="settings-section">
+            <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-bell"></use></svg><span data-i18n="sleepNotificationsTitle">Schlaf &amp; Benachrichtigungen</span></h3>
         <div class="setting-panel">
             <div class="setting-row">
                 <div class="setting-copy">
@@ -2257,6 +3421,9 @@ textarea:focus-visible{
             </div>
             <p class="push-status" id="soundDetectionStatus" data-i18n="soundStatusOff">Ausgeschaltet.</p>
         </div>
+        </section>
+        <section class="settings-section">
+            <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-download"></use></svg><span data-i18n="dataBackupTitle">Daten &amp; Backup</span></h3>
         <div class="setting-panel">
             <div class="setting-row">
                 <div class="setting-copy">
@@ -2282,6 +3449,7 @@ textarea:focus-visible{
                 <button type="button" class="btn-secondary" id="exportCsvBtn" data-i18n="btnExportCsv">Als CSV exportieren</button>
             </div>
         </div>
+        </section>
         <div class="setting-panel legal-panel">
             <div class="setting-row">
                 <div class="setting-copy">
@@ -2380,7 +3548,7 @@ textarea:focus-visible{
         <ul class="onboarding-list">
             <li><svg class="ui-icon" aria-hidden="true"><use href="#i-moon"></use></svg><span data-i18n="onboardingStep1">Schlaf aufzeichnen: Tippe auf der Startseite auf „Schlaf aufzeichnen“, bevor du einschläfst.</span></li>
             <li><svg class="ui-icon" aria-hidden="true"><use href="#i-alarm"></use></svg><span data-i18n="onboardingStep2">Wecker stellen: Lege unter „Wecker“ Uhrzeit, Tage und Klang fest – auch mehrere.</span></li>
-            <li><svg class="ui-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span data-i18n="onboardingStep3">Schlafziel setzen: Trage im Profil deinen Namen und dein Stundenziel ein.</span></li>
+            <li><svg class="ui-icon" aria-hidden="true"><use href="#i-settings"></use></svg><span data-i18n="onboardingStep3">Schlafziel setzen: Trage in den Einstellungen deinen Namen und dein Stundenziel ein.</span></li>
         </ul>
         <div class="sheet-actions">
             <button type="button" class="btn-secondary" id="onboardingLaterBtn" data-i18n="btnOnboardingLater">Später</button>
@@ -2411,45 +3579,33 @@ function loadObject(key, fallback){
     }
 }
 
-// ---------- Profiles ----------
-// Several people can share one device/browser. Personal data (alarms, sleep log, journal,
-// name, goal, snooze settings) is namespaced per profile; device-level things (push
-// subscription, language, theme, onboarding) stay shared across profiles on this device.
-const PROFILE_SCOPED_KEYS = ['gs_userName','gs_targetHours','gs_snoozeMinutes','gs_snoozeMaxCount',
+// ---------- Single-user storage ----------
+// Older versions stored the app data per profile. Keep the active profile's data,
+// move it back to the normal keys once, then remove the obsolete profile metadata.
+const LEGACY_PROFILE_KEYS = ['gs_userName','gs_targetHours','gs_snoozeMinutes','gs_snoozeMaxCount',
     'gs_bedtimeReminder','gs_alarms','gs_sleepStart','gs_log','gs_journal','gs_soundDetectionEnabled','gs_soundHistory','gs_soundCurrent',
     'gs_triggered','gs_snoozeUntil','gs_snoozeCount'];
 
-function loadStoredProfiles(){
+function migrateToSingleUserStorage(){
+    let activeProfileId = localStorage.getItem('gs_activeProfile');
     try{
-        const value = JSON.parse(localStorage.getItem('gs_profiles') || 'null');
-        return Array.isArray(value) && value.length ? value : null;
-    } catch(error){
-        return null;
+        const profiles = JSON.parse(localStorage.getItem('gs_profiles') || 'null');
+        if(!activeProfileId && Array.isArray(profiles) && profiles.length) activeProfileId = profiles[0].id;
+    } catch(error){ /* ignore invalid legacy profile data */ }
+    if(activeProfileId){
+        LEGACY_PROFILE_KEYS.forEach(base => {
+            const scopedKey = 'gs_profile_' + activeProfileId + '_' + base;
+            const scopedValue = localStorage.getItem(scopedKey);
+            if(scopedValue !== null) localStorage.setItem(base, scopedValue);
+        });
     }
+    Object.keys(localStorage).filter(key => key.startsWith('gs_profile_')).forEach(key => localStorage.removeItem(key));
+    ['gs_profiles','gs_activeProfile','gs_profilesMigrated'].forEach(key => localStorage.removeItem(key));
 }
 
-let profiles = loadStoredProfiles();
-if(!profiles){
-    const legacyName = localStorage.getItem('gs_userName');
-    profiles = [{ id:'default', name: legacyName || '' }];
-    localStorage.setItem('gs_profiles', JSON.stringify(profiles));
-}
+migrateToSingleUserStorage();
 
-let activeProfileId = localStorage.getItem('gs_activeProfile');
-if(!activeProfileId || !profiles.some(p => p.id === activeProfileId)) activeProfileId = profiles[0].id;
-localStorage.setItem('gs_activeProfile', activeProfileId);
-
-if(localStorage.getItem('gs_profilesMigrated') !== 'true'){
-    PROFILE_SCOPED_KEYS.forEach(base => {
-        const legacyValue = localStorage.getItem(base);
-        if(legacyValue != null) localStorage.setItem('gs_profile_' + activeProfileId + '_' + base, legacyValue);
-    });
-    localStorage.setItem('gs_profilesMigrated', 'true');
-}
-
-function pk(base){
-    return PROFILE_SCOPED_KEYS.includes(base) ? ('gs_profile_' + activeProfileId + '_' + base) : base;
-}
+function pk(base){ return base; }
 
 function migrateAlarms(){
     const existing = loadArray('gs_alarms', null);
@@ -2554,7 +3710,7 @@ applyTheme();
 
 const I18N = {
     de: {
-        navHome:'Start', navAlarm:'Wecker', navStats:'Verlauf', navJournal:'Notizen', navSettings:'Profil',
+        navHome:'Start', navAlarm:'Wecker', navStats:'Verlauf', navJournal:'Notizen', navSettings:'Einstellungen',
         greetingPrefix:'Hallo,',
         headerMessage:'Erholsame Nacht',
         headerSoundLabel:'Einschlafhilfe',
@@ -2569,7 +3725,7 @@ const I18N = {
         cycleCycles:'{count} Zyklen', cycleTime:'{time} Uhr',
         alarmSetTitle:'Wecker einstellen', alarmIntro:'Wähle Uhrzeit, Tage und deinen bevorzugten Klang.', alarmTimeLabel:'Weckzeit',
         alarmListTitle:'Wecker', alarmListIntro:'Verwalte alle deine Wecker – tippe auf einen Eintrag zum Bearbeiten.',
-        alarmListEmpty:'Noch kein Wecker eingerichtet.', btnAddAlarm:'Neuer Wecker', btnDeleteAlarm:'Wecker löschen',
+        alarmListEmpty:'Noch kein Wecker eingerichtet.', alarmEmptyTitle:'Noch kein Wecker eingerichtet.', alarmEmptyDesc:'Erstelle einen und wache pünktlich auf.', btnAddAlarm:'Neuer Wecker', btnDeleteAlarm:'Wecker löschen',
         confirmDeleteAlarm:'Diesen Wecker wirklich löschen?', ariaAlarmToggle:'Wecker {time} aktivieren oder deaktivieren',
         ariaEditAlarm:'Wecker {time} bearbeiten', toastAlarmDeleted:'Wecker gelöscht.',
         weekdayRepeatLabel:'Wiederholen',
@@ -2585,7 +3741,7 @@ const I18N = {
         alarmMsgNoTime:'Bitte wähle eine Weckzeit.', alarmMsgNoDays:'Bitte wähle mindestens einen Wochentag.',
         toastAlarmSaved:'Wecker für {time} Uhr gespeichert.', toastAlarmSyncFailedSave:'Wecker gespeichert, Push-Synchronisierung fehlgeschlagen.',
         toastAlarmDisabled:'Wecker ausgeschaltet.', toastAlarmSyncFailedDisable:'Wecker ausgeschaltet, Push-Synchronisierung fehlgeschlagen.',
-        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf einen Eintrag, um alle Details, die Kurve und die Bearbeitung zu öffnen.', btnDone:'Fertig',
+        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf einen Eintrag, um alle Details, die Kurve und die Bearbeitung zu öffnen.', statsDurationTitle:'Schlafdauer', statsGoal:'Schlafziel · {hours} Std.', statsTrendEmpty:'Noch nicht genug Daten für einen Trend.', recentNights:'Letzte Nächte', btnDone:'Fertig',
         statsEmpty:'Noch keine Schlafdaten. Starte auf der Hauptseite deinen ersten Schlafmodus.',
         chartRange30:'30 Tage', chartRange90:'90 Tage', statsChartAria:'Balkendiagramm der Schlafdauer',
         statsChartEmpty:'Für diesen Zeitraum liegen noch keine Schlafdaten vor.',
@@ -2610,17 +3766,14 @@ const I18N = {
         toastSleepUpdated:'Schlafeintrag aktualisiert.', toastSleepDeleted:'Schlafeintrag gelöscht.',
         toastSleepDurationError:'Bitte gib eine Schlafdauer zwischen 1 Minute und 24 Stunden ein.',
         journalSheetTitle:'Schlaftagebuch', journalIntro:'Halte kurz fest, was deinen Schlaf beeinflusst hat.',
-        journalInputLabel:'Neuer Eintrag', journalPlaceholder:'Zum Beispiel: spät Kaffee getrunken, schnell eingeschlafen …',
+        journalInputLabel:'Neuer Eintrag', journalPlaceholder:'Zum Beispiel: spät Kaffee getrunken, schnell eingeschlafen …', journalQuickTags:'Schnell-Tags', journalTagCoffee:'Kaffee', journalTagStress:'Stress', journalTagExercise:'Sport', journalTagScreen:'Bildschirmzeit',
         btnClose:'Schließen', btnSaveJournal:'Eintrag speichern',
-        journalEmpty:'Noch keine Einträge. Deine erste Notiz kann ganz kurz sein.', journalTextareaLabel:'Notiz',
+        journalEmpty:'Noch keine Einträge. Deine erste Notiz kann ganz kurz sein.', journalEmptyTitle:'Noch keine Einträge', journalEmptyDesc:'Deine erste Notiz kann ganz kurz sein.', journalTextareaLabel:'Notiz',
         ariaEditJournal:'Tagebucheintrag vom {date} bearbeiten',
         toastJournalSaved:'Tagebucheintrag gespeichert.', toastJournalUpdated:'Tagebucheintrag aktualisiert.',
         toastJournalEmptyError:'Der Tagebucheintrag darf nicht leer sein.', journalMessageEmpty:'Schreibe zuerst eine kurze Notiz.',
         settingsSheetTitle:'Einstellungen', settingsIntro:'Passe G04Sleep an deinen persönlichen Schlafrhythmus an.',
-        profilesTitle:'Profile', profilesDesc:'Teilt ihr euch ein Gerät? Jedes Profil hat eigene Wecker, Schlafdaten und Tagebuch.',
-        profileSwitchLabel:'Aktives Profil', profileUnnamed:'Ohne Namen',
-        btnAddProfile:'Neues Profil', btnDeleteProfile:'Profil löschen',
-        promptProfileName:'Name des neuen Profils:', confirmDeleteProfile:'Profil „{name}“ inklusive aller Wecker, Schlafdaten und Tagebucheinträge wirklich löschen?',
+        personalSectionTitle:'Persönlich', sleepNotificationsTitle:'Schlaf & Benachrichtigungen', dataBackupTitle:'Daten & Backup',
         themeLabel:'Erscheinungsbild', themeDark:'Dunkel', themeLight:'Hell',
         langLabel:'Sprache', nameLabel:'Dein Name', targetLabel:'Schlafziel in Stunden', targetPlaceholder:'z. B. 8',
         targetHelp:'Empfohlener Bereich: 4 bis 14 Stunden.',
@@ -2689,11 +3842,11 @@ const I18N = {
         onboardingTitle:'Willkommen bei G04Sleep', onboardingIntro:'Drei Dinge, mit denen du direkt loslegen kannst:',
         onboardingStep1:'Schlaf aufzeichnen: Tippe auf der Startseite auf „Schlaf aufzeichnen“, bevor du einschläfst.',
         onboardingStep2:'Wecker stellen: Lege unter „Wecker“ Uhrzeit, Tage und Klang fest – auch mehrere.',
-        onboardingStep3:'Schlafziel setzen: Trage im Profil deinen Namen und dein Stundenziel ein.',
+        onboardingStep3:'Schlafziel setzen: Trage in den Einstellungen deinen Namen und dein Stundenziel ein.',
         btnOnboardingLater:'Später', btnOnboardingSetup:'Profil einrichten'
     },
     en: {
-        navHome:'Home', navAlarm:'Alarm', navStats:'History', navJournal:'Journal', navSettings:'Profile',
+        navHome:'Home', navAlarm:'Alarm', navStats:'History', navJournal:'Journal', navSettings:'Settings',
         greetingPrefix:'Hello,',
         headerMessage:'Restful night',
         headerSoundLabel:'Sleep sounds',
@@ -2708,7 +3861,7 @@ const I18N = {
         cycleCycles:'{count} cycles', cycleTime:'{time}',
         alarmSetTitle:'Set alarm', alarmIntro:'Choose a time, days and your preferred tone.', alarmTimeLabel:'Alarm time',
         alarmListTitle:'Alarms', alarmListIntro:'Manage all your alarms – tap an entry to edit it.',
-        alarmListEmpty:'No alarm set up yet.', btnAddAlarm:'New alarm', btnDeleteAlarm:'Delete alarm',
+        alarmListEmpty:'No alarm set up yet.', alarmEmptyTitle:'No alarm set up yet.', alarmEmptyDesc:'Create one and wake up right on time.', btnAddAlarm:'New alarm', btnDeleteAlarm:'Delete alarm',
         confirmDeleteAlarm:'Really delete this alarm?', ariaAlarmToggle:'Enable or disable {time} alarm',
         ariaEditAlarm:'Edit {time} alarm', toastAlarmDeleted:'Alarm deleted.',
         weekdayRepeatLabel:'Repeat',
@@ -2724,7 +3877,7 @@ const I18N = {
         alarmMsgNoTime:'Please choose an alarm time.', alarmMsgNoDays:'Please choose at least one day.',
         toastAlarmSaved:'Alarm set for {time}.', toastAlarmSyncFailedSave:'Alarm saved, background sync failed.',
         toastAlarmDisabled:'Alarm turned off.', toastAlarmSyncFailedDisable:'Alarm turned off, background sync failed.',
-        statsSheetTitle:'Your sleep history', statsIntro:'Tap an entry to open all details, the curve and editing.', btnDone:'Done',
+        statsSheetTitle:'Your sleep history', statsIntro:'Tap an entry to open all details, the curve and editing.', statsDurationTitle:'Sleep duration', statsGoal:'Sleep goal · {hours} h', statsTrendEmpty:'Not enough data for a trend yet.', recentNights:'Recent nights', btnDone:'Done',
         statsEmpty:'No sleep data yet. Start your first sleep session on the home screen.',
         chartRange30:'30 days', chartRange90:'90 days', statsChartAria:'Bar chart of sleep duration',
         statsChartEmpty:'No sleep data for this time range yet.',
@@ -2749,17 +3902,14 @@ const I18N = {
         toastSleepUpdated:'Sleep entry updated.', toastSleepDeleted:'Sleep entry deleted.',
         toastSleepDurationError:'Please enter a sleep duration between 1 minute and 24 hours.',
         journalSheetTitle:'Sleep journal', journalIntro:'Briefly note what affected your sleep.',
-        journalInputLabel:'New entry', journalPlaceholder:'For example: had coffee late, fell asleep quickly …',
+        journalInputLabel:'New entry', journalPlaceholder:'For example: had coffee late, fell asleep quickly …', journalQuickTags:'Quick tags', journalTagCoffee:'Coffee', journalTagStress:'Stress', journalTagExercise:'Exercise', journalTagScreen:'Screen time',
         btnClose:'Close', btnSaveJournal:'Save entry',
-        journalEmpty:'No entries yet. Your first note can be short.', journalTextareaLabel:'Note',
+        journalEmpty:'No entries yet. Your first note can be short.', journalEmptyTitle:'No entries yet', journalEmptyDesc:'Your first note can be short.', journalTextareaLabel:'Note',
         ariaEditJournal:'Edit journal entry from {date}',
         toastJournalSaved:'Journal entry saved.', toastJournalUpdated:'Journal entry updated.',
         toastJournalEmptyError:'The journal entry cannot be empty.', journalMessageEmpty:'Write a short note first.',
         settingsSheetTitle:'Settings', settingsIntro:'Adjust G04Sleep to your personal sleep rhythm.',
-        profilesTitle:'Profiles', profilesDesc:'Sharing this device? Each profile has its own alarms, sleep data and journal.',
-        profileSwitchLabel:'Active profile', profileUnnamed:'Unnamed',
-        btnAddProfile:'New profile', btnDeleteProfile:'Delete profile',
-        promptProfileName:'Name for the new profile:', confirmDeleteProfile:'Really delete profile "{name}" including all its alarms, sleep data and journal entries?',
+        personalSectionTitle:'Personal', sleepNotificationsTitle:'Sleep & notifications', dataBackupTitle:'Data & backup',
         themeLabel:'Appearance', themeDark:'Dark', themeLight:'Light',
         langLabel:'Language', nameLabel:'Your name', targetLabel:'Sleep goal in hours', targetPlaceholder:'e.g. 8',
         targetHelp:'Recommended range: 4 to 14 hours.',
@@ -2828,7 +3978,7 @@ const I18N = {
         onboardingTitle:'Welcome to G04Sleep', onboardingIntro:'Three things you can start with right away:',
         onboardingStep1:'Track sleep: tap "Track sleep" on the home screen before you fall asleep.',
         onboardingStep2:'Set an alarm: choose time, days and tone under "Alarm" – you can add several.',
-        onboardingStep3:'Set your goal: enter your name and hourly sleep goal in your profile.',
+        onboardingStep3:'Set your goal: enter your name and hourly sleep goal in Settings.',
         btnOnboardingLater:'Later', btnOnboardingSetup:'Set up profile'
     }
 };
@@ -2977,7 +4127,11 @@ function renderAlarmsList(){
     const container = document.getElementById('alarmList');
     if(!container) return;
     if(state.alarms.length === 0){
-        container.innerHTML = '<p class="empty">' + t('alarmListEmpty') + '</p>';
+        container.innerHTML = '<div class="alarm-empty-state">' +
+            '<div class="alarm-empty-illustration" aria-hidden="true"><svg class="ui-icon"><use href="#i-alarm"></use></svg><span class="alarm-empty-star star-one">✦</span><span class="alarm-empty-star star-two">✦</span><span class="alarm-empty-moon">◜</span></div>' +
+            '<h3>' + t('alarmEmptyTitle') + '</h3>' +
+            '<p>' + t('alarmEmptyDesc') + '</p>' +
+        '</div>';
         return;
     }
     const sorted = [...state.alarms].sort((a,b) => (a.time || '').localeCompare(b.time || ''));
@@ -3057,7 +4211,7 @@ function renderCycles(){
     [4,5,6].forEach(cycles => {
         const wake = new Date(fallAsleep.getTime() + cycles*90*60000);
         const li = document.createElement('li');
-        li.innerHTML = '<span>' + t('cycleCycles', {count:cycles}) + '</span><b>' + t('cycleTime', {time:fmtTime(wake)}) + '</b>';
+        li.innerHTML = '<span>' + t('cycleCycles', {count:cycles}) + '</span><span class="cycle-time"><b>' + t('cycleTime', {time:fmtTime(wake)}) + '</b><svg class="ui-icon" aria-hidden="true"><use href="#i-arrow"></use></svg></span>';
         list.appendChild(li);
     });
 }
@@ -3065,7 +4219,7 @@ function renderCycles(){
 function renderJournalHistory(){
     const container = document.getElementById('journalHistory');
     if(state.journal.length === 0){
-        container.innerHTML = '<p class="empty">' + t('journalEmpty') + '</p>';
+        container.innerHTML = '<div class="journal-empty-state"><div class="journal-empty-illustration"><svg class="ui-icon" aria-hidden="true"><use href="#i-book"></use></svg><span aria-hidden="true">★</span></div><div><h3>' + t('journalEmptyTitle') + '</h3><p>' + t('journalEmptyDesc') + '</p></div></div>';
         return;
     }
     container.innerHTML = state.journal.map((entry,index) => ({entry,index})).reverse().map(({entry,index}) => {
@@ -3082,6 +4236,29 @@ function renderJournalHistory(){
             '</p></div><button type="button" class="edit-button" data-edit-journal="' + index + '" aria-label="' + escapeHtml(t('ariaEditJournal', {date:d.toLocaleDateString(dateLocale())})) +
             '">' + t('editButton') + '</button></div></article>';
     }).join('');
+}
+
+function updateJournalCount(){
+    const input = document.getElementById('journalInput');
+    const counter = document.getElementById('journalCount');
+    if(input && counter) counter.textContent = input.value.length + ' / ' + input.maxLength;
+}
+
+function addJournalTag(tag){
+    const input = document.getElementById('journalInput');
+    if(!input) return;
+    const labels = {
+        coffee:'journalTagCoffee',
+        stress:'journalTagStress',
+        exercise:'journalTagExercise',
+        screen:'journalTagScreen'
+    };
+    const label = labels[tag] ? t(labels[tag]) : tag;
+    const current = input.value.trim();
+    input.value = current ? current + ', ' + label : label;
+    updateJournalCount();
+    input.focus();
+    input.setSelectionRange(input.value.length, input.value.length);
 }
 
 function renderSoundClipButtons(sound){
@@ -3107,6 +4284,7 @@ function renderStatsHistory(){
         const duration = Math.max(1, Math.round(entry.durationMin));
         const hours = Math.floor(duration/60);
         const minutes = duration%60;
+        const quality = Math.round(Math.max(0, Math.min(100, Number(entry.quality) || 0)));
         const sound = state.soundHistory.find(item => Math.abs(Date.parse(item.date) - d.getTime()) < 2000);
         const soundSummary = sound ? '<div class="history-sound' + (sound.eventCount ? ' detected' : '') + '">' +
             (sound.eventCount ? t('soundEventCount', {count:sound.eventCount}) + ' · ' + t('soundEventMinutes', {minutes:Math.round((sound.eventSeconds || 0) / 60)}) : t('soundNoEvents')) +
@@ -3127,7 +4305,7 @@ function renderStatsHistory(){
                 '<div class="history-actions"><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) + '">' + t('editButton') + '</button></div>') +
             (sound ? renderSoundDetails(sound) : '') + '</div>' : '';
         return '<article class="history-entry"><button type="button" class="history-toggle" data-toggle-sleep="' + index + '" aria-expanded="' + String(expanded) + '" aria-controls="sleep-detail-' + index + '"><span class="history-toggle-content"><span class="history-date">' + d.toLocaleDateString(dateLocale()) +
-            '</span><span class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + entry.quality + t('qualitySuffix') + '</span>' + soundSummary + '</span><span class="history-chevron" aria-hidden="true">›</span></button>' + detail + '</article>';
+            '</span><span class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + quality + t('qualitySuffix') + '</span>' + soundSummary + '</span><span class="history-entry-end"><span class="history-quality-ring" style="--quality:' + quality + '"><span>' + quality + '%</span></span><span class="history-chevron" aria-hidden="true">›</span></span></button>' + detail + '</article>';
     }).join('');
 }
 
@@ -3136,34 +4314,51 @@ let statsChartRange = 30;
 function renderStatsChart(){
     const container = document.getElementById('statsChart');
     if(!container) return;
+    const goalLabel = document.getElementById('statsGoalLabel');
+    if(goalLabel) goalLabel.textContent = t('statsGoal', {hours:state.targetHours});
     const now = new Date();
     const since = new Date(now.getTime() - statsChartRange*24*60*60*1000);
     const entries = state.log.filter(e => new Date(e.date) >= since).sort((a,b) => new Date(a.date) - new Date(b.date));
-    if(entries.length === 0){
-        container.innerHTML = '<p class="stats-chart-empty">' + t('statsChartEmpty') + '</p>';
-        return;
-    }
-    const width = 600, height = 140, padding = 6;
-    const maxHours = Math.max(state.targetHours, ...entries.map(e => e.durationMin/60)) * 1.15;
-    const slot = (width - padding*2) / entries.length;
-    const barWidth = Math.max(3, slot - 3);
-    const targetY = height - padding - Math.min(1, state.targetHours/maxHours) * (height - padding*2);
-
-    const bars = entries.map((entry, index) => {
-        const h = Math.max(2, (entry.durationMin/60 / maxHours) * (height - padding*2));
-        const x = padding + index * slot;
-        const y = height - padding - h;
-        const color = entry.quality >= 80 ? '#39FF8A' : entry.quality >= 60 ? '#00E5FF' : '#FF3D8A';
-        return '<rect x="' + x.toFixed(1) + '" y="' + y.toFixed(1) + '" width="' + barWidth.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="' + color + '" fill-opacity="0.85"><title>' +
-            escapeHtml(new Date(entry.date).toLocaleDateString(dateLocale())) + ': ' + fmtDuration(entry.durationMin) + '</title></rect>';
+    const width = 720, height = 250, left = 58, right = 16, top = 28, bottom = 46;
+    const plotWidth = width - left - right;
+    const plotHeight = height - top - bottom;
+    const maximum = Math.max(state.targetHours || 8, ...entries.map(e => Number(e.durationMin) / 60 || 0));
+    const maxHours = Math.max(10, Math.ceil((maximum + 0.5) / 2) * 2);
+    const targetY = top + (maxHours - state.targetHours) / maxHours * plotHeight;
+    const tickValues = [...new Set([maxHours, Math.round(maxHours / 2), state.targetHours, 0])]
+        .filter(value => value >= 0 && value <= maxHours)
+        .sort((a,b) => b - a);
+    const grid = tickValues.map(value => {
+        const y = top + (maxHours - value) / maxHours * plotHeight;
+        const emphasis = value === state.targetHours;
+        return '<line x1="' + left + '" y1="' + y.toFixed(1) + '" x2="' + (width - right) + '" y2="' + y.toFixed(1) + '" stroke="' +
+            (emphasis ? 'rgba(71,190,255,0.86)' : 'rgba(' + getTintRgb() + ',0.16)') + '" stroke-width="' + (emphasis ? '1.8' : '1') + '" stroke-dasharray="' + (emphasis ? '8 6' : '4 5') + '"/>' +
+            '<text x="8" y="' + (y + 5).toFixed(1) + '" fill="rgba(' + getTintRgb() + ',0.72)" font-size="16">' + value + ' h</text>';
     }).join('');
-
+    const dateLabel = date => dateLocale() === 'en-US'
+        ? date.toLocaleDateString('en-US', {month:'short', day:'numeric'})
+        : date.toLocaleDateString('de-DE', {day:'2-digit', month:'2-digit'});
+    const rangeStart = new Date(since.getTime());
+    const rangeEnd = new Date(now.getTime());
+    const dateToX = date => left + Math.max(0, Math.min(1, (date.getTime() - rangeStart.getTime()) / Math.max(1, rangeEnd.getTime() - rangeStart.getTime()))) * plotWidth;
+    const points = entries.map(entry => {
+        const date = new Date(entry.date);
+        const hours = Math.max(0, Number(entry.durationMin) || 0) / 60;
+        const x = dateToX(date);
+        const y = top + (maxHours - Math.min(maxHours, hours)) / maxHours * plotHeight;
+        return {x, y, entry, date};
+    });
+    const line = points.length > 1 ? '<polyline points="' + points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ') + '" fill="none" stroke="#20c7f5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>' : '';
+    const dots = points.map(point => '<circle cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="6" fill="#20c7f5"><title>' +
+        escapeHtml(point.date.toLocaleDateString(dateLocale()) + ': ' + fmtDuration(point.entry.durationMin)) + '</title></circle>').join('');
+    const xLabels = '<text x="' + left + '" y="' + (height - 10) + '" text-anchor="start" fill="rgba(' + getTintRgb() + ',0.72)" font-size="16">' + escapeHtml(dateLabel(rangeStart)) + '</text>' +
+        '<text x="' + (width - right) + '" y="' + (height - 10) + '" text-anchor="end" fill="rgba(' + getTintRgb() + ',0.72)" font-size="16">' + escapeHtml(dateLabel(rangeEnd)) + '</text>';
+    const trend = entries.length < 2 ? '<p class="chart-trend-note">' + t('statsTrendEmpty') + '</p>' : '';
     container.innerHTML =
         '<svg viewBox="0 0 ' + width + ' ' + height + '" preserveAspectRatio="none" role="img" aria-label="' + escapeHtml(t('statsChartAria')) + '">' +
-        '<line x1="0" y1="' + targetY.toFixed(1) + '" x2="' + width + '" y2="' + targetY.toFixed(1) + '" stroke="rgba(' + getTintRgb() + ',0.28)" stroke-dasharray="4 4" stroke-width="1"/>' +
-        bars +
-        '</svg>' +
-        '<p class="chart-legend">' + t('statsChartLegend', {hours:state.targetHours}) + '</p>';
+        grid + '<line x1="' + left + '" y1="' + (height - bottom) + '" x2="' + (width - right) + '" y2="' + (height - bottom) + '" stroke="rgba(' + getTintRgb() + ',0.4)" stroke-width="1.5"/>' +
+        '<line x1="' + left + '" y1="' + targetY.toFixed(1) + '" x2="' + (width - right) + '" y2="' + targetY.toFixed(1) + '" stroke="rgba(71,190,255,0.86)" stroke-width="1.8" stroke-dasharray="8 6"/>' +
+        line + dots + xLabels + '</svg>' + trend;
 }
 
 function soundEntryStartMs(entry){
@@ -3226,18 +4421,19 @@ function soundDbToY(db, scale, top, plotHeight){
 function renderSoundChart(){
     const container = document.getElementById('soundChart');
     if(!container) return;
+    const emptySoundState = message => '<div class="sound-empty-state"><svg viewBox="0 0 180 64" aria-hidden="true"><path d="M8 31h22c8 0 8-18 16-18s8 37 16 37 8-46 16-46 8 45 16 45 8-33 16-33 8 15 16 15h26" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><p>' + escapeHtml(message) + '</p></div>';
     const now = new Date();
     const since = new Date(now.getTime() - statsChartRange*24*60*60*1000);
     const entries = state.soundHistory
         .filter(entry => entry && Number.isFinite(Date.parse(entry.date)) && new Date(entry.date) >= since)
         .sort((a,b) => new Date(a.date) - new Date(b.date));
     if(entries.length === 0){
-        container.innerHTML = '<p class="stats-chart-empty">' + t('soundChartEmpty') + '</p>';
+        container.innerHTML = emptySoundState(t('soundChartEmpty'));
         return;
     }
     const curveEntries = entries.filter(entry => Array.isArray(entry.timeline) && entry.timeline.length >= 2);
     if(curveEntries.length === 0){
-        container.innerHTML = '<p class="stats-chart-empty">' + t('soundChartNoTimeline') + '</p>';
+        container.innerHTML = emptySoundState(t('soundChartNoTimeline'));
         return;
     }
     const visibleEntries = curveEntries.slice(-7);
@@ -4565,9 +5761,15 @@ document.getElementById('statsHistory').addEventListener('click', event => {
 document.getElementById('journalBtn').addEventListener('click', () => {
     editingJournalIndex = null;
     document.getElementById('journalMessage').textContent = '';
+    updateJournalCount();
     renderJournalHistory();
     openSheet('journalOverlay');
     setActiveTab('journalBtn');
+});
+
+document.getElementById('journalInput').addEventListener('input', updateJournalCount);
+document.querySelectorAll('[data-journal-tag]').forEach(button => {
+    button.addEventListener('click', () => addJournalTag(button.dataset.journalTag));
 });
 
 document.getElementById('saveJournalBtn').addEventListener('click', () => {
@@ -4581,6 +5783,7 @@ document.getElementById('saveJournalBtn').addEventListener('click', () => {
     state.journal.push({ date:new Date().toISOString(), text });
     save('gs_journal', state.journal);
     input.value = '';
+    updateJournalCount();
     document.getElementById('journalMessage').textContent = '';
     renderJournalHistory();
     showToast(t('toastJournalSaved'));
@@ -4828,7 +6031,6 @@ document.getElementById('settingsBtn').addEventListener('click', () => {
     document.getElementById('settingsMessage').textContent = '';
     document.getElementById('backupMessage').textContent = '';
     document.getElementById('backupMessage').style.color = '';
-    renderProfileSwitcher();
     refreshPushControls();
     refreshSoundDetectionControls();
     openSheet('settingsOverlay');
@@ -4863,56 +6065,6 @@ async function deleteAllAppData(){
 }
 
 document.getElementById('deleteAllDataBtn').addEventListener('click', deleteAllAppData);
-
-// ---------- Profile switcher UI ----------
-function profileName(profile){
-    return (profile.name && profile.name.trim()) || t('profileUnnamed');
-}
-
-function renderProfileSwitcher(){
-    const select = document.getElementById('profileSelect');
-    select.innerHTML = '';
-    profiles.forEach(profile => {
-        const option = document.createElement('option');
-        option.value = profile.id;
-        option.textContent = profileName(profile);
-        if(profile.id === activeProfileId) option.selected = true;
-        select.appendChild(option);
-    });
-    document.getElementById('deleteProfileBtn').disabled = profiles.length <= 1;
-}
-
-function switchToProfile(id){
-    if(id === activeProfileId) return;
-    localStorage.setItem('gs_activeProfile', id);
-    location.reload();
-}
-
-document.getElementById('profileSelect').addEventListener('change', event => {
-    switchToProfile(event.target.value);
-});
-
-document.getElementById('addProfileBtn').addEventListener('click', () => {
-    const name = window.prompt(t('promptProfileName'), '');
-    if(name === null) return;
-    const trimmed = name.trim();
-    if(!trimmed) return;
-    const id = 'p' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
-    profiles.push({ id, name: trimmed });
-    localStorage.setItem('gs_profiles', JSON.stringify(profiles));
-    switchToProfile(id);
-});
-
-document.getElementById('deleteProfileBtn').addEventListener('click', () => {
-    if(profiles.length <= 1) return;
-    const current = profiles.find(p => p.id === activeProfileId);
-    if(!window.confirm(t('confirmDeleteProfile', { name: profileName(current || {}) }))) return;
-    PROFILE_SCOPED_KEYS.forEach(base => localStorage.removeItem('gs_profile_' + activeProfileId + '_' + base));
-    profiles = profiles.filter(p => p.id !== activeProfileId);
-    localStorage.setItem('gs_profiles', JSON.stringify(profiles));
-    localStorage.setItem('gs_activeProfile', profiles[0].id);
-    location.reload();
-});
 
 function sanitizeImportedAlarm(alarm){
     if(!alarm || typeof alarm.time !== 'string' || !Array.isArray(alarm.days)) return null;
