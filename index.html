@@ -951,6 +951,77 @@ button:disabled{
 
 .sheet-overlay.open .sheet{ transform:translateY(0); }
 
+.permission-overlay{
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:120;
+    place-items:center;
+    padding:24px;
+    background:rgba(2,3,7,0.78);
+}
+
+.permission-overlay.open{ display:grid; }
+
+.permission-card{
+    width:min(100%,520px);
+    max-height:min(82vh,620px);
+    overflow-y:auto;
+    padding:26px 22px 22px;
+    border:1px solid rgba(0,229,255,0.32);
+    border-radius:24px;
+    background:var(--sheet-bg);
+    box-shadow:0 18px 70px rgba(0,229,255,0.16),0 0 0 1px rgba(129,88,255,0.12);
+}
+
+.permission-icon{
+    width:48px;
+    height:48px;
+    display:grid;
+    place-items:center;
+    margin-bottom:16px;
+    border-radius:16px;
+    color:var(--cyan);
+    background:rgba(0,229,255,0.1);
+}
+
+.permission-icon .ui-icon{ width:25px; height:25px; }
+
+.permission-card h2{
+    margin:0 0 12px;
+    color:var(--text);
+    font-size:22px;
+    line-height:1.2;
+}
+
+.permission-card p{
+    margin:10px 0;
+    color:var(--text-dim);
+    line-height:1.55;
+}
+
+.permission-card .permission-note{
+    padding:12px 14px;
+    border-radius:12px;
+    background:rgba(var(--tint-rgb),0.045);
+    color:var(--text);
+    font-size:14px;
+}
+
+.permission-actions{
+    display:flex;
+    gap:10px;
+    margin-top:22px;
+}
+
+.permission-actions button{
+    flex:1;
+    min-height:50px;
+    border-radius:12px;
+    padding:14px;
+    font:600 15.5px var(--display);
+}
+
 .sheet-handle{
     width:38px;
     height:4px;
@@ -2220,13 +2291,27 @@ textarea:focus-visible{
                 <a class="btn-secondary legal-link" href="privacy.html" target="_blank" rel="noopener" data-i18n="btnPrivacy">Datenschutz</a>
                 <a class="btn-secondary legal-link" href="copyright.html" target="_blank" rel="noopener" data-i18n="btnCopyright">Copyright</a>
             </div>
-            <p class="field-help" data-i18n="legalStoreNote">Vor dem Play-Store-Start Betreibername und Kontakt in den Rechtstexten ergänzen.</p>
+            <p class="field-help" data-i18n="legalStoreNote">Vor der Veröffentlichung die tatsächlichen Datenverarbeitungen und Lizenznachweise prüfen.</p>
             <button type="button" class="btn-danger legal-delete" id="deleteAllDataBtn" data-i18n="btnDeleteAllData">Alle lokalen Daten löschen</button>
         </div>
         <p class="form-message" id="settingsMessage" role="alert"></p>
         <div class="sheet-actions">
             <button type="button" class="btn-secondary" data-close="settingsOverlay" data-i18n="btnCancel">Abbrechen</button>
             <button type="button" class="btn-primary" id="saveSettingsBtn" data-i18n="btnSaveSettings">Änderungen speichern</button>
+        </div>
+    </div>
+</div>
+
+<!-- Mikrofon-Hinweis vor der Berechtigungsabfrage -->
+<div class="permission-overlay" id="micPermissionOverlay" role="dialog" aria-modal="true" aria-labelledby="micPermissionTitle" aria-describedby="micPermissionDescription" aria-hidden="true">
+    <div class="permission-card" tabindex="-1">
+        <div class="permission-icon" aria-hidden="true"><svg class="ui-icon"><use href="#i-wave2"></use></svg></div>
+        <h2 id="micPermissionTitle" data-i18n="micConsentTitle">Mikrofonzugriff für Geräuscherkennung</h2>
+        <p id="micPermissionDescription" data-i18n="micConsentBody">G04Sleep nutzt das Mikrofon nur während deiner aktiven Schlafaufzeichnung, um wahrscheinliche Geräusche lokal zu erkennen.</p>
+        <p class="permission-note" data-i18n="micConsentDetails">Audio und Auswertung bleiben auf diesem Gerät. Die Aufnahme endet spätestens nach acht Stunden und wird nicht an den Push-Dienst hochgeladen.</p>
+        <div class="permission-actions">
+            <button type="button" class="btn-secondary" id="micPermissionDecline" data-i18n="micConsentNotNow">Nicht jetzt</button>
+            <button type="button" class="btn-primary" id="micPermissionAllow" data-i18n="micConsentAllow">Erlauben</button>
         </div>
     </div>
 </div>
@@ -2395,6 +2480,7 @@ const state = {
     soundDetectionEnabled: localStorage.getItem(pk('gs_soundDetectionEnabled')) === 'true',
     soundHistory: loadArray('gs_soundHistory', []),
     pushEnabled: localStorage.getItem('gs_pushEnabled') === 'true',
+    microphoneDisclosureAccepted: localStorage.getItem('gs_micDisclosureAccepted') === 'true',
     lang: localStorage.getItem('gs_lang') || 'en'
 };
 
@@ -2549,6 +2635,9 @@ const I18N = {
         soundStatusUnsupported:'Mikrofonzugriff wird von diesem Browser nicht unterstützt.',
         soundStatusPermission:'Mikrofonzugriff wurde nicht erlaubt.', soundStatusError:'Geräuscherkennung konnte nicht gestartet werden.',
         soundStatusStopped:'Geräuscherkennung beendet.',
+        micConsentTitle:'Mikrofonzugriff für Geräuscherkennung', micConsentBody:'G04Sleep nutzt das Mikrofon nur während deiner aktiven Schlafaufzeichnung, um wahrscheinliche Geräusche lokal zu erkennen.',
+        micConsentDetails:'Audio und Auswertung bleiben auf diesem Gerät. Die Aufnahme endet spätestens nach acht Stunden und wird nicht an den Push-Dienst hochgeladen.',
+        micConsentNotNow:'Nicht jetzt', micConsentAllow:'Erlauben',
         pushTitle:'Hintergrund-Benachrichtigungen', pushDesc:'Weckt dich auch, wenn G04Sleep geschlossen ist.',
         pushToggleAria:'Hintergrund-Benachrichtigungen aktivieren', pushStatusChecking:'Status wird geprüft …',
         btnTestPush:'Test-Benachrichtigung senden', btnSaveSettings:'Änderungen speichern',
@@ -2574,7 +2663,7 @@ const I18N = {
         healthExportTitle:'Export für Gesundheits-Apps', healthExportDesc:'G04Sleep kann sich nicht direkt mit Apple Health oder Google Fit verbinden – das geht nur mit einer nativen App. Als CSV-Datei lassen sich deine Schlafdaten aber in viele Gesundheits-Apps importieren (z. B. über eine Import-App oder Kurzbefehle).',
         btnExportCsv:'Als CSV exportieren', backupMsgCsvExported:'CSV-Datei wurde heruntergeladen.',
         legalTitle:'Datenschutz & Copyright', legalDesc:'Lies, welche Daten G04Sleep verarbeitet und welche Rechte für App-Code und Medien gelten.',
-        btnPrivacy:'Datenschutz', btnCopyright:'Copyright', legalStoreNote:'Vor dem Play-Store-Start Betreibername und Kontakt in den Rechtstexten ergänzen.',
+        btnPrivacy:'Datenschutz', btnCopyright:'Copyright', legalStoreNote:'Vor der Veröffentlichung die tatsächlichen Datenverarbeitungen und Lizenznachweise prüfen.',
         btnDeleteAllData:'Alle lokalen Daten löschen', confirmDeleteAllData:'Alle lokalen G04Sleep-Daten, Aufnahmen und Push-Daten wirklich löschen?', toastDataDeleted:'Lokale Daten wurden gelöscht.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push-Server ist noch nicht konfiguriert.', errPushUnreachable:'Push-Server nicht erreichbar.',
         errNoActiveSubscription:'Keine aktive Push-Anmeldung gefunden.', errPushNotConnected:'Der Cloudflare Push-Server ist noch nicht verbunden.',
@@ -2685,6 +2774,9 @@ const I18N = {
         soundStatusUnsupported:'Microphone access is not supported by this browser.',
         soundStatusPermission:'Microphone access was not allowed.', soundStatusError:'Sound detection could not be started.',
         soundStatusStopped:'Sound detection stopped.',
+        micConsentTitle:'Microphone access for sound detection', micConsentBody:'G04Sleep uses the microphone only during your active sleep recording to detect likely sounds locally.',
+        micConsentDetails:'Audio and analysis stay on this device. Recording stops after eight hours at the latest and is never uploaded to the push service.',
+        micConsentNotNow:'Not now', micConsentAllow:'Allow',
         pushTitle:'Background notifications', pushDesc:'Wakes you even when G04Sleep is closed.',
         pushToggleAria:'Enable background notifications', pushStatusChecking:'Checking status …',
         btnTestPush:'Send test notification', btnSaveSettings:'Save changes',
@@ -2710,7 +2802,7 @@ const I18N = {
         healthExportTitle:'Export for health apps', healthExportDesc:"G04Sleep can't connect directly to Apple Health or Google Fit — that only works from a native app. As a CSV file, though, your sleep data can be imported into many health apps (e.g. via an import app or Shortcuts).",
         btnExportCsv:'Export as CSV', backupMsgCsvExported:'CSV file downloaded.',
         legalTitle:'Privacy & copyright', legalDesc:'See which data G04Sleep processes and which rights apply to the app code and media.',
-        btnPrivacy:'Privacy policy', btnCopyright:'Copyright', legalStoreNote:'Before publishing on Google Play, replace the operator name and contact placeholders in the legal texts.',
+        btnPrivacy:'Privacy policy', btnCopyright:'Copyright', legalStoreNote:'Before publishing, verify the actual data practices and licence records.',
         btnDeleteAllData:'Delete all local data', confirmDeleteAllData:'Really delete all local G04Sleep data, recordings and push data?', toastDataDeleted:'Local data was deleted.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push server is not configured yet.', errPushUnreachable:'Push server unreachable.',
         errNoActiveSubscription:'No active push subscription found.', errPushNotConnected:'The Cloudflare push server is not connected yet.',
@@ -3450,14 +3542,46 @@ function setSoundDetectionStatus(key, tone){
     status.style.color = tone === 'error' ? '#ff8cae' : tone === 'success' ? '#7cf6bd' : '';
 }
 
+let micDisclosureReturnFocus = null;
+
+function openMicDisclosure(){
+    const overlay = document.getElementById('micPermissionOverlay');
+    if(!overlay) return;
+    micDisclosureReturnFocus = document.activeElement;
+    overlay.classList.add('open');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => overlay.querySelector('.permission-card')?.focus());
+}
+
+function closeMicDisclosure(){
+    const overlay = document.getElementById('micPermissionOverlay');
+    if(!overlay) return;
+    overlay.classList.remove('open');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = document.querySelector('.sheet-overlay.open') ? 'hidden' : '';
+    if(micDisclosureReturnFocus && typeof micDisclosureReturnFocus.focus === 'function'){
+        micDisclosureReturnFocus.focus();
+    }
+    micDisclosureReturnFocus = null;
+}
+
+function setSoundDetectionPreference(enabled){
+    state.soundDetectionEnabled = Boolean(enabled);
+    save('gs_soundDetectionEnabled', state.soundDetectionEnabled);
+    if(state.soundDetectionEnabled && state.sleepStart) startSoundDetection();
+    if(!state.soundDetectionEnabled) stopSoundDetection();
+    refreshSoundDetectionControls();
+}
+
 function refreshSoundDetectionControls(){
     const toggle = document.getElementById('soundDetectionToggle');
-    if(toggle) toggle.checked = state.soundDetectionEnabled;
+    if(toggle) toggle.checked = state.soundDetectionEnabled && state.microphoneDisclosureAccepted;
     if(activeSoundSession && micStream){
         setSoundDetectionStatus('soundStatusActive', 'success');
     } else if(!soundDetectionSupported()){
         setSoundDetectionStatus('soundStatusUnsupported', 'error');
-    } else if(state.soundDetectionEnabled){
+    } else if(state.soundDetectionEnabled && state.microphoneDisclosureAccepted){
         setSoundDetectionStatus('soundStatusReady');
     } else {
         setSoundDetectionStatus('soundStatusOff');
@@ -3577,6 +3701,13 @@ function finalizeSoundEvent(endMs){
 
 async function startSoundDetection(){
     if(!state.soundDetectionEnabled || micStream || !state.sleepStart) return;
+    if(!state.microphoneDisclosureAccepted){
+        state.soundDetectionEnabled = false;
+        save('gs_soundDetectionEnabled', false);
+        refreshSoundDetectionControls();
+        openMicDisclosure();
+        return;
+    }
     if(!soundDetectionSupported()){
         setSoundDetectionStatus('soundStatusUnsupported', 'error');
         return;
@@ -4644,11 +4775,31 @@ document.getElementById('pushToggle').addEventListener('change', async event => 
 });
 
 document.getElementById('soundDetectionToggle').addEventListener('change', event => {
-    state.soundDetectionEnabled = event.currentTarget.checked;
-    save('gs_soundDetectionEnabled', state.soundDetectionEnabled);
-    if(state.soundDetectionEnabled && state.sleepStart) startSoundDetection();
-    if(!state.soundDetectionEnabled) stopSoundDetection();
+    const toggle = event.currentTarget;
+    if(toggle.checked && !state.microphoneDisclosureAccepted){
+        toggle.checked = false;
+        openMicDisclosure();
+        return;
+    }
+    setSoundDetectionPreference(toggle.checked);
+});
+
+document.getElementById('micPermissionDecline').addEventListener('click', () => {
+    const toggle = document.getElementById('soundDetectionToggle');
+    if(toggle) toggle.checked = false;
+    state.soundDetectionEnabled = false;
+    save('gs_soundDetectionEnabled', false);
+    closeMicDisclosure();
     refreshSoundDetectionControls();
+});
+
+document.getElementById('micPermissionAllow').addEventListener('click', () => {
+    state.microphoneDisclosureAccepted = true;
+    localStorage.setItem('gs_micDisclosureAccepted', 'true');
+    const toggle = document.getElementById('soundDetectionToggle');
+    if(toggle) toggle.checked = true;
+    setSoundDetectionPreference(true);
+    closeMicDisclosure();
 });
 
 document.getElementById('testPushBtn').addEventListener('click', async event => {

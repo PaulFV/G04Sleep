@@ -33,7 +33,7 @@ G04Sleep/
 ├── sw.js              # Offline-Cache der PWA
 ├── icon-source.svg    # Editierbare Vektorversion des App-Logos
 ├── icons/             # App-Icons von 32 bis 1024 Pixel
-├── privacy.html       # Datenschutzerklärung (Betreiberangaben ergänzen)
+├── privacy.html       # Datenschutzerklärung
 ├── copyright.html     # Copyright- und Lizenzhinweise
 ├── PLAY_STORE.md      # Checkliste für TWA/Google Play
 ├── play-store/        # Vorlage für Digital Asset Links
