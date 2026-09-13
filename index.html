@@ -1974,7 +1974,7 @@ textarea:focus-visible{
             <span class="sound-label" data-i18n="headerSoundLabel">Einschlafhilfe</span>
         </button>
         <div class="profile">
-            <div class="avatar" id="avatarInitial">Hallo, User</div>
+            <div class="avatar" id="avatarInitial">User</div>
         </div>
     </div>
 </header>
@@ -2938,7 +2938,7 @@ function showToast(message){
 
 function renderHeader(){
     const avatar = document.getElementById('avatarInitial');
-    avatar.textContent = t('greetingPrefix') + ' ' + state.userName;
+    avatar.textContent = state.userName;
     avatar.title = avatar.textContent;
 }
 
