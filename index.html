@@ -3922,6 +3922,139 @@ textarea:focus-visible{
     .main-action#sleepBtn{ bottom:calc(64px + var(--safe-bottom) + 10px); }
     .container{ padding-bottom:calc(160px + var(--safe-bottom)); }
 }
+/* ---------- Recent nights: own color, color-coded by sleep quality ---------- */
+.history-recent-section{
+    --accent:#ff5fa2;
+    --accent-rgb:255,95,162;
+    background:
+        linear-gradient(160deg,rgba(255,95,162,0.16),rgba(140,107,255,0.08) 60%,rgba(140,107,255,0.03)),
+        rgba(255,255,255,0.03);
+}
+
+.history-recent-title{ color:var(--accent); display:flex; align-items:center; gap:8px; }
+.history-recent-title::before{
+    content:'';
+    width:8px; height:8px;
+    border-radius:50%;
+    background:var(--accent);
+    box-shadow:0 0 10px 2px rgba(255,95,162,0.6);
+}
+
+.history-entry.q-high{ --tier:#8be33f; --tier-rgb:139,227,63; }
+.history-entry.q-mid{  --tier:#52d6ff; --tier-rgb:82,214,255; }
+.history-entry.q-low{  --tier:#ffb45c; --tier-rgb:255,180,92; }
+
+.history-recent-section .history-entry{
+    padding:8px 12px;
+    margin-bottom:8px;
+    background:
+        linear-gradient(110deg,rgba(var(--tier-rgb),0.2),rgba(var(--tier-rgb),0.05) 70%),
+        rgba(8,10,24,0.45);
+    box-shadow:inset 3px 0 0 var(--tier), 0 8px 18px -12px rgba(var(--tier-rgb),0.6);
+}
+
+.history-recent-section .history-date{ color:var(--tier); }
+.history-recent-section .history-chevron{ color:var(--tier); }
+
+.history-recent-section .history-quality-ring{
+    background:conic-gradient(var(--tier) calc(var(--quality) * 1%),rgba(255,255,255,0.14) 0);
+    box-shadow:0 0 14px rgba(var(--tier-rgb),0.3);
+}
+.history-recent-section .history-quality-ring span{ color:var(--tier); }
+/* Only the latest night is highlighted; all older nights stay neutral. */
+.history-recent-section .history-entry:not(:first-child){
+    --tier:#9fb2d6;
+    --tier-rgb:159,178,214;
+}
+.latest-badge{
+    display:block;
+    width:fit-content;
+    margin:0 0 4px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:rgba(var(--tier-rgb),0.22);
+    color:var(--tier);
+    font:700 10.5px var(--mono);
+    letter-spacing:0.6px;
+    text-transform:uppercase;
+}
+/* ---------- Sound timeline: violet card, animated ---------- */
+.history-sound-card{ --accent:#9d83ff; --accent-rgb:140,107,255; }
+.history-sound-card .stats-subtitle .ui-icon{ color:var(--accent); filter:drop-shadow(0 0 6px rgba(var(--accent-rgb),0.7)); }
+
+.sound-empty-state{ color:var(--accent,#9d83ff); }
+.sound-empty-state svg{ filter:drop-shadow(0 0 8px rgba(140,107,255,0.55)); }
+.sound-empty-state .sound-wave{
+    stroke-dasharray:46 14;
+    animation:soundFlow 2.4s linear infinite;
+}
+.sound-empty-state svg{ width:170px; height:58px; animation:soundPulse 2.4s ease-in-out infinite; }
+
+.sound-line{
+    stroke-dasharray:1;
+    stroke-dashoffset:1;
+    animation:soundDraw 1.8s ease-out forwards;
+    filter:drop-shadow(0 0 4px rgba(120,200,255,0.55));
+}
+
+.sound-dot{
+    transform-box:fill-box;
+    transform-origin:center;
+    animation:soundDot 2s ease-in-out infinite;
+}
+
+@keyframes soundFlow{ to{ stroke-dashoffset:-60; } }
+@keyframes soundPulse{ 0%,100%{ opacity:0.75; transform:scaleY(0.92); } 50%{ opacity:1; transform:scaleY(1.06); } }
+@keyframes soundDraw{ to{ stroke-dashoffset:0; } }
+@keyframes soundDot{ 0%,100%{ transform:scale(1); } 50%{ transform:scale(1.45); } }
+
+@media (prefers-reduced-motion:reduce){
+    .sound-empty-state .sound-wave,
+    .sound-empty-state svg,
+    .sound-dot{ animation:none; }
+    .sound-line{ animation:none; stroke-dashoffset:0; }
+}
+/* ---------- Custom sounds ---------- */
+.custom-sounds{ margin:4px 0 8px; }
+.custom-sounds-title{
+    margin:12px 0 8px;
+    color:var(--text-dim);
+    font:600 11px var(--mono);
+    letter-spacing:0.8px;
+    text-transform:uppercase;
+}
+.custom-sounds .tone-list{ display:flex; flex-direction:column; gap:8px; margin-bottom:8px; }
+.custom-sound-row{ display:flex; gap:8px; align-items:stretch; }
+.custom-sound-row .tone-option{ flex:1; min-width:0; }
+.custom-sound-row .tone-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.custom-sound-remove{
+    flex:0 0 44px;
+    display:grid;
+    place-items:center;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.06);
+    color:#ff8ab7;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.custom-sound-remove .ui-icon{ width:18px; height:18px; }
+.custom-sound-add{
+    width:100%;
+    min-height:42px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(135deg,rgba(var(--accent-rgb,139,227,63),0.24),rgba(var(--accent-rgb,139,227,63),0.08));
+    color:var(--accent,var(--cyan));
+    font:600 13.5px var(--display);
+    box-shadow:0 0 0 1px rgba(var(--accent-rgb,139,227,63),0.45);
+}
+.custom-sound-add .ui-icon{ width:18px; height:18px; }
+.custom-sound-add:disabled{ opacity:0.45; }
+.custom-sounds .field-help{ margin:10px 0 0; }
 </style>
 </head>
 
@@ -4387,6 +4520,13 @@ textarea:focus-visible{
                 <span class="tone-preview"><svg class="ui-icon" aria-hidden="true"><use href="#i-wave2"></use></svg></span>
             </button>
         </div>
+        <section class="custom-sounds" aria-labelledby="customSoundsTitle">
+            <h3 class="custom-sounds-title" id="customSoundsTitle" data-i18n="soundCustomTitle">Eigene Klänge</h3>
+            <div class="tone-list" id="customSoundList" role="group" aria-labelledby="customSoundsTitle"></div>
+            <input type="file" id="customSoundInput" accept="audio/*" multiple hidden>
+            <button type="button" class="custom-sound-add" id="customSoundAddBtn"><svg class="ui-icon" aria-hidden="true"><use href="#i-plus"></use></svg><span data-i18n="soundCustomAdd">Eigenen Sound hinzufügen</span></button>
+            <p class="field-help" data-i18n="soundCustomHint">Musik oder Klänge von deinem Gerät. Die Dateien bleiben nur auf diesem Gerät gespeichert.</p>
+        </section>
         <label id="soundVolumeLabel" for="soundVolume" data-i18n="soundVolumeLabel">Lautstärke</label>
         <input type="range" id="soundVolume" min="0" max="100" value="45">
         <label id="soundTimerLabel" data-i18n="soundTimerLabel">Automatisch stoppen nach</label>
@@ -4604,7 +4744,7 @@ const I18N = {
         alarmMsgNoTime:'Bitte wähle eine Weckzeit.', alarmMsgNoDays:'Bitte wähle mindestens einen Wochentag.',
         toastAlarmSaved:'Wecker für {time} Uhr gespeichert.', toastAlarmSyncFailedSave:'Wecker gespeichert, Push-Synchronisierung fehlgeschlagen.',
         toastAlarmDisabled:'Wecker ausgeschaltet.', toastAlarmSyncFailedDisable:'Wecker ausgeschaltet, Push-Synchronisierung fehlgeschlagen.',
-        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf einen Eintrag, um alle Details, die Kurve und die Bearbeitung zu öffnen.', statsDurationTitle:'Schlafdauer', statsGoal:'Schlafziel · {hours} Std.', statsTrendEmpty:'Noch nicht genug Daten für einen Trend.', recentNights:'Letzte Nächte', btnDone:'Fertig',
+        statsSheetTitle:'Deine Schlafhistorie', statsIntro:'Tippe auf einen Eintrag, um alle Details, die Kurve und die Bearbeitung zu öffnen.', statsDurationTitle:'Schlafdauer', statsGoal:'Schlafziel · {hours} Std.', statsTrendEmpty:'Noch nicht genug Daten für einen Trend.', recentNights:'Letzte Nächte', latestRecording:'Letzte Aufzeichnung', btnDone:'Fertig',
         statsEmpty:'Noch keine Schlafdaten. Starte auf der Hauptseite deinen ersten Schlafmodus.',
         chartRange30:'30 Tage', chartRange90:'90 Tage', statsChartAria:'Balkendiagramm der Schlafdauer',
         statsChartEmpty:'Für diesen Zeitraum liegen noch keine Schlafdaten vor.',
@@ -4701,6 +4841,12 @@ const I18N = {
         soundVolumeLabel:'Lautstärke', soundTimerLabel:'Automatisch stoppen nach',
         timer15:'15 Min.', timer30:'30 Min.', timer60:'60 Min.', timerOff:'Aus',
         soundStatusIdle:'Kein Klang aktiv.', soundStatusPlaying:'Spielt: {sound}',
+        soundCustomTitle:'Eigene Klänge', soundCustomAdd:'Eigenen Sound hinzufügen',
+        soundCustomHint:'Musik oder Klänge von deinem Gerät. Die Dateien bleiben nur auf diesem Gerät gespeichert.',
+        soundCustomRemove:'{name} entfernen', toastSoundAdded:'„{name}“ hinzugefügt.', toastSoundRemoved:'Klang entfernt.',
+        toastSoundTooBig:'„{name}“ ist zu groß (max. 80 MB).', toastSoundNotAudio:'„{name}“ ist keine Audiodatei.',
+        toastSoundLimit:'Maximal 12 eigene Klänge.', soundCustomError:'Dieser Klang konnte nicht abgespielt werden.',
+        soundCustomStorageError:'Der Klang konnte nicht gespeichert werden.',
         btnStopSound:'Stoppen',
         onboardingTitle:'Willkommen bei G04Sleep', onboardingIntro:'Drei Dinge, mit denen du direkt loslegen kannst:',
         onboardingStep1:'Schlaf aufzeichnen: Tippe auf der Startseite auf „Schlaf aufzeichnen“, bevor du einschläfst.',
@@ -4738,7 +4884,7 @@ const I18N = {
         alarmMsgNoTime:'Please choose an alarm time.', alarmMsgNoDays:'Please choose at least one day.',
         toastAlarmSaved:'Alarm set for {time}.', toastAlarmSyncFailedSave:'Alarm saved, background sync failed.',
         toastAlarmDisabled:'Alarm turned off.', toastAlarmSyncFailedDisable:'Alarm turned off, background sync failed.',
-        statsSheetTitle:'Your sleep history', statsIntro:'Tap an entry to open all details, the curve and editing.', statsDurationTitle:'Sleep duration', statsGoal:'Sleep goal · {hours} h', statsTrendEmpty:'Not enough data for a trend yet.', recentNights:'Recent nights', btnDone:'Done',
+        statsSheetTitle:'Your sleep history', statsIntro:'Tap an entry to open all details, the curve and editing.', statsDurationTitle:'Sleep duration', statsGoal:'Sleep goal · {hours} h', statsTrendEmpty:'Not enough data for a trend yet.', recentNights:'Recent nights', latestRecording:'Last recording', btnDone:'Done',
         statsEmpty:'No sleep data yet. Start your first sleep session on the home screen.',
         chartRange30:'30 days', chartRange90:'90 days', statsChartAria:'Bar chart of sleep duration',
         statsChartEmpty:'No sleep data for this time range yet.',
@@ -4835,6 +4981,12 @@ const I18N = {
         soundVolumeLabel:'Volume', soundTimerLabel:'Stop automatically after',
         timer15:'15 min', timer30:'30 min', timer60:'60 min', timerOff:'Off',
         soundStatusIdle:'No sound playing.', soundStatusPlaying:'Playing: {sound}',
+        soundCustomTitle:'Your sounds', soundCustomAdd:'Add your own sound',
+        soundCustomHint:'Music or sounds from your device. Files stay stored on this device only.',
+        soundCustomRemove:'Remove {name}', toastSoundAdded:'“{name}” added.', toastSoundRemoved:'Sound removed.',
+        toastSoundTooBig:'“{name}” is too large (max. 80 MB).', toastSoundNotAudio:'“{name}” is not an audio file.',
+        toastSoundLimit:'At most 12 custom sounds.', soundCustomError:'This sound could not be played.',
+        soundCustomStorageError:'The sound could not be saved.',
         btnStopSound:'Stop',
         onboardingTitle:'Welcome to G04Sleep', onboardingIntro:'Three things you can start with right away:',
         onboardingStep1:'Track sleep: tap "Track sleep" on the home screen before you fall asleep.',
@@ -5127,7 +5279,7 @@ function renderStatsHistory(){
         container.innerHTML = '<p class="empty">' + t('statsEmpty') + '</p>';
         return;
     }
-    container.innerHTML = state.log.map((entry,index) => ({entry,index})).reverse().map(({entry,index}) => {
+    const items = state.log.map((entry,index) => ({entry,index})).reverse().map(({entry,index}) => {
         const d = new Date(entry.date);
         const duration = Math.max(1, Math.round(entry.durationMin));
         const hours = Math.floor(duration/60);
@@ -5152,9 +5304,11 @@ function renderStatsHistory(){
                 '<div class="history-actions"><button type="button" class="save-edit" data-save-sleep="' + index + '">' + t('btnSave') + '</button><button type="button" class="delete-edit" data-delete-sleep="' + index + '">' + t('btnDelete') + '</button><button type="button" data-cancel-sleep>' + t('btnCancel') + '</button></div></div>' :
                 '<div class="history-actions"><button type="button" class="edit-button" data-edit-sleep="' + index + '" aria-label="' + escapeHtml(t('ariaEditSleep', {date:d.toLocaleDateString(dateLocale())})) + '">' + t('editButton') + '</button></div>') +
             (sound ? renderSoundDetails(sound) : '') + '</div>' : '';
-        return '<article class="history-entry"><button type="button" class="history-toggle" data-toggle-sleep="' + index + '" aria-expanded="' + String(expanded) + '" aria-controls="sleep-detail-' + index + '"><span class="history-toggle-content"><span class="history-date">' + d.toLocaleDateString(dateLocale()) +
+        const tier = quality >= 75 ? 'q-high' : quality >= 50 ? 'q-mid' : 'q-low';
+        return '<article class="history-entry ' + tier + '"><button type="button" class="history-toggle" data-toggle-sleep="' + index + '" aria-expanded="' + String(expanded) + '" aria-controls="sleep-detail-' + index + '"><span class="history-toggle-content">' + (index === state.log.length - 1 ? '<span class="latest-badge">' + escapeHtml(t('latestRecording')) + '</span>' : '') + '<span class="history-date">' + d.toLocaleDateString(dateLocale()) +
             '</span><span class="history-value">' + fmtDuration(entry.durationMin) + ' · ' + quality + t('qualitySuffix') + '</span>' + soundSummary + '</span><span class="history-entry-end"><span class="history-quality-ring" style="--quality:' + quality + '"><span>' + quality + '%</span></span><span class="history-chevron" aria-hidden="true">›</span></span></button>' + detail + '</article>';
-    }).join('');
+    });
+    container.innerHTML = items.join('');
 }
 
 let statsChartRange = 30;
@@ -5269,7 +5423,7 @@ function soundDbToY(db, scale, top, plotHeight){
 function renderSoundChart(){
     const container = document.getElementById('soundChart');
     if(!container) return;
-    const emptySoundState = message => '<div class="sound-empty-state"><svg viewBox="0 0 180 64" aria-hidden="true"><path d="M8 31h22c8 0 8-18 16-18s8 37 16 37 8-46 16-46 8 45 16 45 8-33 16-33 8 15 16 15h26" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><p>' + escapeHtml(message) + '</p></div>';
+    const emptySoundState = message => '<div class="sound-empty-state"><svg viewBox="0 0 180 64" aria-hidden="true"><defs><linearGradient id="soundWaveGrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#00E5FF"/><stop offset="0.5" stop-color="#8C6BFF"/><stop offset="1" stop-color="#FF3D8A"/></linearGradient></defs><path class="sound-wave" d="M8 31h22c8 0 8-18 16-18s8 37 16 37 8-46 16-46 8 45 16 45 8-33 16-33 8 15 16 15h26" fill="none" stroke="url(#soundWaveGrad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg><p>' + escapeHtml(message) + '</p></div>';
     const now = new Date();
     const since = new Date(now.getTime() - statsChartRange*24*60*60*1000);
     const entries = state.soundHistory
@@ -5312,10 +5466,10 @@ function renderSoundChart(){
         const pointString = points.map(point => point.x.toFixed(1) + ',' + point.y.toFixed(1)).join(' ');
         const dots = points.filter(point => point.point.event).map(point => {
             const pointTime = formatSoundClipTime(entry, {offsetSec:point.point.offsetSec});
-            return '<circle cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="3.5" fill="#FF3D8A" stroke="' + color + '" stroke-width="1.5"><title>' +
+            return '<circle class="sound-dot" cx="' + point.x.toFixed(1) + '" cy="' + point.y.toFixed(1) + '" r="3.5" fill="#FF3D8A" stroke="' + color + '" stroke-width="1.5"><title>' +
                 escapeHtml(pointTime + ' · ' + formatSoundDb(point.level)) + '</title></circle>';
         }).join('');
-        return '<polyline points="' + pointString + '" fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.86"><title>' +
+        return '<polyline class="sound-line" pathLength="1" points="' + pointString + '" fill="none" stroke="' + color + '" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="0.86"><title>' +
             escapeHtml(new Date(entry.date).toLocaleDateString(dateLocale())) + '</title></polyline>' + dots;
     }).join('');
     const latest = visibleEntries[visibleEntries.length-1];
@@ -6561,7 +6715,15 @@ document.getElementById('statsHistory').addEventListener('click', event => {
         editingSleepIndex = Number(editButton.dataset.editSleep);
         expandedSleepIndex = editingSleepIndex;
         renderStatsHistory();
-        document.getElementById('sleepDate-' + editingSleepIndex).focus();
+        // On touch devices focusing a date field opens the system calendar right away, so only
+        // bring the editor into view there. Desktop keeps the keyboard-friendly focus.
+        const dateField = document.getElementById('sleepDate-' + editingSleepIndex);
+        if(dateField){
+            if(window.matchMedia && window.matchMedia('(pointer:fine)').matches){
+                try{ dateField.focus({preventScroll:true}); } catch(error){ dateField.focus(); }
+            }
+            dateField.closest('.sleep-detail-section')?.scrollIntoView({block:'nearest'});
+        }
     } else if(saveButton){
         const index = Number(saveButton.dataset.saveSleep);
         const dateValue = document.getElementById('sleepDate-' + index).value;
@@ -6919,6 +7081,7 @@ async function deleteAllAppData(){
     stopSound();
     Object.keys(localStorage).filter(key => key.startsWith('gs_')).forEach(key => localStorage.removeItem(key));
     await deleteSoundDatabase();
+    await deleteCustomSoundDatabase();
     showToast(t('toastDataDeleted'));
     setTimeout(() => location.reload(), 450);
 }
@@ -7269,6 +7432,8 @@ function playTone(toneName){
 // ---------- Sleep sounds ----------
 let soundCtx = null, soundSource = null, soundFilter = null, soundGain = null, soundLFO = null, soundLFOGain = null;
 let soundTimerId = null, soundTimerMinutes = 30, soundActive = null;
+let customAudio = null, customAudioUrl = null, customPlayToken = 0;
+const customSoundNames = new Map();
 
 function getSoundCtx(){
     if(!soundCtx){
@@ -7310,11 +7475,21 @@ function makeNoiseBuffer(ctx, kind){
 }
 
 function soundLabel(kind){
+    if(String(kind).startsWith('custom:')) return customSoundNames.get(String(kind).slice(7)) || t('soundCustomTitle');
     return kind === 'ocean' ? t('soundOcean') : kind === 'pink' ? t('soundRain') : t('soundWhite');
 }
 
 function stopSound(){
+    customPlayToken += 1;
     if(soundTimerId){ clearTimeout(soundTimerId); soundTimerId = null; }
+    if(customAudio){
+        try{ customAudio.pause(); } catch(error){ /* already stopped */ }
+        customAudio.removeAttribute('src');
+        try{ customAudio.load(); } catch(error){ /* ignore */ }
+        customAudio = null;
+    }
+    if(customAudioUrl){ URL.revokeObjectURL(customAudioUrl); customAudioUrl = null; }
+    if('mediaSession' in navigator){ try{ navigator.mediaSession.metadata = null; } catch(error){ /* ignore */ } }
     if(soundSource){
         try{ soundSource.stop(); } catch(error){ /* already stopped */ }
         soundSource.disconnect();
@@ -7339,6 +7514,7 @@ function stopSound(){
 
 function playSound(kind){
     stopSound();
+    if(String(kind).startsWith('custom:')){ playCustomSound(String(kind).slice(7)); return; }
     const ctx = getSoundCtx();
     soundSource = ctx.createBufferSource();
     soundSource.buffer = makeNoiseBuffer(ctx, kind);
@@ -7372,6 +7548,153 @@ function playSound(kind){
     }
 }
 
+// ---------- Custom sounds (stored locally in IndexedDB, never uploaded) ----------
+const CUSTOM_SOUND_DB = 'g04sleep-custom-sounds';
+const CUSTOM_SOUND_STORE = 'sounds';
+const CUSTOM_SOUND_MAX_BYTES = 80 * 1024 * 1024;
+const CUSTOM_SOUND_MAX_COUNT = 12;
+
+function withCustomSoundDb(mode, work){
+    return new Promise((resolve, reject) => {
+        if(!('indexedDB' in window)){ reject(new Error('IndexedDB unavailable')); return; }
+        const open = indexedDB.open(CUSTOM_SOUND_DB, 1);
+        open.onupgradeneeded = () => open.result.createObjectStore(CUSTOM_SOUND_STORE, {keyPath:'id'});
+        open.onerror = () => reject(open.error);
+        open.onsuccess = () => {
+            const db = open.result;
+            const tx = db.transaction(CUSTOM_SOUND_STORE, mode);
+            let request;
+            try{ request = work(tx.objectStore(CUSTOM_SOUND_STORE)); } catch(error){ db.close(); reject(error); return; }
+            tx.oncomplete = () => { db.close(); resolve(request ? request.result : undefined); };
+            tx.onerror = tx.onabort = () => { db.close(); reject(tx.error); };
+        };
+    });
+}
+
+function listCustomSounds(){
+    return withCustomSoundDb('readonly', store => store.getAll()).then(items => (items || []).sort((a,b) => a.added - b.added));
+}
+
+function deleteCustomSoundDatabase(){
+    if(!('indexedDB' in window)) return Promise.resolve();
+    return new Promise(resolve => {
+        const request = indexedDB.deleteDatabase(CUSTOM_SOUND_DB);
+        request.onsuccess = request.onerror = request.onblocked = () => resolve();
+    });
+}
+
+function customSoundDisplayName(file){
+    return String(file.name || 'Sound').replace(/\.[a-z0-9]{2,5}$/i, '').trim().slice(0, 60) || 'Sound';
+}
+
+async function renderCustomSounds(){
+    const list = document.getElementById('customSoundList');
+    if(!list) return;
+    let items = [];
+    try{ items = await listCustomSounds(); } catch(error){ items = []; }
+    customSoundNames.clear();
+    items.forEach(item => customSoundNames.set(item.id, item.name));
+    list.innerHTML = items.map(item => {
+        const id = escapeHtml(item.id);
+        const name = escapeHtml(item.name);
+        return '<div class="custom-sound-row">' +
+            '<button type="button" class="tone-option sound-option custom-sound-option" data-sound="custom:' + id + '">' +
+                '<span class="tone-name">' + name + '</span>' +
+                '<span class="tone-preview"><svg class="ui-icon" aria-hidden="true"><use href="#i-play"></use></svg></span>' +
+            '</button>' +
+            '<button type="button" class="custom-sound-remove" data-remove-custom="' + id + '" aria-label="' + escapeHtml(t('soundCustomRemove', {name:item.name})) + '">' +
+                '<svg class="ui-icon" aria-hidden="true"><use href="#i-trash"></use></svg>' +
+            '</button>' +
+        '</div>';
+    }).join('');
+    list.hidden = items.length === 0;
+    const addBtn = document.getElementById('customSoundAddBtn');
+    if(addBtn) addBtn.disabled = items.length >= CUSTOM_SOUND_MAX_COUNT;
+    if(soundActive) document.querySelectorAll('.sound-option').forEach(btn => btn.classList.toggle('selected', btn.dataset.sound === soundActive));
+}
+
+async function playCustomSound(id){
+    const token = ++customPlayToken;
+    let record = null;
+    try{
+        record = await withCustomSoundDb('readonly', store => store.get(id));
+    } catch(error){ record = null; }
+    if(token !== customPlayToken) return;
+    if(!record || !record.blob){ showToast(t('soundCustomError')); renderCustomSounds(); return; }
+    customAudioUrl = URL.createObjectURL(record.blob);
+    const audio = new Audio(customAudioUrl);
+    audio.loop = true;
+    const volumeInput = document.getElementById('soundVolume');
+    audio.volume = (volumeInput ? Number(volumeInput.value) : 45) / 100;
+    customAudio = audio;
+    try{
+        await audio.play();
+    } catch(error){
+        if(token === customPlayToken){ stopSound(); showToast(t('soundCustomError')); }
+        return;
+    }
+    if(token !== customPlayToken){ try{ audio.pause(); } catch(error){ /* ignore */ } return; }
+    soundActive = 'custom:' + id;
+    document.querySelectorAll('.sound-option').forEach(btn => btn.classList.toggle('selected', btn.dataset.sound === soundActive));
+    document.getElementById('soundStopBtn').hidden = false;
+    document.getElementById('soundStatus').textContent = t('soundStatusPlaying', {sound:soundLabel(soundActive)});
+    document.getElementById('soundsBtn').classList.add('active');
+    if('mediaSession' in navigator && window.MediaMetadata){
+        try{
+            navigator.mediaSession.metadata = new MediaMetadata({title:soundLabel(soundActive), artist:'G04Sleep'});
+            navigator.mediaSession.setActionHandler('pause', stopSound);
+            navigator.mediaSession.setActionHandler('stop', stopSound);
+        } catch(error){ /* optional */ }
+    }
+    if(soundTimerMinutes > 0) soundTimerId = setTimeout(stopSound, soundTimerMinutes*60000);
+}
+
+async function addCustomSounds(files){
+    const current = await listCustomSounds().catch(() => []);
+    let count = current.length;
+    for(const file of files){
+        const name = customSoundDisplayName(file);
+        const looksLikeAudio = (file.type || '').startsWith('audio/') || /\.(mp3|m4a|aac|wav|ogg|oga|opus|flac|caf|aif|aiff)$/i.test(file.name || '');
+        if(!looksLikeAudio){ showToast(t('toastSoundNotAudio', {name})); continue; }
+        if(file.size > CUSTOM_SOUND_MAX_BYTES){ showToast(t('toastSoundTooBig', {name})); continue; }
+        if(count >= CUSTOM_SOUND_MAX_COUNT){ showToast(t('toastSoundLimit')); break; }
+        const id = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+        try{
+            await withCustomSoundDb('readwrite', store => store.put({id, name, type:file.type || 'audio/mpeg', size:file.size, added:Date.now(), blob:file}));
+            count += 1;
+            showToast(t('toastSoundAdded', {name}));
+        } catch(error){
+            showToast(t('soundCustomStorageError'));
+            break;
+        }
+    }
+    await renderCustomSounds();
+}
+
+document.getElementById('customSoundAddBtn').addEventListener('click', () => document.getElementById('customSoundInput').click());
+
+document.getElementById('customSoundInput').addEventListener('change', async event => {
+    const files = [...event.target.files];
+    event.target.value = '';
+    if(files.length) await addCustomSounds(files);
+});
+
+document.getElementById('customSoundList').addEventListener('click', async event => {
+    const removeBtn = event.target.closest('[data-remove-custom]');
+    const option = event.target.closest('.custom-sound-option');
+    if(removeBtn){
+        const id = removeBtn.dataset.removeCustom;
+        if(soundActive === 'custom:' + id) stopSound();
+        try{ await withCustomSoundDb('readwrite', store => store.delete(id)); } catch(error){ /* ignore */ }
+        showToast(t('toastSoundRemoved'));
+        renderCustomSounds();
+    } else if(option){
+        playSound(option.dataset.sound);
+    }
+});
+
+renderCustomSounds();
+
 document.getElementById('soundsBtn').addEventListener('click', () => {
     openSheet('soundsOverlay');
 });
@@ -7382,6 +7705,7 @@ document.querySelectorAll('.sound-option').forEach(btn => {
 
 document.getElementById('soundVolume').addEventListener('input', event => {
     if(soundGain) soundGain.gain.value = Number(event.target.value) / 100;
+    if(customAudio) customAudio.volume = Number(event.target.value) / 100;
 });
 
 document.querySelectorAll('#soundTimerPicker button').forEach(btn => {
