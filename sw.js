@@ -1,4 +1,4 @@
-const CACHE_NAME = 'g04sleep-v85';
+const CACHE_NAME = 'g04sleep-v86';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -6,6 +6,7 @@ const APP_ASSETS = [
     './manifest.json',
     './privacy.html',
     './copyright.html',
+    './delete-data.html',
     './icons/favicon-32.png',
     './icons/apple-touch-icon.png',
     './icons/icon-192.png',
@@ -26,6 +27,7 @@ const APP_ASSETS = [
 function navigationCacheKey(url){
     if(url.pathname.endsWith('/privacy.html')) return './privacy.html';
     if(url.pathname.endsWith('/copyright.html')) return './copyright.html';
+    if(url.pathname.endsWith('/delete-data.html')) return './delete-data.html';
     return './index.html';
 }
 
