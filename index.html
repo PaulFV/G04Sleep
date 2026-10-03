@@ -4055,6 +4055,43 @@ textarea:focus-visible{
 .custom-sound-add .ui-icon{ width:18px; height:18px; }
 .custom-sound-add:disabled{ opacity:0.45; }
 .custom-sounds .field-help{ margin:10px 0 0; }
+/* ---------- Feedback form ---------- */
+.feedback-section .feedback-hint{ margin:0 0 4px; }
+.feedback-section textarea{ min-height:76px; resize:vertical; margin-bottom:0; }
+.feedback-honey{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; pointer-events:none; }
+.feedback-actions{ display:flex; align-items:center; gap:12px; margin-top:12px; }
+.feedback-send{
+    flex:0 0 auto;
+    min-height:40px;
+    padding:0 20px;
+    border:none;
+    border-radius:11px;
+    background:linear-gradient(135deg,rgba(var(--accent-rgb,255,180,92),0.3),rgba(var(--accent-rgb,255,180,92),0.1));
+    color:var(--accent,#ffb45c);
+    font:600 13.5px var(--display);
+    box-shadow:0 0 0 1px rgba(var(--accent-rgb,255,180,92),0.5);
+}
+.feedback-send:disabled{ opacity:0.5; }
+.feedback-status{ margin:0; font-size:12.5px; line-height:1.35; color:var(--text-dim); }
+.feedback-status.ok{ color:#8be33f; font-weight:600; }
+.feedback-status.err{ color:#ff8ab7; font-weight:600; }
+.feedback-section .field-help{ margin:10px 0 0; }
+.sheet input[type="email"]{
+    width:100%;
+    min-height:42px;
+    padding:8px 12px;
+    margin-bottom:0;
+    border:none;
+    border-radius:12px;
+    background:rgba(255,255,255,0.055);
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,0.07), inset 0 1px 0 rgba(255,255,255,0.05);
+    color:var(--text);
+    font:16px var(--display);
+}
+.sheet input[type="email"]:focus{
+    outline:none;
+    box-shadow:0 0 0 2px rgba(var(--accent-rgb,0,229,255),0.55), 0 0 18px rgba(var(--accent-rgb,0,229,255),0.2);
+}
 </style>
 </head>
 
@@ -4086,6 +4123,7 @@ textarea:focus-visible{
     <symbol id="i-dumbbell" viewBox="0 0 24 24"><path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/></symbol>
     <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></symbol>
     <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.5-7 8-7s8 3 8 7"/></symbol>
+    <symbol id="i-message" viewBox="0 0 24 24"><path d="M4 5h16v11H10l-4 4v-4H4Z"/><path d="M8 9h8M8 12h5"/></symbol>
     <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 19 6v5c0 4.6-2.8 8.2-7 10-4.2-1.8-7-5.4-7-10V6l7-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
 </svg>
 
@@ -4448,6 +4486,23 @@ textarea:focus-visible{
             </div>
         </div>
         </section>
+        <section class="settings-section feedback-section">
+            <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-message"></use></svg><span data-i18n="feedbackTitle">Feedback &amp; Ideen</span></h3>
+            <p class="field-help feedback-hint" data-i18n="feedbackHint">Fehler gefunden oder eine Idee? Schick sie direkt an mich – ganz ohne Konto.</p>
+            <form id="feedbackForm" novalidate>
+                <label for="feedbackMessage" data-i18n="feedbackMessage">Deine Nachricht*</label>
+                <textarea id="feedbackMessage" name="message" rows="3" maxlength="2000" required placeholder="Was möchtest du loswerden…" data-i18n-placeholder="feedbackPlaceholder"></textarea>
+                <label for="feedbackEmail" data-i18n="feedbackEmailOptional">Deine E-Mail (optional, für eine Antwort)</label>
+                <input type="email" id="feedbackEmail" name="_replyto" maxlength="120" autocomplete="email" inputmode="email" placeholder="du@beispiel.de">
+                <input type="text" name="_honey" class="feedback-honey" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <div class="feedback-actions">
+                    <button type="submit" class="feedback-send" id="feedbackSubmitBtn" data-i18n="feedbackSend">Senden</button>
+                    <p class="feedback-status" id="feedbackStatus" role="status" aria-live="polite"></p>
+                </div>
+                <p class="field-help" data-i18n="feedbackPrivacyNote">Beim Senden geht deine Nachricht über den Dienst formsubmit.co als E-Mail an mich. Mehr dazu in der Datenschutzerklärung.</p>
+            </form>
+        </section>
+
         <div class="setting-panel legal-panel">
             <div class="setting-row">
                 <div class="setting-copy">
@@ -4821,6 +4876,12 @@ const I18N = {
         healthExportTitle:'Export für Gesundheits-Apps', healthExportDesc:'G04Sleep kann sich nicht direkt mit Apple Health oder Google Fit verbinden – das geht nur mit einer nativen App. Als CSV-Datei lassen sich deine Schlafdaten aber in viele Gesundheits-Apps importieren (z. B. über eine Import-App oder Kurzbefehle).',
         btnExportCsv:'Als CSV exportieren', backupMsgCsvExported:'CSV-Datei wurde heruntergeladen.',
         legalTitle:'Datenschutz & Copyright', legalDesc:'Lies, welche Daten G04Sleep verarbeitet und welche Rechte für App-Code und Medien gelten.',
+        feedbackTitle:'Feedback & Ideen', feedbackHint:'Fehler gefunden oder eine Idee? Schick sie direkt an mich – ganz ohne Konto.',
+        feedbackMessage:'Deine Nachricht*', feedbackPlaceholder:'Was möchtest du loswerden…', feedbackEmailOptional:'Deine E-Mail (optional, für eine Antwort)',
+        feedbackSend:'Senden', feedbackSending:'Wird gesendet…', feedbackSent:'Danke! Deine Nachricht ist unterwegs.',
+        feedbackEmpty:'Bitte schreib zuerst eine Nachricht.', feedbackBadEmail:'Bitte gib eine gültige E-Mail-Adresse an oder lass das Feld leer.',
+        feedbackError:'Senden hat nicht geklappt – bitte nochmal versuchen oder direkt an fodorpaul@web.de schreiben.',
+        feedbackPrivacyNote:'Beim Senden geht deine Nachricht über den Dienst formsubmit.co als E-Mail an mich. Mehr dazu in der Datenschutzerklärung.',
         btnPrivacy:'Datenschutz', btnCopyright:'Copyright', legalStoreNote:'Vor der Veröffentlichung die tatsächlichen Datenverarbeitungen und Lizenznachweise prüfen.',
         btnDeleteAllData:'Alle lokalen Daten löschen', confirmDeleteAllData:'Alle lokalen G04Sleep-Daten, Aufnahmen und Push-Daten wirklich löschen?', toastDataDeleted:'Lokale Daten wurden gelöscht.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push-Server ist noch nicht konfiguriert.', errPushUnreachable:'Push-Server nicht erreichbar.',
@@ -4961,6 +5022,12 @@ const I18N = {
         healthExportTitle:'Export for health apps', healthExportDesc:"G04Sleep can't connect directly to Apple Health or Google Fit — that only works from a native app. As a CSV file, though, your sleep data can be imported into many health apps (e.g. via an import app or Shortcuts).",
         btnExportCsv:'Export as CSV', backupMsgCsvExported:'CSV file downloaded.',
         legalTitle:'Privacy & copyright', legalDesc:'See which data G04Sleep processes and which rights apply to the app code and media.',
+        feedbackTitle:'Feedback & ideas', feedbackHint:'Found a bug or have an idea? Send it straight to me – no account needed.',
+        feedbackMessage:'Your message*', feedbackPlaceholder:'What\'s on your mind…', feedbackEmailOptional:'Your email (optional, so I can reply)',
+        feedbackSend:'Send', feedbackSending:'Sending…', feedbackSent:'Thanks! Your message is on its way.',
+        feedbackEmpty:'Please write a message first.', feedbackBadEmail:'Please enter a valid email address or leave it empty.',
+        feedbackError:'Couldn\'t send that – please try again, or write to fodorpaul@web.de directly.',
+        feedbackPrivacyNote:'When you send, your message is forwarded to me by email through formsubmit.co. See the privacy policy for details.',
         btnPrivacy:'Privacy policy', btnCopyright:'Copyright', legalStoreNote:'Before publishing, verify the actual data practices and licence records.',
         btnDeleteAllData:'Delete all local data', confirmDeleteAllData:'Really delete all local G04Sleep data, recordings and push data?', toastDataDeleted:'Local data was deleted.', footerCopyright:'© 2026 G04Sleep',
         errPushNotConfigured:'Push server is not configured yet.', errPushUnreachable:'Push server unreachable.',
@@ -7070,6 +7137,52 @@ function deleteSoundDatabase(){
         request.onsuccess = request.onerror = request.onblocked = () => resolve();
     });
 }
+
+// ---------- Feedback form ----------
+// Static app without a server of its own: the message goes from the browser to formsubmit.co,
+// which forwards it as an email to the developer. The hidden "_honey" field is a simple spam trap.
+const FEEDBACK_TARGET = 'https://formsubmit.co/ajax/fodorpaul@web.de';
+let feedbackLastSentAt = 0;
+
+document.getElementById('feedbackForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    const form = event.target;
+    const status = document.getElementById('feedbackStatus');
+    const button = document.getElementById('feedbackSubmitBtn');
+    if(form._honey.value) return;
+    const message = form.message.value.trim();
+    const email = form._replyto.value.trim();
+    status.className = 'feedback-status';
+    if(!message){ status.textContent = t('feedbackEmpty'); status.classList.add('err'); form.message.focus(); return; }
+    if(email && !form._replyto.checkValidity()){ status.textContent = t('feedbackBadEmail'); status.classList.add('err'); form._replyto.focus(); return; }
+    if(Date.now() - feedbackLastSentAt < 15000) return;
+    button.disabled = true;
+    status.textContent = t('feedbackSending');
+    try{
+        const response = await fetch(FEEDBACK_TARGET, {
+            method:'POST',
+            headers:{'Content-Type':'application/json', 'Accept':'application/json'},
+            body:JSON.stringify({
+                message,
+                _replyto:email,
+                _subject:'G04Sleep – Feedback',
+                _template:'table',
+                App:'G04Sleep',
+                Sprache:state.lang
+            })
+        });
+        if(!response.ok) throw new Error('status ' + response.status);
+        feedbackLastSentAt = Date.now();
+        status.textContent = t('feedbackSent');
+        status.classList.add('ok');
+        form.reset();
+    } catch(error){
+        status.textContent = t('feedbackError');
+        status.classList.add('err');
+    } finally {
+        button.disabled = false;
+    }
+});
 
 async function deleteAllAppData(){
     if(!window.confirm(t('confirmDeleteAllData'))) return;

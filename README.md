@@ -9,6 +9,7 @@ Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, St
 - 📊 Editierbare Schlafhistorie mit Wochen-/Monatsstatistik
 - 📖 Editierbares Schlaftagebuch
 - 🎵 Einschlafhilfe mit Rauschen, Regen, Ozean und eigenen Musik-/Audiodateien (lokal gespeichert)
+- 💬 Feedback & Ideen direkt aus den Einstellungen (per formsubmit.co als E-Mail an den Entwickler)
 - 📱 Installierbare und offlinefähige PWA
 - 🔔 Optionale Hintergrund-Wecker per Web Push und Cloudflare Worker
 - 🌐 Englisch beim ersten Start, Deutsch jederzeit in den Einstellungen umschaltbar

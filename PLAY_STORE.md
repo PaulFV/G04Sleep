@@ -8,6 +8,7 @@ G04Sleep ist bereits als installierbare PWA vorbereitet. Für eine Veröffentlic
 - Die Seiten unter einer dauerhaft erreichbaren HTTPS-Adresse veröffentlichen. Nach dem GitHub-Pages-Deploy lautet die Datenschutz-URL voraussichtlich `https://paulfv.github.io/G04Sleep/privacy.html`.
 - Bild- und Logo-Rechte sowie die Lizenznachweise prüfen und dokumentieren.
 - In der Play Console die Data-Safety-Angaben mit der tatsächlichen Konfiguration abgleichen. Das optionale Mikrofon ist sensible Gerätedaten; optionale Push-Benachrichtigungen übertragen technische Push-Daten und Weckerzeiten an den konfigurierten Dienst.
+- Das optionale Feedback-Formular in den Einstellungen sendet nur auf Knopfdruck Text und optionale E-Mail-Adresse über formsubmit.co an den Entwickler. Das gehört in die Data-Safety-Angaben (Nutzerinhalte, optional, nicht für Werbung).
 - Store-Eintrag, Altersfreigabe, Supportkontakt, Screenshots und Testzugang vervollständigen.
 
 ## TWA-Wrapper erzeugen

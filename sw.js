@@ -1,4 +1,4 @@
-const CACHE_NAME = 'g04sleep-v78';
+const CACHE_NAME = 'g04sleep-v80';
 const APP_ASSETS = [
     './',
     './index.html',
