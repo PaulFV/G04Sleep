@@ -3903,6 +3903,24 @@ textarea:focus-visible{
 }
 .galaxy-stars::before{ animation-duration:48s; }
 .galaxy-stars::after{ animation-duration:62s; }
+/* ---------- Sleep button pinned above the tab bar, always visible ---------- */
+.main-action#sleepBtn{
+    position:fixed;
+    left:0; right:0;
+    margin:0 auto;
+    bottom:calc(68px + var(--safe-bottom) + 10px);
+    width:min(calc(100% - 28px),692px);
+    min-height:52px;
+    z-index:25;
+    animation:none;
+}
+
+.container{ padding-bottom:calc(168px + var(--safe-bottom)); }
+
+@media (max-width:520px){
+    .main-action#sleepBtn{ bottom:calc(64px + var(--safe-bottom) + 10px); }
+    .container{ padding-bottom:calc(160px + var(--safe-bottom)); }
+}
 </style>
 </head>
 
