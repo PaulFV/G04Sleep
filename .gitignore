@@ -4,3 +4,5 @@ node_modules/
 worker/node_modules/
 worker/.dev.vars
 worker/.wrangler/
+
+Codex Image*.png

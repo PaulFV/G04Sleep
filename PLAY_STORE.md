@@ -29,7 +29,7 @@ Damit die TWA als vertrauenswürdige Vollbild-App läuft, muss nach dem Signiere
 
 - `manifest.json` enthält Installationsmodus, Portrait-Ausrichtung, Kategorien, App-Icon und App-Shortcuts.
 - `sw.js` cached die App sowie die Rechtstexte offline.
-- Datenschutz- und Copyright-Links sind in „Profil“ und im App-Footer erreichbar.
+- Datenschutz- und Copyright-Links sind in „Einstellungen“ und im App-Footer erreichbar.
 - „Alle lokalen Daten löschen“ entfernt die G04Sleep-Daten im Browser und versucht, die optionale Push-Registrierung beim Dienst zu löschen.
 
 Diese Datei ersetzt keine rechtliche Prüfung und keine Prüfung der Play-Console-Formulare.

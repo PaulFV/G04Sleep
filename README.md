@@ -54,7 +54,7 @@ Ab iOS 16.4 kann G04Sleep auch bei geschlossener App eine Push-Benachrichtigung 
 1. Die veröffentlichte G04Sleep-Seite in Safari öffnen.
 2. Über „Teilen“ → „Zum Home-Bildschirm“ installieren.
 3. G04Sleep vom Home-Bildschirm starten.
-4. Unter „Profil“ die Hintergrund-Benachrichtigungen einschalten und die iOS-Abfrage erlauben.
+4. Unter „Einstellungen“ die Hintergrund-Benachrichtigungen einschalten und die iOS-Abfrage erlauben.
 5. Mit „Test-Benachrichtigung senden“ die Verbindung prüfen.
 
 Der eigentliche Weckzeitpunkt wird im Cloudflare Worker gespeichert. Der private Push-Schlüssel liegt nur als Cloudflare-Secret vor und wird nicht an den Browser ausgeliefert.
