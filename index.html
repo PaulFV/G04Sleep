@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="G04Sleep hilft dir, Schlafzeiten, Wecker und persönliche Notizen übersichtlich im Blick zu behalten.">
 <meta name="theme-color" content="#05060B">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,11 +59,19 @@
 html,body{
     overscroll-behavior:none;
     height:100%;
+    min-height:100%;
+    width:100%;
     overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
 }
+
+html{ background:var(--bg); }
 
 body{
     margin:0;
+    min-height:100%;
+    min-height:100dvh;
     background:var(--bg);
     background-image:
         radial-gradient(ellipse 800px 500px at 50% -10%, rgba(140,107,255,0.22), transparent 60%),
@@ -74,6 +82,14 @@ body{
     color:var(--text);
     -webkit-font-smoothing:antialiased;
     position:relative;
+}
+
+button,
+a,
+input,
+select,
+textarea{
+    touch-action:manipulation;
 }
 
 /* faint grid / scanline texture */
@@ -1005,6 +1021,7 @@ button:disabled{
     justify-content:space-around;
     align-items:center;
     padding:8px 8px calc(8px + var(--safe-bottom));
+    min-height:68px;
     background:rgba(9,11,20,0.78);
     backdrop-filter:blur(22px);
     -webkit-backdrop-filter:blur(22px);
@@ -1067,6 +1084,8 @@ button:disabled{
     inset:0;
     background:rgba(2,3,7,0.7);
     z-index:100;
+    overscroll-behavior:contain;
+    touch-action:none;
 }
 
 .sheet-overlay.open{ display:block; }
@@ -1074,22 +1093,28 @@ button:disabled{
 .sheet{
     position:fixed;
     left:0; right:0; bottom:0;
+    width:100%;
     max-height:82vh;
     background:var(--sheet-bg);
     border:1px solid rgba(var(--tint-rgb),0.08);
     border-bottom:none;
     border-radius:24px 24px 0 0;
     padding:calc(10px + var(--safe-top)) 20px calc(24px + var(--safe-bottom));
-    transform:translateY(100%);
+    transform:translate3d(0,100%,0);
     transition:transform 0.32s cubic-bezier(.32,.72,0,1);
     box-shadow:0 -10px 50px rgba(0,229,255,0.08);
     overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    touch-action:pan-y;
+    will-change:transform;
 }
 
-.sheet-overlay.open .sheet{ transform:translateY(0); }
+.sheet-overlay.open .sheet{ transform:translate3d(0,0,0); }
 
 /* ---------- Alarm sheet: full, calm setup view ---------- */
 .alarm-sheet{
+    height:calc(100vh - 8px);
     max-height:calc(100vh - 8px);
     min-height:calc(100vh - 8px);
     padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
@@ -1574,8 +1599,10 @@ button:disabled{
     position:relative;
     flex:0 0 auto;
     width:52px;
-    height:30px;
+    height:44px;
     margin:0 !important;
+    display:flex;
+    align-items:center;
 }
 
 .switch input{
@@ -1586,7 +1613,10 @@ button:disabled{
 
 .switch-track{
     position:absolute;
-    inset:0;
+    left:0;
+    right:0;
+    top:7px;
+    bottom:7px;
     border-radius:999px;
     background:rgba(var(--tint-rgb),0.12);
     border:1px solid rgba(var(--tint-rgb),0.12);
@@ -1665,6 +1695,7 @@ button:disabled{
 .alarm-row-main{
     flex:1;
     min-width:0;
+    min-height:44px;
     cursor:pointer;
     background:none;
     border:none;
@@ -1672,6 +1703,9 @@ button:disabled{
     padding:0;
     color:inherit;
     font-family:inherit;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
 }
 
 .alarm-row-time{
@@ -2175,6 +2209,7 @@ textarea:focus-visible{
 
 /* ---------- History sheet: clear sleep dashboard ---------- */
 .history-sheet{
+    height:calc(100vh - 8px);
     max-height:calc(100vh - 8px);
     min-height:calc(100vh - 8px);
     padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
@@ -2423,6 +2458,7 @@ textarea:focus-visible{
 
 /* ---------- Journal sheet: calm writing space ---------- */
 .journal-sheet{
+    height:calc(100vh - 8px);
     max-height:calc(100vh - 8px);
     min-height:calc(100vh - 8px);
     padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
@@ -2659,6 +2695,7 @@ textarea:focus-visible{
 
 /* ---------- Settings sheet: organized app controls ---------- */
 .settings-sheet{
+    height:calc(100vh - 8px);
     max-height:calc(100vh - 8px);
     min-height:calc(100vh - 8px);
     padding:14px clamp(20px,5vw,64px) calc(24px + var(--safe-bottom));
@@ -2890,7 +2927,7 @@ textarea:focus-visible{
     .cycle-list li{ gap:6px; font-size:14px; }
     .cycle-list b{ font-size:16px; }
     .cycle-help{ font-size:10px; }
-    .tabbar{ padding:4px 4px 0; }
+    .tabbar{ padding:4px 4px calc(4px + var(--safe-bottom)); min-height:64px; }
     .tab{ min-height:46px; padding:4px 2px; gap:3px; border-radius:20px; font-size:12px; }
     .tab .icon{ width:24px; height:24px; }
     .tab .ui-icon{ width:23px; height:23px; }
@@ -2898,6 +2935,7 @@ textarea:focus-visible{
     .tab{ min-width:0; flex:1; padding-left:2px; padding-right:2px; }
 
     .alarm-sheet{
+        height:calc(100vh - 4px);
         max-height:calc(100vh - 4px);
         min-height:calc(100vh - 4px);
         padding:10px 16px calc(16px + var(--safe-bottom));
@@ -2937,6 +2975,7 @@ textarea:focus-visible{
     .alarm-sheet .alarm-row{ padding:14px; border-radius:16px; }
 
     .history-sheet{
+        height:calc(100vh - 4px);
         max-height:calc(100vh - 4px);
         min-height:calc(100vh - 4px);
         padding:10px 16px calc(16px + var(--safe-bottom));
@@ -2988,6 +3027,7 @@ textarea:focus-visible{
     .history-sheet .sheet-actions .btn-primary{ min-height:58px; border-radius:18px; font-size:20px; }
 
     .journal-sheet{
+        height:calc(100vh - 4px);
         max-height:calc(100vh - 4px);
         min-height:calc(100vh - 4px);
         padding:10px 16px calc(16px + var(--safe-bottom));
@@ -3035,6 +3075,7 @@ textarea:focus-visible{
     .journal-sheet .journal-entry p{ font-size:15px; }
 
     .settings-sheet{
+        height:calc(100vh - 4px);
         max-height:calc(100vh - 4px);
         min-height:calc(100vh - 4px);
         padding:10px 16px calc(16px + var(--safe-bottom));
@@ -3095,6 +3136,20 @@ textarea:focus-visible{
     .settings-sheet{
         max-height:calc(100dvh - 4px);
         min-height:calc(100dvh - 4px);
+    }
+}
+
+/* Keep full-screen sheets stable while Safari/Chrome show or hide their browser chrome. */
+@supports (height:100svh){
+    .sheet{ max-height:82svh; }
+    .permission-card{ max-height:min(82svh,620px); }
+    .alarm-sheet,
+    .history-sheet,
+    .journal-sheet,
+    .settings-sheet{
+        height:calc(100svh - 4px);
+        max-height:calc(100svh - 4px);
+        min-height:calc(100svh - 4px);
     }
 }
 
@@ -3700,7 +3755,7 @@ function nextUpcomingAlarm(){
     return best;
 }
 
-const PUSH_API_URL = String(window.GOSLEEP_PUSH_API || '').replace(/\/$/, '');
+const PUSH_API_URL = String(window.G04SLEEP_PUSH_API || '').replace(/\/$/, '');
 
 let theme = localStorage.getItem('gs_theme') === 'light' ? 'light' : 'dark';
 
@@ -5168,7 +5223,11 @@ function openSheet(id){
     overlay.classList.add('open');
     overlay.setAttribute('aria-hidden','false');
     document.body.style.overflow = 'hidden';
-    requestAnimationFrame(() => overlay.querySelector('.sheet').focus());
+    requestAnimationFrame(() => {
+        const sheet = overlay.querySelector('.sheet');
+        if(!sheet) return;
+        try{ sheet.focus({preventScroll:true}); } catch(error){ sheet.focus(); }
+    });
 }
 
 function closeSheet(id){
@@ -5240,7 +5299,15 @@ function openAlarmForm(alarmId){
     document.getElementById('alarmSheetHeading').textContent = t('alarmSetTitle');
     document.getElementById('alarmListView').hidden = true;
     document.getElementById('alarmFormView').hidden = false;
-    document.getElementById('alarmTimeInput').focus();
+    // Do not open the iPhone keyboard or trigger Safari's input zoom while changing
+    // views. On desktop, focusing the time field remains convenient.
+    if(window.matchMedia && window.matchMedia('(pointer:fine)').matches){
+        requestAnimationFrame(() => {
+            const input = document.getElementById('alarmTimeInput');
+            if(!input) return;
+            try{ input.focus({preventScroll:true}); } catch(error){ input.focus(); }
+        });
+    }
 }
 
 document.getElementById('alarmBtn').addEventListener('click', () => {
