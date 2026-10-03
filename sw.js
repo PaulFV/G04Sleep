@@ -1,4 +1,4 @@
-const CACHE_NAME = 'g04sleep-v49';
+const CACHE_NAME = 'g04sleep-v66';
 const APP_ASSETS = [
     './',
     './index.html',
@@ -14,7 +14,13 @@ const APP_ASSETS = [
     './icons/moon-floating.svg',
     './icons/moon-hero.png',
     './icons/moon-angel.png',
-    './icons/galaxy-background.png'
+    './icons/galaxy-background.png',
+    './icons/planets/jupiter.png',
+    './icons/planets/earth.png',
+    './icons/planets/saturn.png',
+    './icons/planets/mars.png',
+    './icons/planets/neptune.png',
+    './icons/planets/venus.png'
 ];
 
 function navigationCacheKey(url){

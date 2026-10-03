@@ -3552,6 +3552,357 @@ textarea:focus-visible{
     background:rgba(255,255,255,0.06);
     color:var(--text-dim);
 }
+/* ---------- Settings: compact ---------- */
+.settings-sheet{ padding-top:10px; padding-left:16px; padding-right:16px; border-radius:24px 24px 0 0; }
+
+.settings-sheet .sheet-handle{ width:40px; height:4px; margin:4px auto 12px; }
+
+.settings-sheet h2{ gap:10px; margin:0 0 2px; font-size:22px; letter-spacing:-0.2px; }
+.settings-sheet h2 .ui-icon{ width:24px; height:24px; }
+.settings-sheet > .sheet-intro{ margin:0 0 12px; font-size:13px; line-height:1.4; color:var(--text-dim); }
+
+.settings-sheet .settings-section,
+.settings-sheet .legal-panel{
+    margin:0 0 10px;
+    padding:14px;
+    border-radius:18px;
+}
+
+.settings-section-title{ gap:10px; margin:0 0 10px; font-size:16px; }
+.settings-section-title .ui-icon{ width:20px; height:20px; }
+
+.settings-sheet .settings-section > .setting-panel{ padding-top:12px; }
+.settings-sheet .settings-section > .setting-panel + .setting-panel{ margin-top:12px; }
+
+.settings-sheet .settings-personal-section > label,
+.settings-sheet label{
+    margin:10px 0 6px;
+    font-size:11px;
+    letter-spacing:0.8px;
+}
+
+.settings-sheet .settings-personal-section input[type="text"],
+.settings-sheet .settings-personal-section input[type="number"],
+.settings-sheet input[type="text"],
+.settings-sheet input[type="number"],
+.settings-sheet select{
+    min-height:42px;
+    padding:8px 12px;
+    margin-bottom:0;
+    border-radius:12px;
+    font-size:16px;
+}
+
+.settings-sheet .lang-picker{ gap:6px; margin-bottom:0; }
+.settings-sheet .lang-option{ padding:8px 10px; border-radius:11px; font-size:13px; }
+
+.settings-sheet .field-help{ margin:6px 0 0; font-size:11.5px; line-height:1.4; }
+
+.settings-sheet .setting-copy{ gap:10px; }
+.settings-sheet .setting-copy > .ui-icon{ width:22px; height:22px; }
+.settings-sheet .setting-copy strong{ margin-bottom:2px; font-size:14.5px; }
+.settings-sheet .setting-copy span{ font-size:12px; line-height:1.4; }
+
+.settings-sheet .settings-section .sheet-actions{ margin-top:10px !important; gap:6px; }
+
+.settings-sheet .settings-section .sheet-actions button,
+.settings-sheet .legal-panel .sheet-actions a{
+    min-height:38px;
+    padding:0 10px;
+    border:none !important;
+    border-radius:11px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.settings-sheet .legal-panel .legal-links{ margin-top:10px; }
+.settings-sheet .legal-panel .field-help{ margin:8px 0 0; }
+
+.settings-sheet > .sheet-actions:last-child{ padding-top:10px; }
+.settings-sheet > .sheet-actions:last-child button{
+    min-height:40px;
+    border-radius:11px;
+    font-size:13.5px;
+}
+
+.settings-sheet .switch{ height:36px; }
+.settings-sheet .field-row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    align-items:end;
+}
+
+.settings-sheet .field-row-3{ grid-template-columns:1fr 1fr 1fr; gap:8px; }
+
+.settings-sheet .field{ min-width:0; display:flex; flex-direction:column; justify-content:flex-end; }
+
+.settings-sheet .field-row-3 label{ text-transform:none; letter-spacing:0; font-size:11px; line-height:1.25; min-height:2.5em; display:flex; align-items:flex-end; }
+
+.settings-sheet .field-row-3 input[type="number"]{ padding-left:8px; padding-right:8px; text-align:center; }
+/* ---------- Journal: compact ---------- */
+.journal-sheet{ padding-top:10px; padding-left:16px; padding-right:16px; border-radius:24px 24px 0 0; }
+.journal-sheet .sheet-handle{ width:40px; height:4px; margin:4px auto 12px; }
+.journal-sheet h2{ gap:10px; margin:0 0 2px; font-size:22px; letter-spacing:-0.2px; }
+.journal-sheet h2 .ui-icon{ width:24px; height:24px; }
+.journal-sheet > .sheet-intro{ margin:0 0 12px; font-size:13px; line-height:1.4; color:var(--text-dim); }
+
+.journal-field-label,
+.journal-quick-tags h3{
+    margin:0 0 6px;
+    font-size:11px;
+    letter-spacing:0.8px;
+}
+
+.journal-sheet #journalInput{
+    min-height:88px;
+    padding:12px 14px 26px;
+    border-radius:14px;
+    font-size:16px;
+}
+
+.journal-input-meta{ right:14px; bottom:8px; gap:8px; font-size:11px; }
+
+.journal-sheet .form-message{ min-height:0; margin:4px 0; }
+
+.journal-quick-tags{ margin:10px 0 14px; }
+.journal-tag-list{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+
+.journal-tag{
+    min-height:40px;
+    padding:0 12px;
+    gap:8px;
+    border-radius:12px;
+    font-size:13.5px;
+    font-weight:600;
+}
+
+.journal-tag .ui-icon{ width:18px; height:18px; }
+
+.journal-empty-state{ gap:14px; padding:14px 16px; border-radius:18px; }
+.journal-empty-illustration{ width:64px; height:52px; }
+.journal-empty-illustration .ui-icon{ width:34px; height:34px; }
+.journal-empty-state h3{ margin:0 0 2px; font-size:15px; }
+.journal-empty-state p{ font-size:12.5px; }
+
+.journal-sheet #journalHistory{ margin-top:10px !important; }
+.journal-sheet .journal-entry{ padding:10px 12px; margin-bottom:8px; border-radius:14px; }
+
+.journal-sheet .sheet-actions.sticky-actions{ padding-top:10px; }
+.journal-sheet .journal-actions{ gap:8px; }
+.journal-sheet .journal-actions button{
+    min-height:40px;
+    border-radius:11px;
+    font-size:13.5px;
+    font-weight:600;
+}
+/* Windows grow with their content instead of always filling the screen. */
+.history-sheet,
+.journal-sheet,
+.settings-sheet{
+    width:min(100%,560px);
+    margin:0 auto;
+    height:auto;
+    min-height:0;
+    max-height:calc(100svh - 16px);
+}
+.sheet .sheet-actions.sticky-actions button,
+.alarm-sheet .btn-add,
+.alarm-sheet .btn-secondary{ min-height:40px; font-size:13.5px; border-radius:11px; }
+/* ---------- History: compact glass ---------- */
+.history-sheet{ padding-top:10px; padding-left:16px; padding-right:16px; border-radius:24px 24px 0 0; }
+.history-sheet .sheet-handle{ width:40px; height:4px; margin:4px auto 12px; }
+.history-sheet h2{ gap:10px; margin:0 0 2px; font-size:22px; letter-spacing:-0.2px; }
+.history-sheet h2 .ui-icon{ width:24px; height:24px; }
+.history-sheet > .sheet-intro{ margin:0 0 12px; font-size:13px; line-height:1.4; color:var(--text-dim); }
+
+.history-sheet .chart-range{
+    margin:0 0 12px;
+    padding:3px;
+    gap:3px;
+    border:none;
+    border-radius:13px;
+    background:rgba(255,255,255,0.05);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.history-sheet .chart-range button{
+    min-height:34px;
+    border-radius:10px;
+    font-size:12.5px;
+    letter-spacing:0.4px;
+    box-shadow:none;
+}
+
+.history-sheet .chart-range button.selected{
+    color:var(--accent);
+    background:rgba(var(--accent-rgb),0.2);
+    box-shadow:0 0 0 1px rgba(var(--accent-rgb),0.5);
+}
+
+.history-chart-card,
+.history-sound-card,
+.history-recent-section{
+    margin:0 0 10px;
+    padding:14px;
+    border:none;
+    border-radius:18px;
+    background:
+        linear-gradient(135deg,rgba(var(--accent-rgb),0.12),rgba(var(--accent-rgb),0.03)),
+        rgba(255,255,255,0.04);
+    -webkit-backdrop-filter:blur(14px);
+    backdrop-filter:blur(14px);
+    box-shadow:0 10px 24px -14px rgba(var(--accent-rgb),0.5), inset 0 1px 0 rgba(255,255,255,0.09);
+}
+
+.history-chart-heading{ margin-bottom:6px; gap:10px; }
+.history-chart-heading h3{ margin:0; font-size:15px; }
+.history-sheet .stats-chart svg{ height:150px; }
+.history-sound-card .stats-chart svg{ height:130px; }
+
+.history-sound-card .stats-subtitle{ margin:0 0 2px; gap:8px; font-size:15px; }
+.history-sound-card .stats-subtitle .ui-icon{ width:20px; height:20px; color:var(--accent); }
+.history-sound-card .stats-chart-intro{ margin:0 0 8px 28px; font-size:12px; }
+
+.history-recent-title{ margin:0 0 8px; font-size:15px; letter-spacing:0; }
+
+.sound-empty-state{ min-height:70px; gap:6px; font-size:12.5px; }
+
+.history-sheet .history-entry{ padding:10px 12px; margin-bottom:8px; border-radius:14px; }
+.history-sheet .history-date{ font-size:12.5px; }
+.history-sheet .history-value{ font-size:14px; }
+.history-sheet .history-quality-ring{ transform:scale(0.8); }
+
+.history-sheet .sheet-actions.sticky-actions{ padding-top:10px; }
+.history-sheet .history-entry-end{ gap:10px; }
+.history-sheet .history-quality-ring{ margin:-6px; }
+.sound-empty-state .ui-icon, .sound-empty-state svg{ max-height:34px; }
+.history-recent-section .history-entry{
+    padding:6px 12px;
+    margin-bottom:6px;
+    background:rgba(255,255,255,0.045);
+    box-shadow:none;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+}
+.history-recent-section .history-entry:last-child{ margin-bottom:0; }
+/* ---------- Real planets (cut from the hero image) drifting behind the lower content ---------- */
+.container > .galaxy-scene .galaxy-planet.low{
+    border-radius:0;
+    background-color:transparent;
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:contain;
+    box-shadow:none;
+    opacity:0.92;
+    filter:drop-shadow(0 0 10px rgba(120,170,255,0.28));
+}
+.container > .galaxy-scene .galaxy-planet.low::before,
+.container > .galaxy-scene .galaxy-planet.low::after{ content:none; }
+
+.container > .galaxy-scene .galaxy-planet.jupiter{ background-image:url('icons/planets/jupiter.png'); }
+.container > .galaxy-scene .galaxy-planet.earth{   background-image:url('icons/planets/earth.png'); }
+.container > .galaxy-scene .galaxy-planet.saturn{  background-image:url('icons/planets/saturn.png'); }
+.container > .galaxy-scene .galaxy-planet.mars{    background-image:url('icons/planets/mars.png'); }
+.container > .galaxy-scene .galaxy-planet.neptune{ background-image:url('icons/planets/neptune.png'); }
+.container > .galaxy-scene .galaxy-planet.venus{   background-image:url('icons/planets/venus.png'); }
+
+.container > .galaxy-scene .galaxy-planet.l1{ top:calc(var(--scene-h) + 10px);  left:auto; right:-12px; width:50px; height:50px; animation:planetSway 9s ease-in-out infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l2{ top:calc(var(--scene-h) + 130px); left:-10px; right:auto; width:42px; height:42px; animation:planetSway 7s ease-in-out -2s infinite alternate-reverse; }
+.container > .galaxy-scene .galaxy-planet.l3{ top:calc(var(--scene-h) + 270px); left:auto; right:-16px; width:70px; height:40px; animation:planetSway 8s ease-in-out -4s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l4{ top:calc(var(--scene-h) + 400px); left:-8px; right:auto; width:30px; height:30px; animation:planetSway 10s ease-in-out -1s infinite alternate-reverse; }
+.container > .galaxy-scene .galaxy-planet.l5{ top:calc(var(--scene-h) + 510px); left:auto; right:-8px; width:34px; height:34px; animation:planetSway 11s ease-in-out -6s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l6{ top:calc(var(--scene-h) + 610px); left:-6px; right:auto; width:30px; height:30px; animation:planetSway 12s ease-in-out -3s infinite alternate-reverse; }
+
+@keyframes planetSway{
+    from{ transform:translate3d(-14px,6px,0) rotate(-10deg); }
+    to{ transform:translate3d(16px,-10px,0) rotate(14deg); }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .container > .galaxy-scene .galaxy-planet{ animation:none !important; }
+}
+
+/* ---------- Summary card: scale with device width ---------- */
+.summary-card .quality-text h1{ white-space:nowrap; font-size:clamp(15px,4.8vw,24px); }
+.summary-card .big-value{ font-size:clamp(18px,5.6vw,26px); }
+.summary-card .ring{ width:clamp(84px,27vw,118px); height:clamp(84px,27vw,118px); }
+.summary-card .ring-inner{ width:calc(clamp(84px,27vw,118px) - 26px); height:calc(clamp(84px,27vw,118px) - 26px); font-size:clamp(17px,5.6vw,25px); }
+.overview-card .stat-line span:last-child{ white-space:nowrap; font-size:clamp(14px,4.3vw,24px); }
+.history-quality-ring{ width:48px; height:48px; }
+.history-quality-ring::before{ width:36px; height:36px; }
+.history-quality-ring span{ font-size:12px; }
+.history-sheet .history-quality-ring{ transform:none; margin:0; }
+@media (max-width:520px){
+    .summary-card > .card{ padding:18px 14px; }
+    .summary-card .quality-row{ gap:12px; }
+    .summary-card .ring{ width:clamp(72px,21vw,104px); height:clamp(72px,21vw,104px); }
+    .summary-card .ring-inner{ width:calc(clamp(72px,21vw,104px) - 22px); height:calc(clamp(72px,21vw,104px) - 22px); }
+    .summary-card .quality-text h1{ font-size:clamp(14px,4.2vw,18px); }
+}
+/* ---------- Planets cross the whole screen now and then ---------- */
+.container > .galaxy-scene .galaxy-planet.low{ left:0; right:auto; }
+
+.container > .galaxy-scene .galaxy-planet.l1{ width:56px; height:56px; animation:planetCross 240s linear -30s infinite, planetBob 24s ease-in-out infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l2{ width:46px; height:46px; animation:planetCross 300s linear -160s infinite reverse, planetBob 26s ease-in-out -2s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l3{ width:78px; height:44px; animation:planetCross 270s linear -90s infinite, planetBob 25s ease-in-out -4s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l4{ width:34px; height:34px; animation:planetCross 210s linear -130s infinite reverse, planetBob 28s ease-in-out -1s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l5{ width:38px; height:38px; animation:planetCross 340s linear -220s infinite, planetBob 30s ease-in-out -6s infinite alternate; }
+.container > .galaxy-scene .galaxy-planet.l6{ width:34px; height:34px; animation:planetCross 380s linear -60s infinite reverse, planetBob 32s ease-in-out -3s infinite alternate; }
+
+@keyframes planetCross{
+    0%{ translate:-90px 0; }
+    62%,100%{ translate:calc(100vw + 40px) 0; }
+}
+
+@keyframes planetBob{
+    from{ transform:translate3d(0,-8px,0) rotate(-8deg); }
+    to{ transform:translate3d(0,10px,0) rotate(12deg); }
+}
+/* ---------- Shooting stars across the whole background ---------- */
+.container > .galaxy-scene .shooting-star{
+    position:absolute;
+    left:0;
+    width:110px;
+    height:2px;
+    border-radius:999px;
+    background:linear-gradient(90deg,transparent,rgba(190,246,255,0.95));
+    box-shadow:0 0 10px 1px rgba(150,230,255,0.6);
+    opacity:0;
+    z-index:3;
+    transform:rotate(24deg);
+    transform-origin:100% 50%;
+}
+
+.container > .galaxy-scene .shooting-star::after{
+    content:'';
+    position:absolute;
+    right:-2px; top:50%;
+    width:5px; height:5px;
+    margin-top:-2.5px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 8px 2px rgba(190,246,255,0.9);
+}
+
+.container > .galaxy-scene .ss1{ top:60px; animation:shootingDash 24s linear -4s infinite; }
+.container > .galaxy-scene .ss3{ top:calc(var(--scene-h) + 120px); animation:shootingDash 30s linear -14s infinite; }
+.container > .galaxy-scene .ss5{ top:calc(var(--scene-h) + 480px); animation:shootingDash 38s linear -26s infinite; }
+
+.container > .galaxy-scene .ss8{ top:110px; animation:shootingDash 32s linear -20s infinite; }
+
+@keyframes shootingDash{
+    0%,82%{ translate:-140px -40px; opacity:0; }
+    84%{ opacity:1; }
+    96%{ opacity:0.9; }
+    100%{ translate:calc(100vw + 60px) calc(45vw); opacity:0; }
+}
+
+@media (prefers-reduced-motion:reduce){
+    .container > .galaxy-scene .shooting-star{ animation:none !important; opacity:0; }
+}
+.galaxy-stars::before{ animation-duration:48s; }
+.galaxy-stars::after{ animation-duration:62s; }
 </style>
 </head>
 
@@ -3609,6 +3960,16 @@ textarea:focus-visible{
 
     <div class="galaxy-scene" aria-hidden="true">
         <span class="galaxy-stars"></span>
+        <span class="galaxy-planet low l1 jupiter"></span>
+        <span class="galaxy-planet low l2 earth"></span>
+        <span class="galaxy-planet low l3 saturn"></span>
+        <span class="galaxy-planet low l4 mars"></span>
+        <span class="galaxy-planet low l5 neptune"></span>
+        <span class="galaxy-planet low l6 venus"></span>
+        <span class="shooting-star ss1"></span>
+        <span class="shooting-star ss3"></span>
+        <span class="shooting-star ss5"></span>
+        <span class="shooting-star ss8"></span>
     </div>
 
     <div class="hero">
@@ -3831,27 +4192,39 @@ textarea:focus-visible{
         <p class="sheet-intro" data-i18n="settingsIntro">Passe G04Sleep an deinen persönlichen Schlafrhythmus an.</p>
         <section class="settings-section settings-personal-section">
             <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-sliders"></use></svg><span data-i18n="personalSectionTitle">Persönlich</span></h3>
-        <label id="themeLabel" data-i18n="themeLabel">Erscheinungsbild</label>
-        <div class="lang-picker" id="themePicker" role="group" aria-labelledby="themeLabel">
-            <button type="button" class="lang-option" data-theme-option="dark" data-i18n="themeDark">Dunkel</button>
-            <button type="button" class="lang-option" data-theme-option="light" data-i18n="themeLight">Hell</button>
-        </div>
-        <label id="langLabel" data-i18n="langLabel">Sprache</label>
-        <div class="lang-picker" id="langPicker" role="group" aria-labelledby="langLabel">
-            <button type="button" class="lang-option" data-lang="de">Deutsch</button>
-            <button type="button" class="lang-option" data-lang="en">English</button>
+        <div class="field-row">
+            <div class="field">
+                <label id="themeLabel" data-i18n="themeLabel">Erscheinungsbild</label>
+                <div class="lang-picker" id="themePicker" role="group" aria-labelledby="themeLabel">
+                    <button type="button" class="lang-option" data-theme-option="dark" data-i18n="themeDark">Dunkel</button>
+                    <button type="button" class="lang-option" data-theme-option="light" data-i18n="themeLight">Hell</button>
+                </div>
+            </div>
+            <div class="field">
+                <label id="langLabel" data-i18n="langLabel">Sprache</label>
+                <div class="lang-picker" id="langPicker" role="group" aria-labelledby="langLabel">
+                    <button type="button" class="lang-option" data-lang="de">Deutsch</button>
+                    <button type="button" class="lang-option" data-lang="en">English</button>
+                </div>
+            </div>
         </div>
         <label for="nameInput" data-i18n="nameLabel">Dein Name</label>
         <input type="text" id="nameInput" maxlength="30" autocomplete="name" placeholder="Dein Name" data-i18n-placeholder="nameLabel">
-        <label for="targetInput" data-i18n="targetLabel">Schlafziel in Stunden</label>
-        <input type="number" id="targetInput" min="4" max="14" step="0.5" inputmode="decimal" placeholder="z. B. 8" data-i18n-placeholder="targetPlaceholder">
-        <p class="field-help" data-i18n="targetHelp">Empfohlener Bereich: 4 bis 14 Stunden.</p>
-        <div class="history-editor" style="margin:0 0 16px;">
-            <label for="snoozeMinutesInput" data-i18n="snoozeMinutesLabel">Schlummerdauer (Min.)</label>
-            <input type="number" id="snoozeMinutesInput" min="1" max="30" step="1">
-            <label for="snoozeMaxInput" data-i18n="snoozeMaxLabel">Max. Schlummern (0 = unbegrenzt)</label>
-            <input type="number" id="snoozeMaxInput" min="0" max="10" step="1">
+        <div class="field-row field-row-3">
+            <div class="field">
+                <label for="targetInput" data-i18n="targetLabel">Schlafziel in Stunden</label>
+                <input type="number" id="targetInput" min="4" max="14" step="0.5" inputmode="decimal" placeholder="z. B. 8" data-i18n-placeholder="targetPlaceholder">
+            </div>
+            <div class="field">
+                <label for="snoozeMinutesInput" data-i18n="snoozeMinutesLabel">Schlummerdauer (Min.)</label>
+                <input type="number" id="snoozeMinutesInput" min="1" max="30" step="1">
+            </div>
+            <div class="field">
+                <label for="snoozeMaxInput" data-i18n="snoozeMaxLabel">Max. Schlummern (0 = unbegrenzt)</label>
+                <input type="number" id="snoozeMaxInput" min="0" max="10" step="1">
+            </div>
         </div>
+        <p class="field-help" data-i18n="targetHelp">Empfohlener Bereich: 4 bis 14 Stunden.</p>
         </section>
         <section class="settings-section">
             <h3 class="settings-section-title"><svg class="ui-icon" aria-hidden="true"><use href="#i-bell"></use></svg><span data-i18n="sleepNotificationsTitle">Schlaf &amp; Benachrichtigungen</span></h3>
