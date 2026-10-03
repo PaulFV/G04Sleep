@@ -8,7 +8,6 @@ Eine benutzerfreundliche Progressive Web App für Schlafaufzeichnung, Wecker, St
 - ⏰ Wecker mit Wochentagen, fünf Tönen, Schlummern und Ausschalten
 - 📊 Editierbare Schlafhistorie mit Wochen-/Monatsstatistik
 - 📖 Editierbares Schlaftagebuch
-- 🌙 Schlafzyklus-Berechnung (Aufstehzeit basierend auf vollständigen Zyklen)
 - 📱 Installierbare und offlinefähige PWA
 - 🔔 Optionale Hintergrund-Wecker per Web Push und Cloudflare Worker
 - 🌐 Englisch beim ersten Start, Deutsch jederzeit in den Einstellungen umschaltbar
