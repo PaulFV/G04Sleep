@@ -4092,6 +4092,26 @@ textarea:focus-visible{
     outline:none;
     box-shadow:0 0 0 2px rgba(var(--accent-rgb,0,229,255),0.55), 0 0 18px rgba(var(--accent-rgb,0,229,255),0.2);
 }
+/* ---------- Dim overlay while sleep tracking runs ---------- */
+.sleep-dim-overlay{
+    position:fixed;
+    inset:0;
+    z-index:150;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    background:#000;
+    opacity:0;
+    pointer-events:none;
+    touch-action:none;
+    transition:opacity 1.6s ease;
+}
+.sleep-dim-overlay.on{ opacity:1; pointer-events:auto; }
+.sleep-dim-clock{ color:#2b3150; font:300 clamp(54px,18vw,96px) var(--mono); letter-spacing:2px; }
+.sleep-dim-hint{ margin:0; color:#1f2440; font:500 12px var(--mono); letter-spacing:1px; text-transform:uppercase; }
+@media (prefers-reduced-motion:reduce){ .sleep-dim-overlay{ transition:none; } }
 </style>
 </head>
 
@@ -4893,7 +4913,7 @@ const I18N = {
         ringingLabel:'Zeit zum Aufstehen', btnSnooze:'Noch {minutes} Minuten', btnStopAlarm:'Wecker stoppen',
         toastAlarmStopped:'Wecker gestoppt. Guten Morgen!', toastAlarmSnoozed:'Wecker um {minutes} Minuten verschoben.',
         toastSnoozeSyncFailed:'Schlummerzeit gespeichert, Push-Synchronisierung fehlgeschlagen.',
-         toastSleepStarted:'Schlafaufzeichnung gestartet. Gute Nacht!', toastSleepSaved:'Schlaf gespeichert: {duration}', toastSleepAutoStopped:'Aufnahme automatisch nach 8 Stunden beendet. Schlaf gespeichert: {duration}',
+         toastSleepStarted:'Schlafaufzeichnung gestartet. Gute Nacht!', toastScreenAwake:'Bildschirm bleibt an und wird nach 20 Sekunden dunkel. Lass die App geöffnet.', toastScreenAwakeUnsupported:'Dein Browser kann den Bildschirm nicht wachhalten – schalte die Auto-Sperre aus und lass die App geöffnet.', sleepDimHint:'Tippen zum Aufhellen', toastSleepSaved:'Schlaf gespeichert: {duration}', toastSleepAutoStopped:'Aufnahme automatisch nach 8 Stunden beendet. Schlaf gespeichert: {duration}',
         toastSwSyncFailed:'Hintergrund-Wecker konnte nicht synchronisiert werden.',
         moonAlt:'G04Sleep – leuchtender Halbmond',
         btnOpenSounds:'Einschlafhilfe abspielen',
@@ -5039,7 +5059,7 @@ const I18N = {
         ringingLabel:'Time to get up', btnSnooze:'{minutes} more minutes', btnStopAlarm:'Stop alarm',
         toastAlarmStopped:'Alarm stopped. Good morning!', toastAlarmSnoozed:'Alarm snoozed by {minutes} minutes.',
         toastSnoozeSyncFailed:'Snooze saved, background sync failed.',
-         toastSleepStarted:'Sleep tracking started. Good night!', toastSleepSaved:'Sleep saved: {duration}', toastSleepAutoStopped:'Recording stopped automatically after 8 hours. Sleep saved: {duration}',
+         toastSleepStarted:'Sleep tracking started. Good night!', toastScreenAwake:'The screen stays on and goes dark after 20 seconds. Keep the app open.', toastScreenAwakeUnsupported:'Your browser cannot keep the screen awake – turn off auto-lock and keep the app open.', sleepDimHint:'Tap to brighten', toastSleepSaved:'Sleep saved: {duration}', toastSleepAutoStopped:'Recording stopped automatically after 8 hours. Sleep saved: {duration}',
         toastSwSyncFailed:'Background alarm could not be synced.',
         moonAlt:'G04Sleep – glowing crescent moon',
         btnOpenSounds:'Play sleep sounds',
@@ -6127,6 +6147,108 @@ const MAX_SLEEP_MS = 8 * 60 * 60 * 1000;
 let sleepAutoStopTimer = null;
 let sleepFinishing = false;
 
+// ---------- Keep the screen awake while sleep tracking runs, dim it after 20 s ----------
+// Mobile browsers pause microphone access and scripts as soon as the screen locks or the app
+// is in the background, so the screen has to stay on. A black overlay saves battery and light.
+const SLEEP_DIM_DELAY_MS = 20000;
+let sleepGuardActive = false, sleepGuardAnnounce = false;
+let sleepWakeLock = null, sleepDimTimer = null, sleepDimClockTimer = null, sleepDimOverlay = null;
+
+function ensureSleepDimOverlay(){
+    if(sleepDimOverlay) return sleepDimOverlay;
+    sleepDimOverlay = document.createElement('div');
+    sleepDimOverlay.className = 'sleep-dim-overlay';
+    sleepDimOverlay.id = 'sleepDimOverlay';
+    sleepDimOverlay.setAttribute('aria-hidden', 'true');
+    sleepDimOverlay.innerHTML = '<div class="sleep-dim-clock" id="sleepDimClock"></div><p class="sleep-dim-hint" id="sleepDimHint"></p>';
+    sleepDimOverlay.addEventListener('pointerdown', event => {
+        event.preventDefault();
+        hideSleepDim();
+        scheduleSleepDim();
+    });
+    document.body.appendChild(sleepDimOverlay);
+    return sleepDimOverlay;
+}
+
+function updateSleepDimClock(){
+    const clock = document.getElementById('sleepDimClock');
+    if(clock) clock.textContent = fmtTime(new Date());
+}
+
+function showSleepDim(){
+    if(!sleepGuardActive) return;
+    const overlay = ensureSleepDimOverlay();
+    document.getElementById('sleepDimHint').textContent = t('sleepDimHint');
+    updateSleepDimClock();
+    overlay.classList.add('on');
+    clearInterval(sleepDimClockTimer);
+    sleepDimClockTimer = setInterval(updateSleepDimClock, 15000);
+}
+
+function hideSleepDim(){
+    clearInterval(sleepDimClockTimer);
+    sleepDimClockTimer = null;
+    if(sleepDimOverlay) sleepDimOverlay.classList.remove('on');
+}
+
+function scheduleSleepDim(){
+    clearTimeout(sleepDimTimer);
+    sleepDimTimer = sleepGuardActive ? setTimeout(showSleepDim, SLEEP_DIM_DELAY_MS) : null;
+}
+
+function onSleepGuardActivity(){
+    if(sleepDimOverlay && sleepDimOverlay.classList.contains('on')) return;
+    scheduleSleepDim();
+}
+
+async function requestSleepWakeLock(){
+    if(!sleepGuardActive || document.visibilityState !== 'visible') return Boolean(sleepWakeLock);
+    if(!('wakeLock' in navigator)) return false;
+    try{
+        sleepWakeLock = await navigator.wakeLock.request('screen');
+        sleepWakeLock.addEventListener('release', () => { sleepWakeLock = null; });
+        return true;
+    } catch(error){
+        return false;
+    }
+}
+
+function onSleepGuardVisibility(){
+    if(document.visibilityState === 'visible' && sleepGuardActive && !sleepWakeLock) requestSleepWakeLock();
+}
+
+function startSleepGuard(){
+    if(sleepGuardActive) return;
+    sleepGuardActive = true;
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(type => document.addEventListener(type, onSleepGuardActivity, {passive:true, capture:true}));
+    document.addEventListener('visibilitychange', onSleepGuardVisibility);
+    const announce = sleepGuardAnnounce;
+    requestSleepWakeLock().then(ok => {
+        if(announce) setTimeout(() => showToast(t(ok ? 'toastScreenAwake' : 'toastScreenAwakeUnsupported')), 2800);
+    });
+    scheduleSleepDim();
+}
+
+function stopSleepGuard(){
+    if(!sleepGuardActive) return;
+    sleepGuardActive = false;
+    clearTimeout(sleepDimTimer);
+    sleepDimTimer = null;
+    hideSleepDim();
+    ['pointerdown', 'keydown', 'touchstart', 'scroll'].forEach(type => document.removeEventListener(type, onSleepGuardActivity, {capture:true}));
+    document.removeEventListener('visibilitychange', onSleepGuardVisibility);
+    if(sleepWakeLock){
+        sleepWakeLock.release().catch(() => {});
+        sleepWakeLock = null;
+    }
+}
+
+function syncSleepScreenGuard(){
+    if(state.sleepStart && !sleepFinishing) startSleepGuard();
+    else stopSleepGuard();
+    sleepGuardAnnounce = false;
+}
+
 function updateSleepButton(){
     if(state.sleepStart){
         sleepBtn.innerHTML = '<svg class="ui-icon" aria-hidden="true"><use href="#i-sunrise"></use></svg><span>' + t('sleepBtnStop') + '</span>';
@@ -6144,6 +6266,7 @@ function updateSleepButton(){
     moonSleepAction.classList.toggle('active', Boolean(state.sleepStart));
     moonSleepAction.setAttribute('aria-label', state.sleepStart ? t('sleepBtnStop') : t('sleepBtnStart'));
     moonSleepAction.setAttribute('aria-pressed', String(Boolean(state.sleepStart)));
+    syncSleepScreenGuard();
 }
 
 function scheduleSleepAutoStop(){
@@ -6201,6 +6324,7 @@ sleepBtn.addEventListener('click', async () => {
         scheduleSleepAutoStop();
         if(state.soundDetectionEnabled) startSoundDetection();
         showToast(t('toastSleepStarted'));
+        sleepGuardAnnounce = true;
     } else {
         await finishSleepTracking(new Date(), false);
     }
