@@ -1152,7 +1152,7 @@ button:disabled{
 .alarm-sheet #alarmListView:not([hidden]){
     display:flex;
     flex-direction:column;
-    max-height:calc(min(620px,86svh) - 64px);
+    max-height:calc(min(620px,86svh) - 100px);
 }
 
 .alarm-sheet #alarmList{
@@ -4112,6 +4112,30 @@ textarea:focus-visible{
 .sleep-dim-clock{ color:#2b3150; font:300 clamp(54px,18vw,96px) var(--mono); letter-spacing:2px; }
 .sleep-dim-hint{ margin:0; color:#1f2440; font:500 12px var(--mono); letter-spacing:1px; text-transform:uppercase; }
 @media (prefers-reduced-motion:reduce){ .sleep-dim-overlay{ transition:none; } }
+/* Very narrow phones: keep logo, language switch, sounds and name in one row */
+@media (max-width:370px){
+    .header{ padding-left:12px; padding-right:12px; }
+    .brand-group{ min-width:0; flex:0 1 auto; gap:6px; }
+    .logo{ font-size:17px; letter-spacing:0.2px; gap:6px; white-space:nowrap; }
+    .brand-icon{ width:26px; height:26px; }
+    .header-actions{ gap:4px; flex:0 0 auto; }
+    .header-lang-option{ min-width:24px; padding:0 4px; font-size:10.5px; }
+    .header-sound-action{ width:32px; }
+    .avatar{ max-width:76px; padding:0 9px; font-size:12px; }
+}
+/* Long names end with an ellipsis instead of being cut on both sides */
+.avatar{
+    display:block;
+    line-height:32px;
+    text-align:center;
+}
+
+/* Same width on tablets/desktop for every window */
+#soundsOverlay .sheet,
+#onboardingOverlay .sheet{
+    width:min(100%,560px);
+    margin:0 auto;
+}
 </style>
 </head>
 

@@ -6,3 +6,4 @@ worker/.dev.vars
 worker/.wrangler/
 
 Codex Image*.png
+*.aab
